@@ -91,7 +91,6 @@ function produceMathProblem(level)
   problem["termOne"] = termOne
   problem["termTwo"] = termTwo
   problem["operator"] = operator
- -- print(termOne  .." + " ..termTwo .." = ")
   return problem
 end
 
