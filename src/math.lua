@@ -23,6 +23,8 @@
 gfx = require "gfx"
 gfx.screen:clear({255,0,0})
 gfx.update()
+correctAnswer = 0
+answers = {}
 
 
 -- Directory of artwork 
@@ -61,8 +63,8 @@ local function main()
 
 
   local mathProblem = produceMathProblem(level)
-  local correctAnswer = solveProblem(mathProblem)
-  local answers = produceAnswers(correctAnswer)
+  correctAnswer = solveProblem(mathProblem)
+  answers = produceAnswers(correctAnswer)
   printProblem(mathProblem, answers)
 
   checkAnswer(correctAnswer ,userAnswer)
@@ -157,9 +159,10 @@ function getUpperBound(level)
 end
 
 function produceAnswers(correctAnswer, level)
-  answers ={}
+  --answers ={}
   offset=math.random(3)
   answers[1] = correctAnswer - offset
+  print(answers[1])
   answers[2] = correctAnswer - offset +1
   answers[3] = correctAnswer - offset +2
   answers[4] = correctAnswer - offset +3
@@ -258,6 +261,21 @@ end
 function checkAnswer(correctAnswer, userAnswer)
   if (correctAnswer == userAnswer) then
   -- Something cool happens
+  print("Wihoooo!")
+  end
+end
+
+-- Gets input from user and checks answer
+function onKey(key,state)
+
+  if(key == 'red') then
+    checkAnswer(correctAnswer, answers[1])
+  elseif(key == 'green') then
+    checkAnswer(correctAnswer,answers[2])
+  elseif(key == 'yellow') then
+    checkAnswer(correctAnswer,answers[3])
+  elseif(key == 'blue') then
+    checkAnswer(correctAnswer,answers[4])
   end
 end
 
