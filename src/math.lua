@@ -162,7 +162,6 @@ function produceAnswers(correctAnswer, level)
   --answers ={}
   offset=math.random(3)
   answers[1] = correctAnswer - offset
-  print(answers[1])
   answers[2] = correctAnswer - offset +1
   answers[3] = correctAnswer - offset +2
   answers[4] = correctAnswer - offset +3
@@ -261,7 +260,8 @@ end
 function checkAnswer(correctAnswer, userAnswer)
   if (correctAnswer == userAnswer) then
   -- Something cool happens
-  print("Wihoooo!")
+  gfx.screen:clear({246,255,0})
+  gfx.update()
   end
 end
 
