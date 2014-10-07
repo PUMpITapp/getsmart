@@ -52,17 +52,17 @@ function printCircle(img, xIn, yIn)
 
 end
 
--- Gets input from user and checks answer
+-- Gets input from user and executes chosen script
 function onKey(key,state)
 
   if(key == 'red') then
-  
+  	dofile('math.lua')
   elseif(key == 'green') then
-	  
+	dofile('flags.lua')  
   elseif(key == 'yellow') then
-
+	dofile('memory.lua')
   elseif(key == 'blue') then
-
+	dofile('spelling.lua')
   end
 end
 
