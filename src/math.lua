@@ -51,6 +51,15 @@ png_math = { num1 = 'images/1.png',
                 equals = 'images/equals.png',
                 question = 'images/question.png',}
 
+png_letter = {  c = 'images/letter-c.png',
+                C = 'images/letter-C.png',
+                I = 'images/letter-I.png',
+                n = 'images/letter-n.png',
+                o = 'images/letter-o.png',
+                r = 'images/letter-r.png',
+                e = 'images/letter-e.png',
+                t = 'images/letter-t.png'}
+
 
 -- Main function that runns the program
 local function main()
@@ -67,7 +76,7 @@ local function main()
   answers = produceAnswers(correctAnswer)
   printProblem(mathProblem, answers)
 
-  checkAnswer(correctAnswer ,userAnswer)
+ 
  
 end
 
@@ -259,9 +268,27 @@ end
 
 function checkAnswer(correctAnswer, userAnswer)
   if (correctAnswer == userAnswer) then
-  -- Something cool happens
-  gfx.screen:clear({246,255,0})
+  -- Needs to set the position of the text
+
+  printText('Correct',{})
+ 
+  else 
+  printText('Incorrect', {})
+  end
   gfx.update()
+  main()
+end
+
+function printText(message, position)
+
+  -- This is placeholder code! Should be replaced with an iterator 
+  -- over the incomming string and place the text on desired place.
+
+  
+  if message == 'Correct' then
+    gfx.screen:clear({0,255,0})
+  elseif message == 'Incorrect' then
+    gfx.screen:clear({255,0,0})
   end
 end
 
