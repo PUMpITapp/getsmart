@@ -8,6 +8,7 @@ gfx = require "gfx"
 gfx.screen:clear({255,255,255}) --RGB
 gfx.update()
 
+
 -- All menu items as .png pictures as transparent background
 png_circles = { game1 = 'images/menu-math.png',
 	game2 = 'images/menu-flags.png',
@@ -49,6 +50,20 @@ function printCircle(img, xIn, yIn)
 
 	gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn})
 
+end
+
+-- Gets input from user and checks answer
+function onKey(key,state)
+
+  if(key == 'red') then
+  
+  elseif(key == 'green') then
+	  
+  elseif(key == 'yellow') then
+
+  elseif(key == 'blue') then
+
+  end
 end
 
 -- Main function that runs the program
