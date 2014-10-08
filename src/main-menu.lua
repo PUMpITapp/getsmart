@@ -36,9 +36,7 @@ function printMenuCircles()
 		printCircle(toScreen, i, 450)
 		gameCounter = gameCounter+1
 	end
-	
-	printLogotype()
-	
+		
 	gfx.update()
 
 end
@@ -57,6 +55,7 @@ function printLogotype()
 	
 	toScreen = gfx.loadpng(dir..png_logo)
 	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(png_logo_width/2), y=100})
+	gfx.update()
 
 end
 
@@ -77,7 +76,8 @@ end
 -- Main function that runs the program
 local function main()
 
-  printMenuCircles()
+  printMenuCircles()  
+  printLogotype()
   
 end
 
