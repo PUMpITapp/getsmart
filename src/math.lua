@@ -33,6 +33,7 @@ dir = './'
 -- with size: 
 png_math_width = 140 
 png_math_height = 160 
+
 png_math = {
   num1 = 'images/1.png',
   num2 = 'images/2.png',
@@ -52,6 +53,17 @@ png_math = {
   question = 'images/question.png',
 }
 
+png_letter = {
+  c = 'images/letter-c.png',
+  C = 'images/letter-C.png',
+  I = 'images/letter-I.png',
+  n = 'images/letter-n.png',
+  o = 'images/letter-o.png',
+  r = 'images/letter-r.png',
+  e = 'images/letter-e.png',
+  t = 'images/letter-t.png'
+}
+
 -- Main function that runs the program
 local function main()
 
@@ -67,8 +79,6 @@ local function main()
   answers = produceAnswers(correctAnswer)
   printProblem(mathProblem, answers)
 
-  checkAnswer(correctAnswer ,userAnswer)
- 
 end
 
 --- produces a math problem based on the level of the user.
@@ -268,7 +278,7 @@ function printNumber(number, position)
 
 end
 
---- Dsiplays the operator on the screen on the desired position.
+--- Displays the operator on the screen on the desired position.
 -- @param operator The operator to be displayed.
 -- @param position The position coordinates where the number should be displayed.
 function printOperator(operator ,position)
@@ -280,11 +290,32 @@ function printOperator(operator ,position)
   toScreen:destroy()
 end
 
+--- Checks if the given answer is correct and provides feedback to the user.
+-- @param correctAnswer The correct answer to the problem.
+-- @param userAnswer The answer given by the user.
 function checkAnswer(correctAnswer, userAnswer)
   if (correctAnswer == userAnswer) then
-    -- Something cool happens
-    gfx.screen:clear({246,255,0})
-    gfx.update()
+  -- Needs to set the position of the text
+    printText('Correct',{})
+ 
+  else 
+    printText('Incorrect', {})
+  end
+  gfx.update()
+  main()
+end
+
+--- Prints out messages to the screen.
+-- @param message The message to be displayed on the screen.
+-- @param position The position on the screen where the message should be displayed.
+function printText(message, position)
+
+  -- This is placeholder code! Should be replaced with an iterator 
+  -- over the incomming string and place the text on desired place.
+  if message == 'Correct' then
+    gfx.screen:clear({0,255,0})
+  elseif message == 'Incorrect' then
+    gfx.screen:clear({255,0,0})
   end
 end
 
