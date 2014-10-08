@@ -16,7 +16,7 @@ png_circles = { game1 = 'images/menu-math.png',
 	game4 = 'images/menu-spelling.png',
 }
 
--- Logotype as .png pictuere with transparent background with width
+-- Logotype as .png pictuere with transparent background with width variable
 png_logo_width = 447
 png_logo = 'images/logo.png'
 
@@ -37,18 +37,26 @@ function printMenuCircles()
 		gameCounter = gameCounter+1
 	end
 	
-	-- Prints logo
-	toScreen = gfx.loadpng(dir..png_logo)
-	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(png_logo_width/2), y=100})
-
+	printLogotype()
+	
 	gfx.update()
 
 end
 
--- Print circle according to img, x and y values
+-- Prints circle according to img, x and y values
 function printCircle(img, xIn, yIn)
 
 	gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn})
+
+end
+
+-- Prints logotype in the middle of the screen
+function printLogotype()
+	
+	local toScreen = nil
+	
+	toScreen = gfx.loadpng(dir..png_logo)
+	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(png_logo_width/2), y=100})
 
 end
 
