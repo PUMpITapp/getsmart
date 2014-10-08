@@ -187,7 +187,7 @@ end
 -- @return Incorrect answer choices to a problem.
 function produceAnswers(correctAnswer, level)
   --answers ={}
-  offset = math.random(3)
+  offset = math.random(4)-1
   answers[1] = correctAnswer - offset
   answers[2] = correctAnswer - offset +1
   answers[3] = correctAnswer - offset +2
