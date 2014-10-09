@@ -40,39 +40,38 @@ local png_logo_width = 447
 local png_logo = 'images/logo.png'
 
 
--- Directory of artwork
+-- Directory of images
 local dir = './'
 
+function printSideMenu()
 
-local function printsideMenuSurface()
 
-	local toScreen = nil
-	local gameCounter = 1
-	
-	sideMenuSrfc:clear() -- Initializes sideMenuSrfc
-	
-	sideMenuSrfc:fill({100, 100, 100}) --RGB
-	
-	gfx.screen:copyfrom(sideMenuSrfc, nil, {x=0, y=0}) -- Prints sideMenuSrfc
-	
-	-- Prints menu items
-	for i = 35, 650, 145 do
-		toScreen = gfx.loadpng(dir..png_side_menu_circles['game'..gameCounter])
-		printCircle(toScreen, (gfx.screen:get_width()/3)/2-(png_side_menu_circle_width/2), i)
-		gameCounter = gameCounter+1
+	function printTransparentSurface()
+
+		transparentSrfc:clear() -- Initializes transparentSrfc
+		transparentSrfc:fill({0,0,0,127}) --RGBA -- should be 50% transparent
+		gfx.screen:copyfrom(transparentSrfc, nil, {x=0, y=0}) -- Prints transparentSrfc
+
 	end
-		
-end
+	
+	function printsideMenuSurface()
 
-local function printTransparentSurface()
-
-	transparentSrfc:clear() -- Initializes transparentSrfc
-	transparentSrfc:fill({0,0,0,127}) --RGBA -- should be 50% transparent
-	gfx.screen:copyfrom(transparentSrfc, nil, {x=0, y=0}) -- Prints transparentSrfc
-
-end
-
-local function printSideMenu()
+		local toScreen = nil
+		local gameCounter = 1
+	
+		sideMenuSrfc:clear() -- Initializes sideMenuSrfc
+	
+		sideMenuSrfc:fill({100, 100, 100}) --RGB
+	
+		gfx.screen:copyfrom(sideMenuSrfc, nil, {x=0, y=0}) -- Prints sideMenuSrfc
+	
+		-- Prints menu items
+		for i = 35, 650, 145 do
+			toScreen = gfx.loadpng(dir..png_side_menu_circles['game'..gameCounter])
+			printCircle(toScreen, (gfx.screen:get_width()/3)/2-(png_side_menu_circle_width/2), i)
+			gameCounter = gameCounter+1
+		end
+	end
 
 	printTransparentSurface()
 	printsideMenuSurface()
@@ -82,7 +81,12 @@ local function printSideMenu()
 end
 
 -- Prints main menu
-local function printMenuCircles()
+function printMenuCircles()
+
+	-- Prints circle according to img, x and y values
+	function printCircle(img, xIn, yIn)
+		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn})
+	end
 
 	local toScreen = nil
 	local gameCounter = 1
@@ -98,15 +102,8 @@ local function printMenuCircles()
 
 end
 
--- Prints circle according to img, x and y values
-local function printCircle(img, xIn, yIn)
-
-	gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn})
-
-end
-
 -- Prints logotype in the middle of the screen
-local function printLogotype()
+function printLogotype()
 	
 	local toScreen = nil
 	
@@ -117,7 +114,7 @@ local function printLogotype()
 end
 
 -- Gets input from user and executes chosen script
-local function onKey(key,state)
+function onKey(key,state)
 
   if(key == 'red') then
   	printSideMenu()
