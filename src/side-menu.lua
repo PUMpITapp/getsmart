@@ -6,18 +6,19 @@
 
 
 -- Require the grafics library and setting the background color
-gfx = require "gfx"
+local gfx = require "gfx"
 gfx.screen:clear({255,255,255}) --RGB
 gfx.update()
 
--- Create a new surface with the width of 1/3 of the screen
-sideMenu = gfx.new_surface(gfx.screen:get_width()/3, gfx.screen:get_height())
+-- Create a new surface with 33% width and 100% height of the screen
+local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width()/3, gfx.screen:get_height())
+local transparentSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
 
 
 -- All main menu items as .png pictures as transparent background with width and height variables
-png_menu_circle_width = 149
-png_menu_circle_height = 147
-png_menu_circles = { game1 = 'images/menu/menu-math.png',
+local png_menu_circle_width = 149
+local png_menu_circle_height = 147
+local png_menu_circles = { game1 = 'images/menu/menu-math.png',
 	game2 = 'images/menu/menu-flags.png',
 	game3 = 'images/menu/menu-memory.png',
 	game4 = 'images/menu/menu-spelling.png',
@@ -25,9 +26,9 @@ png_menu_circles = { game1 = 'images/menu/menu-math.png',
 }
 
 -- All side menu items as .png pictures as transparent background with width and height variables
-png_side_menu_circle_width = 115
-png_circle_height = 112
-png_side_menu_circles = { game1 = 'images/side-menu/side-menu-math.png',
+local png_side_menu_circle_width = 115
+local png_circle_height = 112
+local png_side_menu_circles = { game1 = 'images/side-menu/side-menu-math.png',
 	game2 = 'images/side-menu/side-menu-flags.png',
 	game3 = 'images/side-menu/side-menu-memory.png',
 	game4 = 'images/side-menu/side-menu-spelling.png',
@@ -35,24 +36,24 @@ png_side_menu_circles = { game1 = 'images/side-menu/side-menu-math.png',
 }
 
 -- Logotype as .png pictuere with transparent background with width variable
-png_logo_width = 447
-png_logo = 'images/logo.png'
+local png_logo_width = 447
+local png_logo = 'images/logo.png'
 
 
 -- Directory of artwork
-dir = './'
+local dir = './'
 
 
-function printSideMenuBox()
+local function printsideMenuSurface()
 
 	local toScreen = nil
 	local gameCounter = 1
 	
-	sideMenu:clear() -- Initializes sideMenu
+	sideMenuSrfc:clear() -- Initializes sideMenuSrfc
 	
-	sideMenu:fill({100, 100, 100}) --RGB
+	sideMenuSrfc:fill({100, 100, 100}) --RGB
 	
-	gfx.screen:copyfrom(sideMenu, nil, {x=0, y=0}) -- Prints sideMenu
+	gfx.screen:copyfrom(sideMenuSrfc, nil, {x=0, y=0}) -- Prints sideMenuSrfc
 	
 	-- Prints menu items
 	for i = 35, 650, 145 do
@@ -60,21 +61,28 @@ function printSideMenuBox()
 		printCircle(toScreen, (gfx.screen:get_width()/3)/2-(png_side_menu_circle_width/2), i)
 		gameCounter = gameCounter+1
 	end
-	
-	gfx.update()
-	
+		
 end
 
-function hideSideMenu()
+local function printTransparentSurface()
 
-	--sideMenu:destroy()
+	transparentSrfc:clear() -- Initializes transparentSrfc
+	transparentSrfc:fill({0,0,0,127}) --RGBA -- should be 50% transparent
+	gfx.screen:copyfrom(transparentSrfc, nil, {x=0, y=0}) -- Prints transparentSrfc
 
+end
+
+local function printSideMenu()
+
+	printTransparentSurface()
+	printsideMenuSurface()
+	
 	gfx.update()
-
+	
 end
 
 -- Prints main menu
-function printMenuCircles()
+local function printMenuCircles()
 
 	local toScreen = nil
 	local gameCounter = 1
@@ -91,14 +99,14 @@ function printMenuCircles()
 end
 
 -- Prints circle according to img, x and y values
-function printCircle(img, xIn, yIn)
+local function printCircle(img, xIn, yIn)
 
 	gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn})
 
 end
 
 -- Prints logotype in the middle of the screen
-function printLogotype()
+local function printLogotype()
 	
 	local toScreen = nil
 	
@@ -109,12 +117,11 @@ function printLogotype()
 end
 
 -- Gets input from user and executes chosen script
-function onKey(key,state)
+local function onKey(key,state)
 
   if(key == 'red') then
-  	printSideMenuBox()
+  	printSideMenu()
   elseif(key == 'green') then
-  hideSideMenu()
 --	dofile('flags.lua')  
   elseif(key == 'yellow') then
 	dofile('memory.lua')
@@ -128,7 +135,7 @@ local function main()
 
   printMenuCircles()  
   printLogotype()
-    
+      
 end
 
 main()
