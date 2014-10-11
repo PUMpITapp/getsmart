@@ -40,7 +40,6 @@ local png_side_menu_circles = { game1 = 'images/side-menu/side-menu-math.png',
 local png_logo_width = 447
 local png_logo = 'images/logo.png'
 
-
 -- Directory of images
 local dir = './'
 
@@ -113,21 +112,21 @@ function printLogotype()
 
 end
 
+-- Copys graphics from main surface (in this case main menu) to the surface mainSrfc
 function setMainSrfc()
 
 	mainSrfc:clear()
-	mainSrfc:fill({100, 255, 100})
 	mainSrfc:copyfrom(gfx.screen, nil, {x=0, y=0})
 
 end
 
+-- Changes from active surface to mainSrfc (which can be seen as the previous "state")
 function changeSrfc()
 
 	gfx.screen:copyfrom(mainSrfc, nil, {x=0, y=0})
 	gfx.update()
 
 end
-
 
 -- Gets input from user and executes chosen script
 function onKey(key,state)
