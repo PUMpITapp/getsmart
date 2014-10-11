@@ -13,6 +13,7 @@ gfx.update()
 -- Create a new surface with 33% width and 100% height of the screen
 local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width()/3, gfx.screen:get_height())
 local transparentSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+local mainSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
 
 
 -- All main menu items as .png pictures as transparent background with width and height variables
@@ -45,8 +46,7 @@ local dir = './'
 
 function printSideMenu()
 
-
-	function printTransparentSurface()
+	local function printTransparentSurface()
 
 		transparentSrfc:clear() -- Initializes transparentSrfc
 		transparentSrfc:fill({0,0,0,127}) --RGBA -- should be 50% transparent
@@ -54,7 +54,7 @@ function printSideMenu()
 
 	end
 	
-	function printsideMenuSurface()
+	local function printsideMenuSurface()
 
 		local toScreen = nil
 		local gameCounter = 1
@@ -113,12 +113,30 @@ function printLogotype()
 
 end
 
+function setMainSrfc()
+
+	mainSrfc:clear()
+	mainSrfc:fill({100, 255, 100})
+	mainSrfc:copyfrom(gfx.screen, nil, {x=0, y=0})
+
+end
+
+function changeSrfc()
+
+	gfx.screen:copyfrom(mainSrfc, nil, {x=0, y=0})
+	gfx.update()
+
+end
+
+
 -- Gets input from user and executes chosen script
 function onKey(key,state)
 
   if(key == 'red') then
+  	setMainSrfc()
   	printSideMenu()
   elseif(key == 'green') then
+  	changeSrfc()
 --	dofile('flags.lua')  
   elseif(key == 'yellow') then
 	dofile('memory.lua')
