@@ -319,6 +319,153 @@ function printText(message, position)
 end
 
 
+----------------------------------------------------------
+
+-- Create a new surface with 33% width and 100% height of the screen
+local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width()/3, gfx.screen:get_height())
+local transparentSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+local mainSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+
+
+-- All main menu items as .png pictures as transparent background with width and height variables
+local png_menu_circle_width = 149
+local png_menu_circle_height = 147
+local png_menu_circles = { game1 = 'images/menu/menu-math.png',
+	game2 = 'images/menu/menu-flags.png',
+	game3 = 'images/menu/menu-memory.png',
+	game4 = 'images/menu/menu-spelling.png',
+	game5 = 'images/menu/menu-user.png',
+}
+
+-- All side menu items as .png pictures as transparent background with width and height variables
+local png_side_menu_circle_width = 115
+local png_circle_height = 112
+local png_side_menu_circles = { game1 = 'images/side-menu/side-menu-math.png',
+	game2 = 'images/side-menu/side-menu-flags.png',
+	game3 = 'images/side-menu/side-menu-memory.png',
+	game4 = 'images/side-menu/side-menu-spelling.png',
+	game5 = 'images/side-menu/side-menu-user.png',
+}
+
+-- Logotype as .png pictuere with transparent background with width variable
+local png_logo_width = 447
+local png_logo = 'images/logo.png'
+
+-- Directory of images
+local dir = './'
+
+function printSideMenu()
+
+	local function printTransparentSurface()
+
+		transparentSrfc:clear() -- Initializes transparentSrfc
+		transparentSrfc:fill({0,0,0,127}) --RGBA -- should be 50% transparent
+		gfx.screen:copyfrom(transparentSrfc, nil, {x=0, y=0}) -- Prints transparentSrfc
+
+	end
+	
+	local function printsideMenuSurface()
+	
+		-- Prints circle according to img, x and y values
+	function printCircle(img, xIn, yIn)
+		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn})
+	end
+
+		local toScreen = nil
+		local gameCounter = 1
+	
+		sideMenuSrfc:clear() -- Initializes sideMenuSrfc
+	
+		sideMenuSrfc:fill({100, 100, 100}) --RGB
+	
+		gfx.screen:copyfrom(sideMenuSrfc, nil, {x=0, y=0}) -- Prints sideMenuSrfc
+	
+		-- Prints menu items
+		for i = 35, 650, 145 do
+			toScreen = gfx.loadpng(dir..png_side_menu_circles['game'..gameCounter])
+			printCircle(toScreen, (gfx.screen:get_width()/3)/2-(png_side_menu_circle_width/2), i)
+			gameCounter = gameCounter+1
+		end
+	end
+
+	printTransparentSurface()
+	printsideMenuSurface()
+	
+	gfx.update()
+	
+end
+
+-- Prints main menu
+function printMenuCircles()
+
+	-- Prints circle according to img, x and y values
+	function printCircle(img, xIn, yIn)
+		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn})
+	end
+
+	local toScreen = nil
+	local gameCounter = 1
+
+	-- Prints menu items
+	for i = 50, 1000, 250 do
+		toScreen = gfx.loadpng(dir..png_menu_circles['game'..gameCounter])
+		printCircle(toScreen, i, 450)
+		gameCounter = gameCounter+1
+	end
+		
+	gfx.update()
+
+end
+
+-- Prints logotype in the middle of the screen
+function printLogotype()
+	
+	local toScreen = nil
+	
+	toScreen = gfx.loadpng(dir..png_logo)
+	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(png_logo_width/2), y=100})
+	gfx.update()
+
+end
+
+-- Copys graphics from main surface (in this case main menu) to the surface mainSrfc
+function setMainSrfc()
+
+	mainSrfc:clear()
+	mainSrfc:copyfrom(gfx.screen, nil, {x=0, y=0})
+
+end
+
+-- Changes from active surface to mainSrfc (which can be seen as the previous "state")
+function changeSrfc()
+
+	gfx.screen:copyfrom(mainSrfc, nil, {x=0, y=0})
+	gfx.update()
+
+end
+
+-- Gets input from user and executes chosen script
+function onKey(key,state)
+
+  if(key == '1') then
+  	setMainSrfc()
+  	printSideMenu()
+  elseif(key == '2') then
+  	changeSrfc()
+ end
+  
+    if(key == 'Q') then
+    checkAnswer(correctAnswer, answers[1])
+  elseif(key == 'W') then
+    checkAnswer(correctAnswer, answers[2])
+  elseif(key == 'E') then
+    checkAnswer(correctAnswer, answers[3])
+  elseif(key == 'R') then
+    checkAnswer(correctAnswer, answers[4])
+  end
+end
+
+
 
 main()
 
