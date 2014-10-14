@@ -1,3 +1,7 @@
+function stuff( ... )
+	return "abcd"
+end
+
 -- GetMathSmart
 --
 -- A math game to learn and practice the basic arithmetic calculations
@@ -23,7 +27,7 @@
 gfx = require "gfx"
 gfx.screen:clear({255,0,0})
 gfx.update()
-correctAnswer = 12
+correctAnswer = 0
 answers = {}
 
 
