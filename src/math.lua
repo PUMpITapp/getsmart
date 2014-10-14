@@ -22,7 +22,7 @@
 -- Require the grafics library and setting the background color
 gfx = require "gfx"
 text = require "write_text"
-gfx.screen:clear({255,0,0})
+gfx.screen:clear({0,0,255})
 gfx.update()
 correctAnswer = 0
 answers = {}
@@ -168,13 +168,9 @@ function produceAnswers(correctAnswer, level)
 end
 
 
---- Displays the problem and the answers on the screen.
+--- Displays the problem and the answers on the screen by invoking write_text.lua.
 -- @param mathProblem The problem to be displayed on the screen.
 -- @param answers The possible answers for the problem.
---
-------------------------------------------------------------------
--- NOT FINISHED!! Making the spacing more generic still missing --
-------------------------------------------------------------------
 --
 function printProblem(mathProblem, answers)
 
@@ -213,80 +209,25 @@ function printProblem(mathProblem, answers)
 
 end
 
---- Displays a number on the screen on the desired position.
--- @param number The number to be displayed.
--- @param position The position coordinates where the number should be displayed.
-function printNumber(number, position)
-  -- Boolean to set if the number is larger than 100
-  local large = false
-  local toScreen = nil
-
-  if(number < 0) then
-    number = math.abs(number) 
-    local minusPos = {}
-    minusPos['x'] = position['x'] + (png_math_width / 4) * (2 - tostring(number):len())
-    minusPos['y'] = position['y']
-    printOperator('minus', minusPos)
-  end
-
- if(number > 99) then
-    large = true
-    toScreen = gfx.loadpng(dir .. png_math['num' .. math.floor(number / 100)])
-    gfx.screen:copyfrom(toScreen, nil, { x = position['x'], y = position['y'] })
-    number = number - math.floor(number / 100) * 100
-  end
-  if(number > 9 or large) then
-    large = false
-    toScreen = gfx.loadpng(dir..png_math['num' .. math.floor(number / 10)])
-    gfx.screen:copyfrom(toScreen, nil,  { x = position['x'] + png_math_width / 4, y = position['y'] })
-  end
-
-  toScreen = gfx.loadpng(dir .. png_math['num' .. number % 10])
-  gfx.screen:copyfrom(toScreen, nil,  { x = position['x'] + png_math_width / 2, y = position['y'] })
- 
-  toScreen:destroy()
-
-end
-
---- Displays the operator on the screen on the desired position.
--- @param operator The operator to be displayed.
--- @param position The position coordinates where the number should be displayed.
-function printOperator(operator ,position)
-
-  local toScreen = nil
-  toScreen = gfx.loadpng(dir..png_math[operator])
-  gfx.screen:copyfrom(toScreen, nil, { x = position['x'], y = position['y'] })
- 
-  toScreen:destroy()
-end
 
 --- Checks if the given answer is correct and provides feedback to the user.
 -- @param correctAnswer The correct answer to the problem.
 -- @param userAnswer The answer given by the user.
 function checkAnswer(correctAnswer, userAnswer)
+
   if (correctAnswer == userAnswer) then
-  -- Needs to set the position of the text
-    printText('Correct',{})
- 
+   gfx.screen:clear({0,255,0})
+   text.print(gfx.screen, arial, "Correct", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
+   sleep(1)
+  
   else 
-    printText('Incorrect', {})
+     gfx.screen:clear({255,0,0})
+     text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)
+     sleep(1)
+
   end
-  gfx.update()
+  gfx.screen:clear({0,0,255})
   main()
-end
-
---- Prints out messages to the screen.
--- @param message The message to be displayed on the screen.
--- @param position The position on the screen where the message should be displayed.
-function printText(message, position)
-
-  -- This is placeholder code! Should be replaced with an iterator 
-  -- over the incomming string and place the text on desired place.
-  if message == 'Correct' then
-    gfx.screen:clear({0,255,0})
-  elseif message == 'Incorrect' then
-    gfx.screen:clear({255,0,0})
-  end
 end
 
 --- Gets input from user and checks answer
@@ -303,6 +244,13 @@ function onKey(key, state)
   elseif(key == 'blue') then
     checkAnswer(correctAnswer, answers[4])
   end
+end
+
+--- Pauses the system for a period of time
+-- @param time The amount of seconds the system should sleep
+function sleep(time)
+  local t0 = os.clock()
+  while os.clock() < (t0 +time) do end
 end
 
 main()
