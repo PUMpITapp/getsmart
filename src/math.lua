@@ -21,6 +21,7 @@
 
 -- Require the grafics library and setting the background color
 gfx = require "gfx"
+text = require "write_text"
 gfx.screen:clear({255,0,0})
 gfx.update()
 correctAnswer = 0
@@ -30,39 +31,9 @@ answers = {}
 dir = './'
 
 -- All the numbers as .png pictures with transparent background 
--- with size: 
+-- with size (These might not be needed later with the new way of writing text on screen): 
 png_math_width = 140 
 png_math_height = 160 
-
-png_math = {
-  num1 = 'images/1.png',
-  num2 = 'images/2.png',
-  num3 = 'images/3.png',
-  num4 = 'images/4.png',
-  num5 = 'images/5.png',
-  num6 = 'images/6.png',
-  num7 = 'images/7.png',
-  num8 = 'images/8.png',
-  num9 = 'images/9.png',
-  num0 = 'images/0.png',
-  plus = 'images/plus.png',
-  minus = 'images/minus.png',
-  divide = 'images/divide.png',
-  multiply = 'images/multiply.png',
-  equals = 'images/equals.png',
-  question = 'images/question.png',
-}
-
-png_letter = {
-  c = 'images/letter-c.png',
-  C = 'images/letter-C.png',
-  I = 'images/letter-I.png',
-  n = 'images/letter-n.png',
-  o = 'images/letter-o.png',
-  r = 'images/letter-r.png',
-  e = 'images/letter-e.png',
-  t = 'images/letter-t.png'
-}
 
 -- Main function that runs the program
 local function main()
@@ -110,19 +81,19 @@ end
 -- Returns the correct answer
 -- @param The math problem to be solved
 function solveProblem(mathProblem)
-  if(mathProblem['operator'] == "plus") then
+  if(mathProblem['operator'] == "+") then
     answer = tonumber(mathProblem['termOne'] + mathProblem['termTwo'])
   end
   
-  if(mathProblem['operator'] == "minus") then
+  if(mathProblem['operator'] == "-") then
     answer = tonumber(mathProblem['termOne'] - mathProblem['termTwo'])
   end
 
-  if(mathProblem['operator'] == "multiply") then
+  if(mathProblem['operator'] == "*") then
     answer = tonumber(mathProblem['termOne'] * mathProblem['termTwo'])
   end
 
-  if(mathProblem['operator'] == "divide") then
+  if(mathProblem['operator'] == "/") then
     answer = tonumber(mathProblem['termOne'] / mathProblem['termTwo'])
   end
   
@@ -136,10 +107,10 @@ end
 function getOperator(level)
   local operator = nil
 
-  if(level > 8) then      operator = 'divide'
-  elseif(level > 4) then  operator = 'multiply'
-  elseif(level > 2) then  operator = 'minus'
-  else                    operator = 'plus'
+  if(level > 8) then      operator = '/'
+  elseif(level > 4) then  operator = '*'
+  elseif(level > 2) then  operator = '-'
+  else                    operator = '+'
   end
 
   return operator
@@ -212,34 +183,33 @@ function printProblem(mathProblem, answers)
   position['x'] = gfx.screen:get_width() / 8
   position['y'] = gfx.screen:get_height() / 2 - png_math_height / 2
 
-  -- Printing the problem
-  printNumber(tonumber(mathProblem['termOne']), position)
+  text.print(gfx.screen, arial, tostring(mathProblem['termOne']), position['x'], position['y'], png_math_width, png_math_height)
 
   position['x'] = position['x'] + png_math_width
-  printOperator(tostring(mathProblem['operator']), position)
+  text.print(gfx.screen, arial, tostring(mathProblem['operator']), position['x'], position['y'], png_math_width, png_math_height)
 
-  position['x'] = position['x'] + png_math_width / 4
-  printNumber(tonumber(mathProblem['termTwo']), position)
+  position['x'] = position['x'] + png_math_width / 2
+  text.print(gfx.screen, arial, tostring(mathProblem['termTwo']), position['x'], position['y'], png_math_width, png_math_height)
 
   position['x'] = position['x'] + png_math_width
-  printOperator('equals', position)
+  text.print(gfx.screen, arial, "=", position['x'], position['y'], png_math_width, png_math_height)
 
   -- Printing the answers
+  print(tostring(answers[1]))
   position['x'] = position['x'] + png_math_width / 3
-  printNumber(answers[1],position)
+  text.print(gfx.screen, arial, tostring(answers[1]), position['x'], position['y'], png_math_width*2, png_math_height)
 
   position['x'] = position['x'] + png_math_width
   position['y'] = position['y'] - png_math_height / 2
-  printNumber(answers[2],position)
+  text.print(gfx.screen, arial, tostring(answers[2]), position['x'], position['y'], png_math_width*2, png_math_height)
 
   position['y'] = position['y'] + png_math_height
-  printNumber(answers[3],position)
+  text.print(gfx.screen, arial, tostring(answers[3]), position['x'], position['y'], png_math_width*2, png_math_height)
 
   position['x'] = position['x'] + png_math_width
   position['y'] = position['y'] - png_math_height / 2
-  printNumber(answers[4],position)
+  text.print(gfx.screen, arial, tostring(answers[4]), position['x'], position['y'], png_math_width*2, png_math_height)
 
-  gfx.update()
 
 end
 
