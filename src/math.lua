@@ -30,8 +30,7 @@ answers = {}
 -- Directory of artwork 
 dir = './'
 
--- All the numbers as .png pictures with transparent background 
--- with size (These might not be needed later with the new way of writing text on screen): 
+-- Remains from old code. The sizes are still being used.
 png_math_width = 140 
 png_math_height = 160 
 
