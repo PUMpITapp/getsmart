@@ -37,6 +37,23 @@ function text.print(surface, font, text, x, y, w, h)
 	gfx.update()
 end
 
+function text.getStringLength(font, text)
+	local strLength = 0
+	for i =1, #text do
+		local c = text:sub(i,i)
+		for j = 1, #font.chars do 
+			local fc = font.chars[j]
+			if fc.char == c then
+				strLength = strLength + fc.width
+			end
+		end
+	end	
+	return strLength
+end
+
+function text.getFontHeight(font)
+	return font.height
+end
 --text.print(gfx.screen, arial, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi maximus auctor tellus. In interdum maximus odio consequat posuere. Suspendisse convallis condimentum pharetra. Ut luctus massa eget consequat iaculis. Nunc blandit semper odio, et tristique justo vestibulum nec. Donec ex justo, iaculis eget fringilla at, tempus sed justo. Pellentesque a odio orci. Integer vel lorem sodales, laoreet quam non, porta velit.", 10, 10, 400, 400)
 
 return text

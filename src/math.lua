@@ -30,9 +30,10 @@ answers = {}
 -- Directory of artwork 
 dir = './'
 
+images ={['colors'] = "images/color_choices.png"}
 -- Remains from old code. The sizes are still being used.
-png_math_width = 140 
-png_math_height = 160 
+--png_math_width = 140 
+--png_math_height = 160 
 
 -- Main function that runs the program
 local function main()
@@ -46,7 +47,8 @@ local function main()
 
   local mathProblem = produceMathProblem(level)
   correctAnswer = solveProblem(mathProblem)
-  answers = produceAnswers(correctAnswer)
+  local answers = produceAnswers(correctAnswer)
+  placeAnswerBackground()
   printProblem(mathProblem, answers)
 
 end
@@ -167,43 +169,90 @@ function produceAnswers(correctAnswer, level)
 end
 
 
+function placeAnswerBackground()
+
+
+  
+
+ --gfx.screen:copyfrom(colorsImg, cutOut.red, position.red)
+ --gfx.screen:copyfrom(colorsImg, cutOut.green, position.green)
+ --gfx.screen:copyfrom(colorsImg, cutOut.blue, position.blue)
+ --gfx.screen:copyfrom(colorsImg, cutOut.yellow, position.yellow)
+
+
+end
+
+
 --- Displays the problem and the answers on the screen by invoking write_text.lua.
 -- @param mathProblem The problem to be displayed on the screen.
 -- @param answers The possible answers for the problem.
---
 function printProblem(mathProblem, answers)
 
+---------------------------------------------------------------
+----- TEMPORARY CODE -----------------------------------------
+----- Placeing the colored circles----------------------------
+----- the rest is ok. ----------------------------------------
+---------------------------------------------------------
+colorsImg = gfx.loadpng(images.colors)
+
+xs =40  -- x starting coordinate
+y = xs  -- y position
+d = 160 -- diameter of circle
+local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
+                 yellow = {x= xs + d  , y = y, w = d, h = d},
+                 blue   = {x= xs + d*2, y = y, w = d, h = d},
+                 green  = {x= xs + d*3, y = y, w = d, h = d}}
+
+
   -- Printing the numbers on the correct position on the screen
-  local position = {}
-  position['x'] = gfx.screen:get_width() / 8
-  position['y'] = gfx.screen:get_height() / 2 - png_math_height / 2
+  sw = gfx.screen:get_width()  -- screen width
+  sh = gfx.screen:get_height() -- screen height
+  fh = text.getFontHeight(arial) -- font height
 
-  text.print(gfx.screen, arial, tostring(mathProblem['termOne']), position['x'], position['y'], png_math_width, png_math_height)
+  local position = {termOne   = {x = sw * 0.13, y = sh * 0.4},
+                    operator  = {x = sw * 0.23, y = sh * 0.4},
+                    termTwo   = {x = sw * 0.33, y = sh * 0.4},
+                    equals    = {x = sw * 0.43, y = sh * 0.4},
+                    red       = {x = sw * 0.55, y = sh * 0.40 , w = 200, h = 200},
+                    yellow    = {x = sw * 0.70, y = sh * 0.55 , w = 200, h = 200},
+                    blue      = {x = sw * 0.85, y = sh * 0.40 , w = 200, h = 200},
+                    green     = {x = sw * 0.70, y = sh * 0.25 , w = 200, h = 200},
+                    redC      = {x = sw * 0.55 - d/2, y = sh * 0.40, w = 200, h = 200},
+                    yellowC   = {x = sw * 0.70 - d/2, y = sh * 0.55, w = 200, h = 200},
+                    blueC     = {x = sw * 0.85 - d/2, y = sh * 0.40, w = 200, h = 200},
+                    greenC    = {x = sw * 0.70 - d/2, y = sh * 0.25, w = 200, h = 200}}
 
-  position['x'] = position['x'] + png_math_width
-  text.print(gfx.screen, arial, tostring(mathProblem['operator']), position['x'], position['y'], png_math_width, png_math_height)
+ gfx.screen:copyfrom(colorsImg, cutOut.red, position.redC)
+ gfx.screen:copyfrom(colorsImg, cutOut.green, position.greenC)
+ gfx.screen:copyfrom(colorsImg, cutOut.blue, position.blueC)
+ gfx.screen:copyfrom(colorsImg, cutOut.yellow, position.yellowC)
 
-  position['x'] = position['x'] + png_math_width / 2
-  text.print(gfx.screen, arial, tostring(mathProblem['termTwo']), position['x'], position['y'], png_math_width, png_math_height)
 
-  position['x'] = position['x'] + png_math_width
-  text.print(gfx.screen, arial, "=", position['x'], position['y'], png_math_width, png_math_height)
+  local xOffset = text.getStringLength(arial, tostring(mathProblem.termOne)) / 2
+  text.print(gfx.screen, arial, tostring(mathProblem['termOne']), position.termOne.x - xOffset ,position.termOne.y + fh/2, xOffset*2, fh)
+
+  xOffset = text.getStringLength(arial, tostring(mathProblem.operator)) / 2
+  text.print(gfx.screen, arial, tostring(mathProblem['operator']), position.operator.x - xOffset, position.operator.y + fh/2, xOffset*2, fh)
+
+  xOffset = text.getStringLength(arial, tostring(mathProblem.termTwo)) / 2
+  text.print(gfx.screen, arial, tostring(mathProblem['termTwo']), position.termTwo.x -xOffset, position.termTwo.y + fh/2, xOffset*2, fh)
+
+  xOffset = text.getStringLength(arial, "=") / 2
+  text.print(gfx.screen, arial, "=", position.equals.x - xOffset, position.equals.y + fh/2, xOffset*2, fh)
 
   -- Printing the answers
-  print(tostring(answers[1]))
-  position['x'] = position['x'] + png_math_width / 3
-  text.print(gfx.screen, arial, tostring(answers[1]), position['x'], position['y'], png_math_width*2, png_math_height)
+ 
+  xOffset = text.getStringLength(arial, tostring(answers[1])) / 2
+  text.print(gfx.screen, arial, tostring(answers[1]), position.red.x - xOffset, position.red.y + fh/2, xOffset*2, fh)
 
-  position['x'] = position['x'] + png_math_width
-  position['y'] = position['y'] - png_math_height / 2
-  text.print(gfx.screen, arial, tostring(answers[2]), position['x'], position['y'], png_math_width*2, png_math_height)
+  xOffset = text.getStringLength(arial, tostring(answers[2])) / 2
+  text.print(gfx.screen, arial, tostring(answers[2]), position.green.x - xOffset, position.green.y + fh/2, xOffset*2, fh)
 
-  position['y'] = position['y'] + png_math_height
-  text.print(gfx.screen, arial, tostring(answers[3]), position['x'], position['y'], png_math_width*2, png_math_height)
+  xOffset = text.getStringLength(arial, tostring(answers[3])) / 2
+  text.print(gfx.screen, arial, tostring(answers[3]), position.yellow.x - xOffset, position.yellow.y + fh/2, xOffset*2, fh)
 
-  position['x'] = position['x'] + png_math_width
-  position['y'] = position['y'] - png_math_height / 2
-  text.print(gfx.screen, arial, tostring(answers[4]), position['x'], position['y'], png_math_width*2, png_math_height)
+  xOffset = text.getStringLength(arial, tostring(answers[4])) / 2  
+  text.print(gfx.screen, arial, tostring(answers[4]), position.blue.x - xOffset, position.blue.y + fh/2, xOffset*2, fh)
 
 
 end
