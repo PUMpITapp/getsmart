@@ -131,10 +131,10 @@ end
 -- Gets input from user and executes chosen script
 function onKey(key,state)
 
-  if(key == 'red') then
+  if(key == 'Q') then
   	setMainSrfc()
   	printSideMenu()
-  elseif(key == 'green') then
+  elseif(key == 'W') then
   	changeSrfc()
 --	dofile('flags.lua')  
   elseif(key == 'yellow') then
