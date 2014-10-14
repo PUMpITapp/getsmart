@@ -49,9 +49,10 @@ end
 -- Require the grafics library and setting the background color
 
 gfx = chooseGfx(checkTestMode())
+
 gfx.screen:clear({255,0,0})
 gfx.update()
-correctAnswer = 0
+correctAnswer = 12
 answers = {}
 
 
@@ -167,6 +168,8 @@ function getOperator(level)
   return operator
 end
 
+
+-- Vad händer om level är 8? Ska det bli 0? Simon Lindgren
 function getLowerBound(level)
   local lowerBound = nil
   if(level > 8) then       lowerBound = 9
@@ -181,6 +184,7 @@ function getLowerBound(level)
   return lowerBound
 end
 
+-- Vad händer om level är 8? Ska det bli 0? Simon Lindgren
 function getUpperBound(level)
   local lowerBound = nil
   if(level > 8) then       upperBound = 9
@@ -279,7 +283,7 @@ function printNumber(number, position)
   end
   toScreen = gfx.loadpng(dir..png_math['num'..number%10])
   gfx.screen:copyfrom(toScreen, nil,  {x=position['x'] + png_math_width / 2, y=position['y']})
-  print(toScreen) 
+ 
   toScreen:destroy()
 
 end
@@ -335,7 +339,8 @@ function onKey(key,state)
 end
 
 main()
-return math
+return mathGame
+
 
 
 
