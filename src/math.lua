@@ -18,9 +18,38 @@
 -- will display if the answer is correct or not and take the user onwards
 -- to new questions. 
 
+--- Checks if the file was called from a test file.
+-- Returs true if it was, 
+--   - which would mean that the file is being tested.
+-- Returns false if it was not,
+--   - which wold mean that the file was being used.  
+function checkTestMode()
+  runFile = debug.getinfo(2, "S").source:sub(2,3)
+  if (runFile ~= './' ) then
+    underGoingTest = false
+  elseif (runFile == './') then
+    underGoingTest = true
+  end
+  return underGoingTest
+end
 
--- Require the graphics library and setting the background color
-gfx = require "gfx"
+--- Chooses either the actual or he dummy gfx.
+-- Returns dummy gfx if the file is being tested.
+-- Rerunes actual gfx if the file is being run.
+function chooseGfx(underGoingTest)
+  if not underGoingTest then
+    tempGfx = require "gfx"
+  elseif underGoingTest then
+    tempGfx = require "gfx_test"
+  end
+  return tempGfx
+end
+
+
+-- Require the grafics library and setting the background color
+
+gfx = chooseGfx(checkTestMode())
+
 text = require "write_text"
 gfx.screen:clear({122,219,228})
 gfx.update()
