@@ -36,7 +36,9 @@ function text.print(surface, font, text, x, y, w, h)
 
 	gfx.update()
 end
-
+--- Returns the width of the string in pixels
+-- @param font 
+-- @param text The text that is beoing mesured
 function text.getStringLength(font, text)
 	local strLength = 0
 	for i =1, #text do
@@ -51,6 +53,8 @@ function text.getStringLength(font, text)
 	return strLength
 end
 
+--- Returns the height of the font
+-- @param font 
 function text.getFontHeight(font)
 	return font.height
 end
