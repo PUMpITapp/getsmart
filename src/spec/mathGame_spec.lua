@@ -189,3 +189,20 @@ describe('Boundry testing getUpperBound()', function ( ... )
 	end)
 
 end)
+
+describe('Testing produceAnswers()', function ( ... )
+	it('Checking that the answer 5 is present in produceAnswers',function ( ... )	
+		local correctAnswearTest = 5
+		local answerCandidatesTest = produceAnswers(correctAnswearTest,4)
+		function checkAnswearTest(candidates, right)
+			for i = 1, #candidates do
+				if (candidates[i] == right) then
+					return true
+				end
+			end
+			return false
+		end
+		assert.is_true(checkAnswearTest(answerCandidatesTest,correctAnswearTest))
+	end)
+end)
+
