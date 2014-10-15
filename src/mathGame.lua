@@ -1,4 +1,4 @@
--- GetMathSmart
+--- GetMathSmart
 --
 -- A math game to learn and practice the basic arithmetic calculations
 -- addition, subtraction, multiplication and division. The user gets a
@@ -18,7 +18,7 @@
 -- will display if the answer is correct or not and take the user onwards
 -- to new questions. 
 
--- Checks if the file was called from a test file.
+--- Checks if the file was called from a test file.
 -- Returs true if it was, 
 --   - which would mean that the file is being tested.
 -- Returns false if it was not,
@@ -33,65 +33,48 @@ function checkTestMode()
   return underGoingTest
 end
 
--- Chooses either the actual or he dummy gfx.
+--- Chooses either the actual or he dummy gfx.
 -- Returns dummy gfx if the file is being tested.
 -- Rerunes actual gfx if the file is being run.
 function chooseGfx(underGoingTest)
   if not underGoingTest then
     tempGfx = require "gfx"
   elseif underGoingTest then
-    tempGfx = require "gfx_test"
+    tempGfx = require "gfx_stub"
   end
   return tempGfx
+end
+
+function chooseText(underGoingTest)
+  if not underGoingTest then
+    tempText = require "write_text"
+  elseif underGoingTest then
+    tempText = require "write_text_stub"
+  end
+  return tempText
 end
 
 
 -- Require the grafics library and setting the background color
 
 gfx = chooseGfx(checkTestMode())
-
-gfx.screen:clear({255,0,0})
+text = chooseText(checkTestMode())
 gfx.update()
 correctAnswer = 12
 answers = {}
 
-
 -- Directory of artwork 
 dir = './'
 
--- All the numbers as .png pictures with transparent background 
--- with size: 
-png_math_width = 140 
-png_math_height = 160 
-png_math = { num1 = 'images/1.png',
-                num2 = 'images/2.png',
-                num3 = 'images/3.png',
-                num4 = 'images/4.png',
-                num5 = 'images/5.png',
-                num6 = 'images/6.png',
-                num7 = 'images/7.png',
-                num8 = 'images/8.png',
-                num9 = 'images/9.png',
-                num0 = 'images/0.png',
-                plus = 'images/plus.png',
-                minus = 'images/minus.png',
-                divide = 'images/divide.png',
-                multiply = 'images/multiply.png',
-                equals = 'images/equals.png',
-                question = 'images/question.png',}
+images ={['colors'] = "images/color_choices.png"}
+-- Remains from old code. The sizes are still being used.
+--png_math_width = 140 
+--png_math_height = 160 
 
-png_letter = {  c = 'images/letter-c.png',
-                C = 'images/letter-C.png',
-                I = 'images/letter-I.png',
-                n = 'images/letter-n.png',
-                o = 'images/letter-o.png',
-                r = 'images/letter-r.png',
-                e = 'images/letter-e.png',
-                t = 'images/letter-t.png'}
-
-
--- Main function that runns the program
+-- Main function that runs the program
 local function main()
+
+  gfx.screen:clear({122,219,228})
 
   ------------------------------------------------------------------------
   --  INCOMPLETE! 
@@ -102,21 +85,19 @@ local function main()
 
   local mathProblem = produceMathProblem(level)
   correctAnswer = solveProblem(mathProblem)
-  answers = produceAnswers(correctAnswer)
+  local answers = produceAnswers(correctAnswer)
+  placeAnswerBackground()
   printProblem(mathProblem, answers)
 
- 
- 
 end
 
--- produces a math problem based on the level of the user.
-
+--- produces a math problem based on the level of the user.
+-- @param level The difficulty level of the problem
 function produceMathProblem(level)
  -- level not implemented yet
   local operator = getOperator(level)
   local lowerBound = tonumber(getLowerBound(level))
   local upperBound = tonumber(getUpperBound(level))
-
 
   -- Because of Lua random being semi-random from fixed lists
   -- this solution provides a more random behavior
@@ -126,7 +107,6 @@ function produceMathProblem(level)
   local termOne = tonumber(math.random(lowerBound, upperBound))
   local termTwo = tonumber(math.random(lowerBound, upperBound))
 
-
   local problem = {}
   problem["termOne"] = termOne
   problem["termTwo"] = termTwo
@@ -134,42 +114,50 @@ function produceMathProblem(level)
   return problem
 end
 
+--- Solves a math problem
 -- Gets a table with the first and second term and the operator.
 -- Solves the problem based on the operator.
 -- Returns the correct answer
+-- @param The math problem to be solved
 function solveProblem(mathProblem)
-  if(mathProblem['operator'] == "plus") then
+  if(mathProblem['operator'] == "+") then
     answer = tonumber(mathProblem['termOne'] + mathProblem['termTwo'])
   end
   
-  if(mathProblem['operator'] == "minus") then
+  if(mathProblem['operator'] == "-") then
     answer = tonumber(mathProblem['termOne'] - mathProblem['termTwo'])
   end
 
-  if(mathProblem['operator'] == "multiply") then
+  if(mathProblem['operator'] == "*") then
     answer = tonumber(mathProblem['termOne'] * mathProblem['termTwo'])
   end
 
-  if(mathProblem['operator'] == "divide") then
+  if(mathProblem['operator'] == "/") then
     answer = tonumber(mathProblem['termOne'] / mathProblem['termTwo'])
   end
   
   return answer
 end
 
+--- Get the operator for a math problem given its difficulty level.
+-- The mathematical operation of a given problem depends on its difficulty level.
+-- @param level The difficulty level of the math problem.
+-- @return Returns the operator for a math problem.
 function getOperator(level)
   local operator = nil
-  if(level > 8) then      operator = 'divide'
-  elseif(level > 4) then  operator = 'multiply'
-  elseif(level > 2) then  operator = 'minus'
-  else                    operator = 'plus'
+
+  if(level > 8) then      operator = '/'
+  elseif(level > 4) then  operator = '*'
+  elseif(level > 2) then  operator = '-'
+  else                    operator = '+'
   end
 
   return operator
 end
 
-
--- Vad händer om level är 8? Ska det bli 0? Simon Lindgren
+--- The lowest number that a term within a math problem should have.
+-- @param level The difficulty level of the math problem.
+-- @return Returns the lower numerical bound for terms within a problem.
 function getLowerBound(level)
   local lowerBound = nil
   if(level > 8) then       lowerBound = 9
@@ -181,10 +169,13 @@ function getLowerBound(level)
   elseif(level == 2) then  lowerBound = 10
   else                     lowerBound = 0
   end
+
   return lowerBound
 end
 
--- Vad händer om level är 8? Ska det bli 0? Simon Lindgren
+--- The highest number that a term within a math problem should have.
+-- @param level The difficulty level of the math problem.
+-- @return Returns the upper numerical bound for terms within a problem.
 function getUpperBound(level)
   local lowerBound = nil
   if(level > 8) then       upperBound = 9
@@ -196,12 +187,17 @@ function getUpperBound(level)
   elseif(level == 2) then  upperBound = 99
   else                     upperBound = 9
   end
+
   return upperBound
 end
 
+--- Given the correct answer and difficulty level of a problem, create three other incorrect answers
+-- @param correctAnswer The correct answer to the problem.
+-- @param level The difficulty level of the problem.
+-- @return Incorrect answer choices to a problem.
 function produceAnswers(correctAnswer, level)
   --answers ={}
-  offset=math.random(3)
+  offset = math.random(4)-1
   answers[1] = correctAnswer - offset
   answers[2] = correctAnswer - offset +1
   answers[3] = correctAnswer - offset +2
@@ -211,135 +207,146 @@ function produceAnswers(correctAnswer, level)
 end
 
 
--- Displays the problem and the answers on the screen.
-------------------------------------------------------------------
--- NOT FINISHED!! Making the spacing more generic still missing --
-------------------------------------------------------------------
+function placeAnswerBackground()
+
+
+  
+
+ --gfx.screen:copyfrom(colorsImg, cutOut.red, position.red)
+ --gfx.screen:copyfrom(colorsImg, cutOut.green, position.green)
+ --gfx.screen:copyfrom(colorsImg, cutOut.blue, position.blue)
+ --gfx.screen:copyfrom(colorsImg, cutOut.yellow, position.yellow)
+
+
+end
+
+
+--- Displays the problem and the answers on the screen by invoking write_text.lua.
+-- @param mathProblem The problem to be displayed on the screen.
+-- @param answers The possible answers for the problem.
 function printProblem(mathProblem, answers)
 
+---------------------------------------------------------------
+----- TEMPORARY CODE -----------------------------------------
+----- Placeing the colored circles----------------------------
+----- the rest is ok. ----------------------------------------
+---------------------------------------------------------
+colorsImg = gfx.loadpng(images.colors)
+
+local xs =40  -- x starting coordinate
+local y = xs  -- y position
+local d = 160 -- diameter of circle
+local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
+                 yellow = {x= xs + d  , y = y, w = d, h = d},
+                 blue   = {x= xs + d*2, y = y, w = d, h = d},
+                 green  = {x= xs + d*3, y = y, w = d, h = d}}
+
+
   -- Printing the numbers on the correct position on the screen
-local position ={}
-position['x'] = gfx.screen:get_width() / 8
-position['y'] = gfx.screen:get_height() / 2 - png_math_height /2
+  local sw = gfx.screen:get_width()  -- screen width
+  local sh = gfx.screen:get_height() -- screen height
+  local fh = text.getFontHeight(arial) -- font height
 
+  position = {termOne   = {x = sw * 0.13, y = sh * 0.4},
+                    operator  = {x = sw * 0.23, y = sh * 0.4},
+                    termTwo   = {x = sw * 0.33, y = sh * 0.4},
+                    equals    = {x = sw * 0.43, y = sh * 0.4},
+                    red       = {x = sw * 0.55, y = sh * 0.40 , w = 200, h = 200},
+                    yellow    = {x = sw * 0.70, y = sh * 0.55 , w = 200, h = 200},
+                    blue      = {x = sw * 0.85, y = sh * 0.40 , w = 200, h = 200},
+                    green     = {x = sw * 0.70, y = sh * 0.25 , w = 200, h = 200},
+                    redC      = {x = sw * 0.55 - d/2, y = sh * 0.40, w = 200, h = 200},
+                    yellowC   = {x = sw * 0.70 - d/2, y = sh * 0.55, w = 200, h = 200},
+                    blueC     = {x = sw * 0.85 - d/2, y = sh * 0.40, w = 200, h = 200},
+                    greenC    = {x = sw * 0.70 - d/2, y = sh * 0.25, w = 200, h = 200}}
 
--- Printing the problem
-printNumber(tonumber(mathProblem['termOne']), position)
+ gfx.screen:copyfrom(colorsImg, cutOut.red, position.redC)
+ gfx.screen:copyfrom(colorsImg, cutOut.green, position.greenC)
+ gfx.screen:copyfrom(colorsImg, cutOut.blue, position.blueC)
+ gfx.screen:copyfrom(colorsImg, cutOut.yellow, position.yellowC)
 
-position['x'] = position['x'] + png_math_width 
-printOperator(tostring(mathProblem['operator']), position)
+  local xOffset = 0     -- the horizontal offset to center the text over the position, half the strings width
+  local yOffset = fh/2  -- the vertical offset to venter the text over the position, half the font height
+  xOffset = text.getStringLength(arial, tostring(mathProblem.termOne)) / 2
+  text.print(gfx.screen, arial, tostring(mathProblem['termOne']), position.termOne.x - xOffset ,position.termOne.y + yOffset, xOffset*2, fh)
 
-position['x'] = position['x'] + png_math_width /4
-printNumber(tonumber(mathProblem['termTwo']), position)
+  xOffset = text.getStringLength(arial, tostring(mathProblem.operator)) / 2
+  text.print(gfx.screen, arial, tostring(mathProblem['operator']), position.operator.x - xOffset, position.operator.y + yOffset, xOffset*2, fh)
 
-position['x'] = position['x'] + png_math_width 
-printOperator('equals', position)
+  xOffset = text.getStringLength(arial, tostring(mathProblem.termTwo)) / 2
+  text.print(gfx.screen, arial, tostring(mathProblem['termTwo']), position.termTwo.x -xOffset, position.termTwo.y + yOffset, xOffset*2, fh)
 
+  xOffset = text.getStringLength(arial, "=") / 2
+  text.print(gfx.screen, arial, "=", position.equals.x - xOffset, position.equals.y + yOffset, xOffset*2, fh)
 
--- Printing the answers
-position['x'] = position['x'] + png_math_width /3
-printNumber(answers[1],position)
-
-position['x'] = position['x'] + png_math_width
-position['y'] = position['y'] - png_math_height /2
-printNumber(answers[2],position)
-
-position['y'] = position['y'] + png_math_height
-printNumber(answers[3],position)
-
-position['x'] = position['x'] + png_math_width
-position['y'] = position['y'] - png_math_height /2
-printNumber(answers[4],position)
-
-gfx.update()
-
-
-end
--- Displays a number on the screen on the desired position
-function printNumber(number, position)
-  -- Boolean to set if the number is larger than 100
-  local large = false
-  local toScreen = nil
-
-  if(number<0) then
-    number = math.abs(number) 
-    local minusPos = {}
-    minusPos['x'] = position['x'] + (png_math_width / 4) * (2 - tostring(number):len())
-    minusPos['y'] = position['y']
-    printOperator('minus', minusPos) 
-      
-  end
-
- if(number>99) then
-    large = true
-    toScreen = gfx.loadpng(dir..png_math['num'..math.floor(number/100)])
-    gfx.screen:copyfrom(toScreen, nil, {x=position['x'], y=position['y']})
-    number=number - math.floor(number/100)*100
-  end
-  if(number>9 or large) then
-    large = false
-    toScreen = gfx.loadpng(dir..png_math['num'..math.floor(number/10)])
-    gfx.screen:copyfrom(toScreen, nil,  {x=position['x'] + png_math_width / 4, y=position['y']})
-  end
-  toScreen = gfx.loadpng(dir..png_math['num'..number%10])
-  gfx.screen:copyfrom(toScreen, nil,  {x=position['x'] + png_math_width / 2, y=position['y']})
+  -- Printing the answers
  
-  toScreen:destroy()
+  xOffset = text.getStringLength(arial, tostring(answers[1])) / 2
+  text.print(gfx.screen, arial, tostring(answers[1]), position.red.x - xOffset, position.red.y + yOffset, xOffset*2, fh)
+
+  xOffset = text.getStringLength(arial, tostring(answers[2])) / 2
+  text.print(gfx.screen, arial, tostring(answers[2]), position.green.x - xOffset, position.green.y + yOffset, xOffset*2, fh)
+
+  xOffset = text.getStringLength(arial, tostring(answers[3])) / 2
+  text.print(gfx.screen, arial, tostring(answers[3]), position.yellow.x - xOffset, position.yellow.y + yOffset, xOffset*2, fh)
+
+  xOffset = text.getStringLength(arial, tostring(answers[4])) / 2  
+  text.print(gfx.screen, arial, tostring(answers[4]), position.blue.x - xOffset, position.blue.y + yOffset, xOffset*2, fh)
+
 
 end
 
--- Dsiplays the operator on the screen on the desired position
-function printOperator(operator ,position)
 
-  local toScreen = nil
-  toScreen = gfx.loadpng(dir..png_math[operator])
-  gfx.screen:copyfrom(toScreen, nil, {x=position['x'], y=position['y']})
- 
-  toScreen:destroy()
-end
-
+--- Checks if the given answer is correct and provides feedback to the user.
+-- @param correctAnswer The correct answer to the problem.
+-- @param userAnswer The answer given by the user.
 function checkAnswer(correctAnswer, userAnswer)
-  if (correctAnswer == userAnswer) then
-  -- Needs to set the position of the text
 
-  printText('Correct',{})
- 
+  if (correctAnswer == userAnswer) then
+   gfx.screen:clear({0,255,0})
+   text.print(gfx.screen, arial, "Correct", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
+   sleep(1)
+  
   else 
-  printText('Incorrect', {})
+   gfx.screen:clear({255,0,0})
+   text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)
+   sleep(1)
+
   end
-  gfx.update()
+  ---gfx.screen:clear({0,0,255})
   main()
 end
 
-function printText(message, position)
+--- Gets input from user and checks answer
+-- @param key The key that has been pressed
+-- @param state
+function onKey(key, state)
+  if state == 'down' then
 
-  -- This is placeholder code! Should be replaced with an iterator 
-  -- over the incomming string and place the text on desired place.
-
-  
-  if message == 'Correct' then
-    gfx.screen:clear({0,255,0})
-  elseif message == 'Incorrect' then
-    gfx.screen:clear({255,0,0})
-  end
+  elseif state == 'up' then
+    if(key == 'red') then
+      checkAnswer(correctAnswer, answers[1])
+    elseif(key == 'green') then
+      checkAnswer(correctAnswer, answers[2])
+    elseif(key == 'yellow') then
+      checkAnswer(correctAnswer, answers[3])
+    elseif(key == 'blue') then
+      checkAnswer(correctAnswer, answers[4])
+    end
+   else end 
 end
 
--- Gets input from user and checks answer
-function onKey(key,state)
 
-  if(key == 'red') then
-    checkAnswer(correctAnswer, answers[1])
-  elseif(key == 'green') then
-    checkAnswer(correctAnswer,answers[2])
-  elseif(key == 'yellow') then
-    checkAnswer(correctAnswer,answers[3])
-  elseif(key == 'blue') then
-    checkAnswer(correctAnswer,answers[4])
-  end
+
+--- Pauses the system for a period of time
+-- @param time The amount of seconds the system should sleep
+function sleep(time)
+  local t0 = os.clock()
+  while os.clock() < (t0 +time) do end
 end
 
 main()
-return mathGame
+return math
 
 
 
