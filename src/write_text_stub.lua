@@ -4,6 +4,7 @@ local text = {}
 arial = require "apple_symbols_regular_65"
 
 function text.print(surface, font, text, x, y, w, h)
+	return text
 end
 
 function text.getStringLength(font, text)

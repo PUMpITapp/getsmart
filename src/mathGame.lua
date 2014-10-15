@@ -303,11 +303,11 @@ function checkAnswer(correctAnswer, userAnswer)
 
   if (correctAnswer == userAnswer) then
    gfx.screen:clear({0,255,0})
-   text.print(gfx.screen, arial, "Correct", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
+   message = text.print(gfx.screen, arial, "Correct", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
    
   else 
    gfx.screen:clear({255,0,0})
-   text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)  
+   message = text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)  
 
   end
   sleep(1)

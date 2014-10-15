@@ -205,4 +205,3 @@ describe('Testing produceAnswers()', function ( ... )
 		assert.is_true(checkAnswearTest(answerCandidatesTest,correctAnswearTest))
 	end)
 end)
-
