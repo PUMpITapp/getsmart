@@ -270,9 +270,9 @@ function checkAnswer(correctAnswer, userAnswer)
    sleep(1)
   
   else 
-     gfx.screen:clear({255,0,0})
-     text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)
-     sleep(1)
+   gfx.screen:clear({255,0,0})
+   text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)
+   sleep(1)
 
   end
   gfx.screen:clear({0,0,255})
@@ -283,17 +283,22 @@ end
 -- @param key The key that has been pressed
 -- @param state
 function onKey(key, state)
+  if state == 'down' then
 
-  if(key == 'red') then
-    checkAnswer(correctAnswer, answers[1])
-  elseif(key == 'green') then
-    checkAnswer(correctAnswer, answers[2])
-  elseif(key == 'yellow') then
-    checkAnswer(correctAnswer, answers[3])
-  elseif(key == 'blue') then
-    checkAnswer(correctAnswer, answers[4])
-  end
+  elseif state == 'up' then
+    if(key == 'red') then
+      checkAnswer(correctAnswer, answers[1])
+    elseif(key == 'green') then
+      checkAnswer(correctAnswer, answers[2])
+    elseif(key == 'yellow') then
+      checkAnswer(correctAnswer, answers[3])
+    elseif(key == 'blue') then
+      checkAnswer(correctAnswer, answers[4])
+    end
+   else end 
 end
+
+
 
 --- Pauses the system for a period of time
 -- @param time The amount of seconds the system should sleep
