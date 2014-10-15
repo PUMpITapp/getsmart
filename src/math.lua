@@ -19,10 +19,10 @@
 -- to new questions. 
 
 
--- Require the grafics library and setting the background color
+-- Require the graphics library and setting the background color
 gfx = require "gfx"
 text = require "write_text"
-gfx.screen:clear({0,0,255})
+gfx.screen:clear({122,219,228})
 gfx.update()
 correctAnswer = 0
 answers = {}
