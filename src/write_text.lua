@@ -4,7 +4,9 @@ gfx = require "gfx"
 arial = require "apple_symbols_regular_65"
 
 font_spritesheet = gfx.loadpng("fonts/"..arial.file)
-
+gfx.screen:clear({255,0,0})
+gfx.update()
+--- Places teh 
 function text.print(surface, font, text, x, y, w, h)
 	local sx = x -- Start x position on the surface
 	local surface_w = surface:get_width()
@@ -27,7 +29,7 @@ function text.print(surface, font, text, x, y, w, h)
 				end
 				dx = x + fc.ox -- dx is the x positon of the character, some characters need offset
 				dy = y + font.metrics.ascender - fc.oy -- dy is the y position of the character, some characters need offset
-				surface:copyfrom(font_spritesheet, {x=fc.x, y=fc.y, w=fc.w, h=fc.h}, {x=dx, y=dy})
+				surface:copyfrom(font_spritesheet, {x=fc.x, y=fc.y, w=fc.w, h=fc.h}, {x=dx, y=dy}, true)
 				x = x + fc.width -- add offset for next character
 				break
 			end
