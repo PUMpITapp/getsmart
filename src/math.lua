@@ -209,7 +209,7 @@ local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
   local sh = gfx.screen:get_height() -- screen height
   local fh = text.getFontHeight(arial) -- font height
 
-  local position = {termOne   = {x = sw * 0.13, y = sh * 0.4},
+  position = {termOne   = {x = sw * 0.13, y = sh * 0.4},
                     operator  = {x = sw * 0.23, y = sh * 0.4},
                     termTwo   = {x = sw * 0.33, y = sh * 0.4},
                     equals    = {x = sw * 0.43, y = sh * 0.4},
