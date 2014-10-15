@@ -195,9 +195,9 @@ function printProblem(mathProblem, answers)
 ---------------------------------------------------------
 colorsImg = gfx.loadpng(images.colors)
 
-xs =40  -- x starting coordinate
-y = xs  -- y position
-d = 160 -- diameter of circle
+local xs =40  -- x starting coordinate
+local y = xs  -- y position
+local d = 160 -- diameter of circle
 local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
                  yellow = {x= xs + d  , y = y, w = d, h = d},
                  blue   = {x= xs + d*2, y = y, w = d, h = d},
@@ -205,9 +205,9 @@ local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
 
 
   -- Printing the numbers on the correct position on the screen
-  sw = gfx.screen:get_width()  -- screen width
-  sh = gfx.screen:get_height() -- screen height
-  fh = text.getFontHeight(arial) -- font height
+  local sw = gfx.screen:get_width()  -- screen width
+  local sh = gfx.screen:get_height() -- screen height
+  local fh = text.getFontHeight(arial) -- font height
 
   local position = {termOne   = {x = sw * 0.13, y = sh * 0.4},
                     operator  = {x = sw * 0.23, y = sh * 0.4},
@@ -227,32 +227,33 @@ local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
  gfx.screen:copyfrom(colorsImg, cutOut.blue, position.blueC)
  gfx.screen:copyfrom(colorsImg, cutOut.yellow, position.yellowC)
 
-
-  local xOffset = text.getStringLength(arial, tostring(mathProblem.termOne)) / 2
-  text.print(gfx.screen, arial, tostring(mathProblem['termOne']), position.termOne.x - xOffset ,position.termOne.y + fh/2, xOffset*2, fh)
+  local xOffset = 0     -- the horizontal offset to center the text over the position, half the strings width
+  local yOffset = fh/2  -- the vertical offset to venter the text over the position, half the font height
+  xOffset = text.getStringLength(arial, tostring(mathProblem.termOne)) / 2
+  text.print(gfx.screen, arial, tostring(mathProblem['termOne']), position.termOne.x - xOffset ,position.termOne.y + yOffset, xOffset*2, fh)
 
   xOffset = text.getStringLength(arial, tostring(mathProblem.operator)) / 2
-  text.print(gfx.screen, arial, tostring(mathProblem['operator']), position.operator.x - xOffset, position.operator.y + fh/2, xOffset*2, fh)
+  text.print(gfx.screen, arial, tostring(mathProblem['operator']), position.operator.x - xOffset, position.operator.y + yOffset, xOffset*2, fh)
 
   xOffset = text.getStringLength(arial, tostring(mathProblem.termTwo)) / 2
-  text.print(gfx.screen, arial, tostring(mathProblem['termTwo']), position.termTwo.x -xOffset, position.termTwo.y + fh/2, xOffset*2, fh)
+  text.print(gfx.screen, arial, tostring(mathProblem['termTwo']), position.termTwo.x -xOffset, position.termTwo.y + yOffset, xOffset*2, fh)
 
   xOffset = text.getStringLength(arial, "=") / 2
-  text.print(gfx.screen, arial, "=", position.equals.x - xOffset, position.equals.y + fh/2, xOffset*2, fh)
+  text.print(gfx.screen, arial, "=", position.equals.x - xOffset, position.equals.y + yOffset, xOffset*2, fh)
 
   -- Printing the answers
  
   xOffset = text.getStringLength(arial, tostring(answers[1])) / 2
-  text.print(gfx.screen, arial, tostring(answers[1]), position.red.x - xOffset, position.red.y + fh/2, xOffset*2, fh)
+  text.print(gfx.screen, arial, tostring(answers[1]), position.red.x - xOffset, position.red.y + yOffset, xOffset*2, fh)
 
   xOffset = text.getStringLength(arial, tostring(answers[2])) / 2
-  text.print(gfx.screen, arial, tostring(answers[2]), position.green.x - xOffset, position.green.y + fh/2, xOffset*2, fh)
+  text.print(gfx.screen, arial, tostring(answers[2]), position.green.x - xOffset, position.green.y + yOffset, xOffset*2, fh)
 
   xOffset = text.getStringLength(arial, tostring(answers[3])) / 2
-  text.print(gfx.screen, arial, tostring(answers[3]), position.yellow.x - xOffset, position.yellow.y + fh/2, xOffset*2, fh)
+  text.print(gfx.screen, arial, tostring(answers[3]), position.yellow.x - xOffset, position.yellow.y + yOffset, xOffset*2, fh)
 
   xOffset = text.getStringLength(arial, tostring(answers[4])) / 2  
-  text.print(gfx.screen, arial, tostring(answers[4]), position.blue.x - xOffset, position.blue.y + fh/2, xOffset*2, fh)
+  text.print(gfx.screen, arial, tostring(answers[4]), position.blue.x - xOffset, position.blue.y + yOffset, xOffset*2, fh)
 
 
 end
