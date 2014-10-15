@@ -40,18 +40,25 @@ function chooseGfx(underGoingTest)
   if not underGoingTest then
     tempGfx = require "gfx"
   elseif underGoingTest then
-    tempGfx = require "gfx_test"
+    tempGfx = require "gfx_stub"
   end
   return tempGfx
+end
+
+function chooseText(underGoingTest)
+  if not underGoingTest then
+    tempText = require "write_text"
+  elseif underGoingTest then
+    tempText = require "write_text_stub"
+  end
+  return tempText
 end
 
 
 -- Require the grafics library and setting the background color
 
 gfx = chooseGfx(checkTestMode())
-
-text = require "write_text"
---gfx.screen:clear({122,219,228})
+text = chooseText(checkTestMode())
 gfx.update()
 correctAnswer = 12
 answers = {}
@@ -66,14 +73,16 @@ images ={['colors'] = "images/color_choices.png"}
 
 -- Main function that runs the program
 local function main()
+
   gfx.screen:clear({122,219,228})
+
   ------------------------------------------------------------------------
   --  INCOMPLETE! 
   -- level will come from user but at the moment it is a static number. --
   ------------------------------------------------------------------------
   local level = tonumber(3)
 
-  
+
   local mathProblem = produceMathProblem(level)
   correctAnswer = solveProblem(mathProblem)
   local answers = produceAnswers(correctAnswer)
@@ -246,10 +255,10 @@ local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
                     yellow    = {x = sw * 0.70, y = sh * 0.55 , w = 200, h = 200},
                     blue      = {x = sw * 0.85, y = sh * 0.40 , w = 200, h = 200},
                     green     = {x = sw * 0.70, y = sh * 0.25 , w = 200, h = 200},
-                    redC      = {x = sw * 0.55 - d/2, y = sh * 0.40, w = d, h = d},
-                    yellowC   = {x = sw * 0.70 - d/2, y = sh * 0.55, w = d, h = d},
-                    blueC     = {x = sw * 0.85 - d/2, y = sh * 0.40, w = d, h = d},
-                    greenC    = {x = sw * 0.70 - d/2, y = sh * 0.25, w = d, h = d}}
+                    redC      = {x = sw * 0.55 - d/2, y = sh * 0.40, w = 200, h = 200},
+                    yellowC   = {x = sw * 0.70 - d/2, y = sh * 0.55, w = 200, h = 200},
+                    blueC     = {x = sw * 0.85 - d/2, y = sh * 0.40, w = 200, h = 200},
+                    greenC    = {x = sw * 0.70 - d/2, y = sh * 0.25, w = 200, h = 200}}
 
  gfx.screen:copyfrom(colorsImg, cutOut.red, position.redC)
  gfx.screen:copyfrom(colorsImg, cutOut.green, position.greenC)
@@ -304,6 +313,7 @@ function checkAnswer(correctAnswer, userAnswer)
    sleep(1)
 
   end
+  ---gfx.screen:clear({0,0,255})
   main()
 end
 
