@@ -60,16 +60,15 @@ end
 gfx = chooseGfx(checkTestMode())
 text = chooseText(checkTestMode())
 gfx.update()
-correctAnswer = 12
+
 answers = {}
 
 -- Directory of artwork 
 dir = './'
 
+-- All images in the game are placed in this table
 images ={['colors'] = "images/color_choices.png"}
--- Remains from old code. The sizes are still being used.
---png_math_width = 140 
---png_math_height = 160 
+ 
 
 -- Main function that runs the program
 local function main()
@@ -255,10 +254,10 @@ local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
                     yellow    = {x = sw * 0.70, y = sh * 0.55 , w = 200, h = 200},
                     blue      = {x = sw * 0.85, y = sh * 0.40 , w = 200, h = 200},
                     green     = {x = sw * 0.70, y = sh * 0.25 , w = 200, h = 200},
-                    redC      = {x = sw * 0.55 - d/2, y = sh * 0.40, w = 200, h = 200},
-                    yellowC   = {x = sw * 0.70 - d/2, y = sh * 0.55, w = 200, h = 200},
-                    blueC     = {x = sw * 0.85 - d/2, y = sh * 0.40, w = 200, h = 200},
-                    greenC    = {x = sw * 0.70 - d/2, y = sh * 0.25, w = 200, h = 200}}
+                    redC      = {x = sw * 0.55 - d/2, y = sh * 0.40, w = d, h = d},
+                    yellowC   = {x = sw * 0.70 - d/2, y = sh * 0.55, w = d, h = d},
+                    blueC     = {x = sw * 0.85 - d/2, y = sh * 0.40, w = d, h = d},
+                    greenC    = {x = sw * 0.70 - d/2, y = sh * 0.25, w = d, h = d}}
 
  gfx.screen:copyfrom(colorsImg, cutOut.red, position.redC)
  gfx.screen:copyfrom(colorsImg, cutOut.green, position.greenC)
@@ -305,15 +304,13 @@ function checkAnswer(correctAnswer, userAnswer)
   if (correctAnswer == userAnswer) then
    gfx.screen:clear({0,255,0})
    text.print(gfx.screen, arial, "Correct", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
-   sleep(1)
-  
+   
   else 
    gfx.screen:clear({255,0,0})
-   text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)
-   sleep(1)
+   text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)  
 
   end
-  ---gfx.screen:clear({0,0,255})
+  sleep(1)
   main()
 end
 
