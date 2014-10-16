@@ -342,12 +342,20 @@ function onKey(key, state)
     elseif(not sideMenu) then
       if(key == 'red') then
         checkAnswer(correctAnswer, answers[1])
+        sleep(1)
+        main()
       elseif(key == 'green') then
         checkAnswer(correctAnswer, answers[2])
+        sleep(1)
+        main()
       elseif(key == 'yellow') then
         checkAnswer(correctAnswer, answers[3])
+        sleep(1)
+        main()
       elseif(key == 'blue') then
         checkAnswer(correctAnswer, answers[4])
+        sleep(1)
+        main()
       elseif(key == "M") then
         sideMenu = true
         setMainSrfc()
