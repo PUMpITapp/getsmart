@@ -321,16 +321,45 @@ function onKey(key, state)
   if state == 'down' then
 
   elseif state == 'up' then
-    if(key == 'red') then
-      checkAnswer(correctAnswer, answers[1])
-    elseif(key == 'green') then
-      checkAnswer(correctAnswer, answers[2])
-    elseif(key == 'yellow') then
-      checkAnswer(correctAnswer, answers[3])
-    elseif(key == 'blue') then
-      checkAnswer(correctAnswer, answers[4])
+    --if side menu is up
+    if(sideMenu) then
+      
+      if(key == 'red') then
+        sideMenu = false
+        dofile('mathGame.lua')
+      elseif(key == 'green') then
+        sideMenu = false
+        dofile('memoryGame.lua')
+      elseif(key == 'yellow') then
+        sideMenu = false
+        dofile('spellingGame.lua')
+      elseif(key == 'blue') then
+        sideMenu = false
+        dofile('geographyGame.lua')
+      elseif(key == "M") then
+        sideMenu = false
+         changeSrfc()
+      end
+      
+      -- In-game control when side menu is down
+    elseif(not sideMenu) then
+      if(key == 'red') then
+        checkAnswer(correctAnswer, answers[1])
+      elseif(key == 'green') then
+        checkAnswer(correctAnswer, answers[2])
+      elseif(key == 'yellow') then
+        checkAnswer(correctAnswer, answers[3])
+      elseif(key == 'blue') then
+        checkAnswer(correctAnswer, answers[4])
+      elseif(key == "M") then
+        sideMenu = true
+        setMainSrfc()
+        printSideMenu()
+      end
     end
-   else end 
+         
+  elseif (state == "repeat") then
+  end 
 end
 
 
