@@ -26,18 +26,18 @@ local mainSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height()
 local png_menu_circle_width = 149
 local png_menu_circle_height = 147
 local png_menu_circles = { 	game1 = 'images/menu/main-menu_math.png',
-							game2 = 'images/menu/main-menu_geography.png',
-							game3 = 'images/menu/main-menu_memory.png',
-							game4 = 'images/menu/main-menu_spelling.png'
+							game2 = 'images/menu/main-menu_memory.png',
+							game3 = 'images/menu/main-menu_spelling.png',
+							game4 = 'images/menu/main-menu_geography.png'
 }
 
 -- All side menu items as .png pictures as transparent background with width and height variables
 local png_side_menu_circle_width = 115
 local png_circle_height = 112
 local png_side_menu_circles = { game1 = 'images/side-menu/side-menu-math.png',
-								game2 = 'images/side-menu/side-menu-geography.png',
-								game3 = 'images/side-menu/side-menu-memory.png',
-								game4 = 'images/side-menu/side-menu-spelling.png',
+								game2 = 'images/side-menu/side-menu-memory.png',
+								game3 = 'images/side-menu/side-menu-spelling.png',
+								game4 = 'images/side-menu/side-menu-geography.png',
 								game5 = 'images/side-menu/side-menu-users.png'
 }
 
