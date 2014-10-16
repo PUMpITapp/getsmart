@@ -205,3 +205,58 @@ describe('Testing produceAnswers()', function ( ... )
 		assert.is_true(checkAnswearTest(answerCandidatesTest,correctAnswearTest))
 	end)
 end)
+
+describe('Testing checkAnswer()',function ( ... )
+	it('Var = 1, Var = 1, expected = Correct', function ( ... )
+		checkAnswer(1,1)
+		assert.are.same('Correct', message)
+	end)
+	it('Var = 1, Var = 2, expected = Worng', function ( ... )
+		checkAnswer(1,2)
+		assert.are.same('Wrong', message)
+	end)
+end)
+
+describe('Testing solveProblem()',function ( ... )
+	local testMathProblem = {}
+	testMathProblem["termOne"] = 2
+	testMathProblem["termTwo"] = 2
+
+
+
+	it('checking 2 + 2, expected: 4',function ( ... )
+		testMathProblem["operator"] = "+"
+		assert.are.same(4, solveProblem(testMathProblem))
+	end)
+	it('checking 2 + 2, not_expected: 13',function ( ... )
+		assert.are_not.same(13, solveProblem(testMathProblem))
+	end)
+
+
+	it('checking 2 - 2, expected: 0',function ( ... )
+		testMathProblem["operator"] = "-"
+		assert.are.same(0, solveProblem(testMathProblem))
+	end)
+	it('checking 2 - 2, not_expected: 13',function ( ... )
+		assert.are_not.same(13, solveProblem(testMathProblem))
+	end)
+
+
+	it('checking 2 * 2, expected: 4',function ( ... )
+		testMathProblem["operator"] = "*"
+		assert.are.same(4, solveProblem(testMathProblem))
+	end)
+	it('checking 2 * 2, not_expected: 13',function ( ... )
+		assert.are_not.same(13, solveProblem(testMathProblem))
+	end)
+
+
+	it('checking 2 / 2, expected: 1',function ( ... )
+		testMathProblem["operator"] = "/"
+		assert.are.same(1, solveProblem(testMathProblem))
+	end)
+	it('checking 2 / 2, not_expected: 13',function ( ... )
+		assert.are_not.same(13, solveProblem(testMathProblem))
+	end)
+
+end)

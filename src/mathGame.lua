@@ -304,14 +304,10 @@ function checkAnswer(correctAnswer, userAnswer)
   if (correctAnswer == userAnswer) then
    gfx.screen:clear({0,255,0})
    message = text.print(gfx.screen, arial, "Correct", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
-   
   else 
    gfx.screen:clear({255,0,0})
    message = text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)  
-
   end
-  sleep(1)
-  main()
 end
 
 --- Gets input from user and checks answer
@@ -323,12 +319,20 @@ function onKey(key, state)
   elseif state == 'up' then
     if(key == 'red') then
       checkAnswer(correctAnswer, answers[1])
+      sleep(1)
+      main()
     elseif(key == 'green') then
       checkAnswer(correctAnswer, answers[2])
+      sleep(1)
+      main()
     elseif(key == 'yellow') then
       checkAnswer(correctAnswer, answers[3])
+      sleep(1)
+      main()
     elseif(key == 'blue') then
       checkAnswer(correctAnswer, answers[4])
+      sleep(1)
+      main()
     end
    else end 
 end
