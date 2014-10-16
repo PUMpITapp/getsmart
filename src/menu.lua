@@ -7,7 +7,10 @@
 
 -- Require the grafics library and setting the background color
 local gfx = require "gfx"
-gfx.screen:clear({255,255,255}) --RGB
+--gfx.screen:clear({255,255,255}) --RGB
+local background = gfx.loadpng('./images/background.png')
+gfx.screen:copyfrom(background,nil)
+
 gfx.update()
 
 -- set boolean controlling if side menu is showing to false
@@ -35,12 +38,13 @@ local png_side_menu_circles = { game1 = 'images/side-menu/side-menu-math.png',
 								game2 = 'images/side-menu/side-menu-geography.png',
 								game3 = 'images/side-menu/side-menu-memory.png',
 								game4 = 'images/side-menu/side-menu-spelling.png',
-								game5 = 'images/side-menu/side-menu-user.png'
+								game5 = 'images/side-menu/side-menu-users.png'
 }
 
 -- Logotype as .png pictuere with transparent background with width variable
 local png_logo_width = 447
 local png_logo = 'images/logo.png'
+
 
 -- Directory of images
 local dir = './'
@@ -86,7 +90,8 @@ function printMenuCircles()
 
 	-- Prints circle according to img, x and y values
 	function printCircle(img, xIn, yIn)
-		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn})
+		local scale = 0.5
+		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale})
 	end
 
 	local toScreen = nil
@@ -110,7 +115,7 @@ function printLogotype()
 	
 	toScreen = gfx.loadpng(dir..png_logo)
 	scale = 0.5
-	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
+	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2 *scale), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
 	gfx.update()
 
 end
