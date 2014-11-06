@@ -53,8 +53,11 @@ gfx.screen:copyfrom(background,nil)
 
 gfx.update()
 
--- set boolean controlling if side menu is showing to false
+-- Boolean controlling if side menu is showing
 sideMenu = false
+
+-- Boolean controlling if main menu is showing
+mainMenu = true
 
 -- Create a new surface with 33% width and 100% height of the screen
 local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width()/3, gfx.screen:get_height())
@@ -196,8 +199,9 @@ function onKey(key,state)
         sideMenu = false
         gamePath = 'geographyGame.lua'
         runGame(gamePath, underGoingTest)
+		--[[
 	  elseif(key=='M') then
-	  	if(not sideMenu) then
+	  	if(not sideMenu ) then
 	  		sideMenu = true
 	  		setMainSrfc()
 	  		printSideMenu()
@@ -205,6 +209,7 @@ function onKey(key,state)
 	  		sideMenu = false
 	  		changeSrfc()
 	  	end
+	  	]]
 	  end
   end
 end
