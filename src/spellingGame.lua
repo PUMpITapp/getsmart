@@ -5,6 +5,28 @@ gfx.screen:clear({122,219,228})
 
 text.print(gfx.screen, arial, "Spelling Game coming soon!", 70 , 300 )
 
+answerTable = {
+  {'across',{5,6},{'ss','s','cs','x'}}
+}
+
+function main() {
+    question = generateQuestion()
+    printQuestion(question)
+}
+
+function generateQuestion()
+  math.randomseed(os.time())
+  math.random()
+  math.random()
+  local questionPosition = tonumber(math.random(1, #answerTable))
+  local question = answerTable[questionPosition]
+end
+
+function printQuestion(question)
+  
+end
+
+
 
 --- Gets input from user and checks answer
 -- @param key The key that has been pressed
@@ -48,3 +70,5 @@ function onKey(key, state)
   elseif (state == "repeat") then
   end 
 end
+
+main()
