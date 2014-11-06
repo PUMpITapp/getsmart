@@ -5,8 +5,48 @@
 -- !! Contains main menu functions and variables until side menu is fully functional and tested !!
 
 
+--- Checks if the file was called from a test file.
+-- Returs true if it was, 
+--   - which would mean that the file is being tested.
+-- Returns false if it was not,
+--   - which wold mean that the file was being used.  
+function checkTestMode()
+  runFile = debug.getinfo(2, "S").source:sub(2,3)
+  if (runFile ~= './' ) then
+    underGoingTest = false
+  elseif (runFile == './') then
+    underGoingTest = true
+  end
+  return underGoingTest
+end
+
+--- Chooses either the actual or he dummy gfx.
+-- Returns dummy gfx if the file is being tested.
+-- Rerunes actual gfx if the file is being run.
+function chooseGfx(underGoingTest)
+  if not underGoingTest then
+    tempGfx = require "gfx"
+  elseif underGoingTest then
+    tempGfx = require "gfx_stub"
+  end
+  return tempGfx
+end
+
+function chooseText(underGoingTest)
+  if not underGoingTest then
+    tempText = require "write_text"
+  elseif underGoingTest then
+    tempText = require "write_text_stub"
+  end
+  return tempText
+end
+
+gamePath = ''
+
 -- Require the grafics library and setting the background color
-local gfx = require "gfx"
+gfx = chooseGfx(checkTestMode())
+text = chooseText(checkTestMode())
+
 --gfx.screen:clear({255,255,255}) --RGB
 local background = gfx.loadpng('./images/background.png')
 gfx.screen:copyfrom(background,nil)
@@ -44,7 +84,6 @@ local png_side_menu_circles = { game1 = 'images/side-menu/side-menu-math.png',
 -- Logotype as .png pictuere with transparent background with width variable
 local png_logo_width = 447
 local png_logo = 'images/logo.png'
-
 
 -- Directory of images
 local dir = './'
@@ -143,16 +182,20 @@ function onKey(key,state)
   elseif state == 'up' then
 	  if(key == 'red') then
         sideMenu = false
-        dofile('mathGame.lua')
+        gamePath = 'mathGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'green') then
         sideMenu = false
-        dofile('memoryGame.lua')
+        gamePath = 'memoryGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'yellow') then
         sideMenu = false
-        dofile('spellingGame.lua')
+        gamePath = 'spellingGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'blue') then
         sideMenu = false
-        dofile('geographyGame.lua')
+        gamePath = 'geographyGame.lua'
+        runGame(gamePath, underGoingTest)
 	  elseif(key=='M') then
 	  	if(not sideMenu) then
 	  		sideMenu = true
@@ -166,14 +209,18 @@ function onKey(key,state)
   end
 end
 
+-- Runs chosen game (file) if testing mode is off
+function runGame(path, testingModeOn)
+	if(not testingModeOn) then
+		dofile(path)
+	end
+end
+
 -- Main function that runs the program
 local function main()
 
   printMenuCircles()  
   printLogotype()
-  
-
-
 
 end
 
