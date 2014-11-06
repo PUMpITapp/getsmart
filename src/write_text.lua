@@ -4,7 +4,7 @@ gfx = require "gfx"
 arial = require "apple_symbols_regular_65"
 
 font_spritesheet = gfx.loadpng("fonts/"..arial.file)
-gfx.screen:clear({255,0,0})
+--gfx.screen:clear({255,0,0})
 gfx.update()
 --- Places teh 
 function text.print(surface, font, text, x, y, w, h)
