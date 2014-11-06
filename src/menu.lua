@@ -1,9 +1,7 @@
 --- Menu
 -- 
--- The menu for the application GetSmart
+-- The start- and side menu for the application GetSmart
 --
--- !! Contains main menu functions and variables until side menu is fully functional and tested !!
-
 
 --- Checks if the file was called from a test file.
 -- Returs true if it was, 
@@ -41,8 +39,6 @@ function chooseText(underGoingTest)
   return tempText
 end
 
-gamePath = ''
-
 -- Require the grafics library and setting the background color
 gfx = chooseGfx(checkTestMode())
 text = chooseText(checkTestMode())
@@ -56,8 +52,8 @@ gfx.update()
 -- Boolean controlling if side menu is showing
 sideMenu = false
 
--- Boolean controlling if main menu is showing
-mainMenu = true
+-- String which holds what game is to be loaded
+gamePath = ''
 
 -- Create a new surface with 33% width and 100% height of the screen
 local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width()/3, gfx.screen:get_height())
