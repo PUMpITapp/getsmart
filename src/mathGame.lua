@@ -55,7 +55,7 @@ function chooseText(underGoingTest)
 end
 
 
--- Require the grafics library and setting the background color
+-- Require the graphics library and setting the background color
 
 gfx = chooseGfx(checkTestMode())
 text = chooseText(checkTestMode())
