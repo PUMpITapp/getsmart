@@ -19,10 +19,7 @@
 -- to new questions. 
 
 --- Checks if the file was called from a test file.
--- Returs true if it was, 
---   - which would mean that the file is being tested.
--- Returns false if it was not,
---   - which wold mean that the file was being used.  
+-- @return #boolean If called from test file return true (indicating file is being tested) else false  
 function checkTestMode()
   runFile = debug.getinfo(2, "S").source:sub(2,3)
   if (runFile ~= './' ) then
@@ -55,13 +52,42 @@ function chooseText(underGoingTest)
 end
 
 
--- Require the grafics library and setting the background color
-
+-- Require the grafics library 
 gfx = chooseGfx(checkTestMode())
 text = chooseText(checkTestMode())
 gfx.update()
 
+-- Require animations to be able to zoom
+animation = require "animation"
+
+
 answers = {}
+answered = {red = false,
+            blue = false,
+            yellow = false,
+            green = false}
+
+
+-- Printing the numbers on the correct position on the screen
+local sw = gfx.screen:get_width()  -- screen width
+local sh = gfx.screen:get_height() -- screen height
+local fh = text.getFontHeight(arial) -- font height
+local d = 160 -- diameter of circle
+
+position = {termOne   = {x = sw * 0.13, y = sh * 0.4},
+          operator  = {x = sw * 0.23, y = sh * 0.4},
+          termTwo   = {x = sw * 0.33, y = sh * 0.4},
+          equals    = {x = sw * 0.43, y = sh * 0.4},
+       --   redPos    = {x = sw * 0.55, y = sh * 0.40 , w = 200, h = 200},
+       --   yellowPos = {x = sw * 0.70, y = sh * 0.55 , w = 200, h = 200},
+       --   bluePos   = {x = sw * 0.85, y = sh * 0.40 , w = 200, h = 200},
+       --   greenPos  = {x = sw * 0.70, y = sh * 0.25 , w = 200, h = 200},
+          red       = {x = sw * 0.55 - d/2, y = sh * 0.40, w = d, h = d},
+          yellow    = {x = sw * 0.70 - d/2, y = sh * 0.55, w = d, h = d},
+          blue      = {x = sw * 0.85 - d/2, y = sh * 0.40, w = d, h = d},
+          green     = {x = sw * 0.70 - d/2, y = sh * 0.25, w = d, h = d}}
+
+
 
 -- Directory of artwork 
 dir = './'
@@ -73,20 +99,24 @@ images ={['colors'] = "images/color_choices.png"}
 -- Main function that runs the program
 local function main()
 
-  gfx.screen:clear({122,219,228})
+
+
+  setBackground()
 
   ------------------------------------------------------------------------
   --  INCOMPLETE! 
   -- level will come from user but at the moment it is a static number. --
   ------------------------------------------------------------------------
-  local level = tonumber(3)
+  local level = tonumber(4)
 
 
   local mathProblem = produceMathProblem(level)
   correctAnswer = solveProblem(mathProblem)
   local answers = produceAnswers(correctAnswer)
-  placeAnswerBackground()
+  createAnswerBackground()
+  placeAnswerBackground(answers)
   printProblem(mathProblem, answers)
+
 
 end
 
@@ -205,17 +235,53 @@ function produceAnswers(correctAnswer, level)
   return answers
 end
 
+function createAnswerBackground()
+  colorsImg = gfx.loadpng(images.colors)
 
-function placeAnswerBackground()
+  -- Positions in the circle sprite.
+  local xs =40  -- x starting coordinate
+  local y = xs  -- y position
+  local d = 160 -- diameter of circle
+  local cutOut ={  red    = {x= xs      , y = y, w = d, h = d},
+                   yellow = {x= xs + d  , y = y, w = d, h = d},
+                   blue   = {x= xs + d*2, y = y, w = d, h = d},
+                   green  = {x= xs + d*3, y = y, w = d, h = d}}
 
 
+  circle = {
+  red = gfx.new_surface(cutOut.red.w, cutOut.red.h),
+  green = gfx.new_surface(cutOut.green.w, cutOut.green.h),
+  yellow = gfx.new_surface(cutOut.yellow.w, cutOut.yellow.h),
+  blue = gfx.new_surface(cutOut.blue.w, cutOut.blue.h)}
+
+  circle.red:copyfrom(colorsImg, cutOut.red, true)
+  circle.green:copyfrom(colorsImg, cutOut.green, true)
+  circle.yellow:copyfrom(colorsImg, cutOut.yellow, true)
+  circle.blue:copyfrom(colorsImg, cutOut.blue, true)
+
+end
+
+function placeAnswerBackground(answers)
+-- Printing the answers
+  local fh = text.getFontHeight(arial) -- font height
+  local yOffset = text.getFontHeight(arial) /2
+
+  local xOffset = text.getStringLength(arial, tostring(answers[1])) / 2
+  text.print(circle.red, arial, tostring(answers[1]), circle.red:get_width() /2 - xOffset, circle.red:get_height() /2 - yOffset, xOffset*2, fh)
+ 
+  xOffset = text.getStringLength(arial, tostring(answers[2])) / 2
+  text.print(circle.green, arial, tostring(answers[2]), circle.green:get_width() /2 - xOffset, circle.green:get_height() /2 - yOffset, math.ceil(xOffset*2), fh)
   
+  xOffset = text.getStringLength(arial, tostring(answers[3])) / 2
+  text.print(circle.yellow, arial, tostring(answers[3]), circle.yellow:get_width() /2 - xOffset, circle.yellow:get_height() /2 - yOffset, xOffset*2, fh)
+  
+  xOffset = text.getStringLength(arial, tostring(answers[4])) / 2
+  text.print(circle.blue, arial, tostring(answers[4]), circle.blue:get_width() /2 - xOffset, circle.blue:get_height() /2 - yOffset, xOffset*2, fh)
 
- --gfx.screen:copyfrom(colorsImg, cutOut.red, position.red)
- --gfx.screen:copyfrom(colorsImg, cutOut.green, position.green)
- --gfx.screen:copyfrom(colorsImg, cutOut.blue, position.blue)
- --gfx.screen:copyfrom(colorsImg, cutOut.yellow, position.yellow)
-
+   gfx.screen:copyfrom(circle.red, nil, position.red, true)
+   gfx.screen:copyfrom(circle.green, nil, position.green, true)
+   gfx.screen:copyfrom(circle.blue, nil, position.blue, true)
+   gfx.screen:copyfrom(circle.yellow, nil, position.yellow, true)
 
 end
 
@@ -224,45 +290,6 @@ end
 -- @param mathProblem The problem to be displayed on the screen.
 -- @param answers The possible answers for the problem.
 function printProblem(mathProblem, answers)
-
----------------------------------------------------------------
------ TEMPORARY CODE -----------------------------------------
------ Placeing the colored circles----------------------------
------ the rest is ok. ----------------------------------------
----------------------------------------------------------
-colorsImg = gfx.loadpng(images.colors)
-
-local xs =40  -- x starting coordinate
-local y = xs  -- y position
-local d = 160 -- diameter of circle
-local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
-                 yellow = {x= xs + d  , y = y, w = d, h = d},
-                 blue   = {x= xs + d*2, y = y, w = d, h = d},
-                 green  = {x= xs + d*3, y = y, w = d, h = d}}
-
-
-  -- Printing the numbers on the correct position on the screen
-  local sw = gfx.screen:get_width()  -- screen width
-  local sh = gfx.screen:get_height() -- screen height
-  local fh = text.getFontHeight(arial) -- font height
-
-  position = {termOne   = {x = sw * 0.13, y = sh * 0.4},
-                    operator  = {x = sw * 0.23, y = sh * 0.4},
-                    termTwo   = {x = sw * 0.33, y = sh * 0.4},
-                    equals    = {x = sw * 0.43, y = sh * 0.4},
-                    red       = {x = sw * 0.55, y = sh * 0.40 , w = 200, h = 200},
-                    yellow    = {x = sw * 0.70, y = sh * 0.55 , w = 200, h = 200},
-                    blue      = {x = sw * 0.85, y = sh * 0.40 , w = 200, h = 200},
-                    green     = {x = sw * 0.70, y = sh * 0.25 , w = 200, h = 200},
-                    redC      = {x = sw * 0.55 - d/2, y = sh * 0.40, w = d, h = d},
-                    yellowC   = {x = sw * 0.70 - d/2, y = sh * 0.55, w = d, h = d},
-                    blueC     = {x = sw * 0.85 - d/2, y = sh * 0.40, w = d, h = d},
-                    greenC    = {x = sw * 0.70 - d/2, y = sh * 0.25, w = d, h = d}}
-
- gfx.screen:copyfrom(colorsImg, cutOut.red, position.redC)
- gfx.screen:copyfrom(colorsImg, cutOut.green, position.greenC)
- gfx.screen:copyfrom(colorsImg, cutOut.blue, position.blueC)
- gfx.screen:copyfrom(colorsImg, cutOut.yellow, position.yellowC)
 
   local xOffset = 0     -- the horizontal offset to center the text over the position, half the strings width
   local yOffset = fh/2  -- the vertical offset to venter the text over the position, half the font height
@@ -277,36 +304,29 @@ local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
 
   xOffset = text.getStringLength(arial, "=") / 2
   text.print(gfx.screen, arial, "=", position.equals.x - xOffset, position.equals.y + yOffset, xOffset*2, fh)
-
-  -- Printing the answers
- 
-  xOffset = text.getStringLength(arial, tostring(answers[1])) / 2
-  text.print(gfx.screen, arial, tostring(answers[1]), position.red.x - xOffset, position.red.y + yOffset, xOffset*2, fh)
-
-  xOffset = text.getStringLength(arial, tostring(answers[2])) / 2
-  text.print(gfx.screen, arial, tostring(answers[2]), position.green.x - xOffset, position.green.y + yOffset, xOffset*2, fh)
-
-  xOffset = text.getStringLength(arial, tostring(answers[3])) / 2
-  text.print(gfx.screen, arial, tostring(answers[3]), position.yellow.x - xOffset, position.yellow.y + yOffset, xOffset*2, fh)
-
-  xOffset = text.getStringLength(arial, tostring(answers[4])) / 2  
-  text.print(gfx.screen, arial, tostring(answers[4]), position.blue.x - xOffset, position.blue.y + yOffset, xOffset*2, fh)
-
-
 end
 
 
 --- Checks if the given answer is correct and provides feedback to the user.
 -- @param correctAnswer The correct answer to the problem.
 -- @param userAnswer The answer given by the user.
-function checkAnswer(correctAnswer, userAnswer)
-
+-- @param key The button pressed
+function checkAnswer(correctAnswer, userAnswer, key)
   if (correctAnswer == userAnswer) then
-   gfx.screen:clear({0,255,0})
-   message = text.print(gfx.screen, arial, "Correct", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
+    answered[key] = true
+    for key,val in pairs(answered) do
+      if (not val) then
+        animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
+      end
+        answered[key] = false
+    end
+    animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
+    sleep(1)
+    main()
   else 
-   gfx.screen:clear({255,0,0})
-   message = text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)  
+   answered[key]= true 
+   animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.5)
+   sleep(1)
   end
 end
 
@@ -315,7 +335,7 @@ end
 -- @param state
 function onKey(key, state)
   if state == 'down' then
-
+  elseif state == 'repeat' then
   elseif state == 'up' then
 
     --if side menu is up
@@ -340,22 +360,18 @@ function onKey(key, state)
       
       -- In-game control when side menu is down
     elseif(not sideMenu) then
-      if(key == 'red') then
-        checkAnswer(correctAnswer, answers[1])
-        sleep(1)
-        main()
-      elseif(key == 'green') then
-        checkAnswer(correctAnswer, answers[2])
-        sleep(1)
-        main()
-      elseif(key == 'yellow') then
-        checkAnswer(correctAnswer, answers[3])
-        sleep(1)
-        main()
-      elseif(key == 'blue') then
-        checkAnswer(correctAnswer, answers[4])
-        sleep(1)
-        main()
+      if(key == 'red' and not answered[key]) then
+        checkAnswer(correctAnswer, answers[1], key)
+       
+      elseif(key == 'green' and not answered[key]) then
+        checkAnswer(correctAnswer, answers[2], key)
+       
+      elseif(key == 'yellow' and not answered[key]) then
+        checkAnswer(correctAnswer, answers[3], key)
+      
+      elseif(key == 'blue' and not answered[key]) then
+        checkAnswer(correctAnswer, answers[4], key)
+       
       elseif(key == "M") then
         sideMenu = true
         setMainSrfc()
@@ -369,10 +385,19 @@ function onKey(key, state)
 end
 
 
+--- Sets the background of the screen
+function setBackground()
+    background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+    background:clear({122,219,228})
+    gfx.screen:copyfrom(background,nil)
+  return 
+end
+
 
 --- Pauses the system for a period of time
 -- @param time The amount of seconds the system should sleep
-function sleep(time)
+function
+  sleep(time)
   local t0 = os.clock()
   while os.clock() < (t0 +time) do end
 end
