@@ -14,7 +14,7 @@
 -- level 8: multiplication 2-9 * 2-9
 --
 -- The answers are displayed in different colors that represent the
--- colored buttons on the remotecontrol. Pressing one of the buttons 
+-- colored buttons on the remotecontrol. Pressing one of the buttons    
 -- will display if the answer is correct or not and take the user onwards
 -- to new questions. 
 
@@ -31,8 +31,8 @@ function checkTestMode()
 end
 
 --- Chooses either the actual or he dummy gfx.
--- Returns dummy gfx if the file is being tested.
--- Rerunes actual gfx if the file is being run.
+-- @returns dummy gfx if the file is being tested.
+-- @rerunes actual gfx if the file is being run.
 function chooseGfx(underGoingTest)
   if not underGoingTest then
     tempGfx = require "gfx"
@@ -41,7 +41,9 @@ function chooseGfx(underGoingTest)
   end
   return tempGfx
 end
-
+--- Chooses either the actual or the dummy text
+--@returns dummy text if the file is being tested
+--@returns the actual text if the file is being runFile 
 function chooseText(underGoingTest)
   if not underGoingTest then
     tempText = require "write_text"
@@ -121,7 +123,7 @@ local function main()
 end
 
 --- produces a math problem based on the level of the user.
--- @param level The difficulty level of the problem
+-- @param #int level The difficulty level of the problem
 function produceMathProblem(level)
  -- level not implemented yet
   local operator = getOperator(level)
@@ -146,8 +148,8 @@ end
 --- Solves a math problem
 -- Gets a table with the first and second term and the operator.
 -- Solves the problem based on the operator.
--- Returns the correct answer
--- @param The math problem to be solved
+-- @returns #number the correct answer
+-- @param #table The math problem to be solved, conatining two numbers and operator
 function solveProblem(mathProblem)
   if(mathProblem['operator'] == "+") then
     answer = tonumber(mathProblem['termOne'] + mathProblem['termTwo'])
@@ -170,8 +172,8 @@ end
 
 --- Get the operator for a math problem given its difficulty level.
 -- The mathematical operation of a given problem depends on its difficulty level.
--- @param level The difficulty level of the math problem.
--- @return Returns the operator for a math problem.
+-- @param #number level The difficulty level of the math problem.
+-- @return #STRING Returns the operator for a math problem.
 function getOperator(level)
   local operator = nil
 
@@ -185,8 +187,8 @@ function getOperator(level)
 end
 
 --- The lowest number that a term within a math problem should have.
--- @param level The difficulty level of the math problem.
--- @return Returns the lower numerical bound for terms within a problem.
+-- @param #number level The difficulty level of the math problem.
+-- @return #number Returns the lower numerical bound for terms within a problem.
 function getLowerBound(level)
   local lowerBound = nil
   if(level > 8) then       lowerBound = 9
@@ -203,8 +205,8 @@ function getLowerBound(level)
 end
 
 --- The highest number that a term within a math problem should have.
--- @param level The difficulty level of the math problem.
--- @return Returns the upper numerical bound for terms within a problem.
+-- @param #number level The difficulty level of the math problem.
+-- @return #number Returns the upper numerical bound for terms within a problem.
 function getUpperBound(level)
   local lowerBound = nil
   if(level > 8) then       upperBound = 9
@@ -221,9 +223,9 @@ function getUpperBound(level)
 end
 
 --- Given the correct answer and difficulty level of a problem, create three other incorrect answers
--- @param correctAnswer The correct answer to the problem.
--- @param level The difficulty level of the problem.
--- @return Incorrect answer choices to a problem.
+-- @param #number correctAnswer The correct answer to the problem.
+-- @param #number level The difficulty level of the problem.
+-- @return #number Incorrect answer choices to a problem.
 function produceAnswers(correctAnswer, level)
   --answers ={}
   offset = math.random(4)-1
@@ -234,7 +236,7 @@ function produceAnswers(correctAnswer, level)
  
   return answers
 end
-
+--- create the background and the "circles" for the answers
 function createAnswerBackground()
   colorsImg = gfx.loadpng(images.colors)
 
@@ -260,7 +262,8 @@ function createAnswerBackground()
   circle.blue:copyfrom(colorsImg, cutOut.blue, true)
 
 end
-
+--- place the answers to the right position in their circle
+--@param #number answers The answer options that is given to the user 
 function placeAnswerBackground(answers)
 -- Printing the answers
   local fh = text.getFontHeight(arial) -- font height
@@ -332,7 +335,7 @@ end
 
 --- Gets input from user and checks answer
 -- @param key The key that has been pressed
--- @param state
+-- @param state The state of thed key-press
 function onKey(key, state)
   if state == 'down' then
   elseif state == 'repeat' then
