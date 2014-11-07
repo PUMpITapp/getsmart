@@ -30,35 +30,20 @@ function checkTestMode()
   return underGoingTest
 end
 
---- Chooses either the actual or he dummy gfx.
--- Returns dummy gfx if the file is being tested.
--- Rerunes actual gfx if the file is being run.
-function chooseGfx(underGoingTest)
+--- Chooses either the actual or the stubs depending on if a test file started the program.
+-- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
   if not underGoingTest then
-    tempGfx = require "gfx"
-  elseif underGoingTest then
-    tempGfx = require "gfx_stub"
+    gfx = require "gfx"
+    text = require "write_text"
+    animation = require "animation"
+  elseif underGoingTest then 
+    gfx = require "gfx_stub"
+    text = require "write_text_stub"
+    animation = require "animation_stub"
   end
-  return tempGfx
-end
-
-function chooseText(underGoingTest)
-  if not underGoingTest then
-    tempText = require "write_text"
-  elseif underGoingTest then
-    tempText = require "write_text_stub"
-  end
-  return tempText
-end
-
-
--- Require the grafics library 
-gfx = chooseGfx(checkTestMode())
-text = chooseText(checkTestMode())
-gfx.update()
-
--- Require animations to be able to zoom
-animation = require "animation"
+end 
+setRequire(checkTestMode())
 
 
 answers = {}
@@ -115,7 +100,7 @@ local function main()
   local answers = produceAnswers(correctAnswer)
   createAnswerBackground()
   placeAnswerBackground(answers)
-  printProblem(mathProblem, answers)
+  printProblem(mathProblem)
 
 
 end
@@ -277,19 +262,22 @@ function placeAnswerBackground(answers)
   
   xOffset = text.getStringLength(arial, tostring(answers[4])) / 2
   text.print(circle.blue, arial, tostring(answers[4]), circle.blue:get_width() /2 - xOffset, circle.blue:get_height() /2 - yOffset, xOffset*2, fh)
-
-   gfx.screen:copyfrom(circle.red, nil, position.red, true)
-   gfx.screen:copyfrom(circle.green, nil, position.green, true)
-   gfx.screen:copyfrom(circle.blue, nil, position.blue, true)
-   gfx.screen:copyfrom(circle.yellow, nil, position.yellow, true)
-
 end
 
 
+--- Places the colored answer circles on their positions
+function placeAnswerCircles()
+  gfx.screen:copyfrom(circle.red, nil, position.red, true)
+  gfx.screen:copyfrom(circle.green, nil, position.green, true)
+  gfx.screen:copyfrom(circle.blue, nil, position.blue, true)
+  gfx.screen:copyfrom(circle.yellow, nil, position.yellow, true)
+end
+
+
+
 --- Displays the problem and the answers on the screen by invoking write_text.lua.
--- @param mathProblem The problem to be displayed on the screen.
--- @param answers The possible answers for the problem.
-function printProblem(mathProblem, answers)
+-- @param #table mathProblem The problem to be displayed on the screen.
+function printProblem(mathProblem)
 
   local xOffset = 0     -- the horizontal offset to center the text over the position, half the strings width
   local yOffset = fh/2  -- the vertical offset to venter the text over the position, half the font height
@@ -308,9 +296,9 @@ end
 
 
 --- Checks if the given answer is correct and provides feedback to the user.
--- @param correctAnswer The correct answer to the problem.
--- @param userAnswer The answer given by the user.
--- @param key The button pressed
+-- @param #number correctAnswer The correct answer to the problem.
+-- @param #number userAnswer The answer given by the user.
+-- @param #string key The button pressed
 function checkAnswer(correctAnswer, userAnswer, key)
   if (correctAnswer == userAnswer) then
     answered[key] = true
@@ -330,9 +318,9 @@ function checkAnswer(correctAnswer, userAnswer, key)
   end
 end
 
---- Gets input from user and checks answer
--- @param key The key that has been pressed
--- @param state
+--- Gets input from user and checks answer or controls side-menu
+-- @param #string key The key that has been pressed
+-- @param #string state
 function onKey(key, state)
   if state == 'down' then
   elseif state == 'repeat' then
@@ -358,7 +346,7 @@ function onKey(key, state)
          changeSrfc()
       end
       
-      -- In-game control when side menu is down
+      -- In-game control when side menu is down, controls that a button can only be pressed once
     elseif(not sideMenu) then
       if(key == 'red' and not answered[key]) then
         checkAnswer(correctAnswer, answers[1], key)
@@ -395,7 +383,7 @@ end
 
 
 --- Pauses the system for a period of time
--- @param time The amount of seconds the system should sleep
+-- @param #number time The amount of seconds (decimal) the system should sleep
 function
   sleep(time)
   local t0 = os.clock()
