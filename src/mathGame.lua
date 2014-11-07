@@ -63,10 +63,6 @@ position = {termOne   = {x = sw * 0.13, y = sh * 0.4},
           operator  = {x = sw * 0.23, y = sh * 0.4},
           termTwo   = {x = sw * 0.33, y = sh * 0.4},
           equals    = {x = sw * 0.43, y = sh * 0.4},
-       --   redPos    = {x = sw * 0.55, y = sh * 0.40 , w = 200, h = 200},
-       --   yellowPos = {x = sw * 0.70, y = sh * 0.55 , w = 200, h = 200},
-       --   bluePos   = {x = sw * 0.85, y = sh * 0.40 , w = 200, h = 200},
-       --   greenPos  = {x = sw * 0.70, y = sh * 0.25 , w = 200, h = 200},
           red       = {x = sw * 0.55 - d/2, y = sh * 0.40, w = d, h = d},
           yellow    = {x = sw * 0.70 - d/2, y = sh * 0.55, w = d, h = d},
           blue      = {x = sw * 0.85 - d/2, y = sh * 0.40, w = d, h = d},
@@ -83,9 +79,6 @@ images ={['colors'] = "images/color_choices.png"}
 
 -- Main function that runs the program
 local function main()
-
-
-
   setBackground()
 
   ------------------------------------------------------------------------
@@ -99,7 +92,8 @@ local function main()
   correctAnswer = solveProblem(mathProblem)
   local answers = produceAnswers(correctAnswer)
   createAnswerBackground()
-  placeAnswerBackground(answers)
+  placeAnswersOnCircles(answers)
+  placeAnswerCircles()
   printProblem(mathProblem)
 
 
@@ -247,7 +241,7 @@ function createAnswerBackground()
 end
 --- place the answers to the right position in their circle
 --@param #number answers The answer options that is given to the user 
-function placeAnswerBackground(answers)
+function placeAnswersOnCircles(answers)
 -- Printing the answers
   local fh = text.getFontHeight(arial) -- font height
   local yOffset = text.getFontHeight(arial) /2
