@@ -1,97 +1,139 @@
 local text = {}
 
-gfx = require "gfx"
--- arial = require "apple_symbols_regular_65"
+function checkTestMode()
+  runFile = debug.getinfo(2, "S").source:sub(2,3)
+  if (runFile ~= './' ) then
+    underGoingTest = false
+  elseif (runFile == './') then
+    underGoingTest = true
+  end
+  return underGoingTest
+end
 
---[[fonts = {
-  Lato = require "fonts/lookups/lato",
-  Lor a = require "fonts/lookups/lora"
-}
+function chooseGfx(underGoingTest)
+  if not underGoingTest then
+    tempGfx = require "gfx"
+  elseif underGoingTest then
+    tempGfx = require "gfx_stub"
+  end
+  return tempGfx
+end
 
-fontSprites = {
-  Lato = gfx.loadpng("fonts/spritesheets/lato.PNG"),
-  Lora = gfx.loadpng("fonts/spritesheets/lora.PNG")
-}
-]]--
-
-arial = require "fonts/lookups/lato"
-font_spritesheet = gfx.loadpng("fonts/spritesheets/lato.png")
-
--- font_spritesheet = gfx.loadpng("fonts/"..arial.file)
-
-gfx.screen:clear({255,0,0})
-gfx.update()
+gfx = chooseGfx(checkTestMode())
 
 --- Prints text to the screen
 -- @param surface The surface to print to
--- @param font The font to use
+-- @param fontFace The font to use, possible values: 'lora', 'lato'
 -- @param fontSize The font size to use, measured in pixel height
 -- @param text The text to print
 -- @param x X coordinate of upper left corner to start printing from
 -- @param y Y coordinate of upper left corner to start printing from
 -- @param w Width of textbox
 -- @param h Height of textbox
-function text.print(surface, font, fontSize, text, x, y, w, h)
-    local fontScale = fontSize / font.height
+function text.print(surface, fontFace, fontColor, fontSize, text, x, y, w, h)
 
-    local sx = x -- Start x position on the surface
-	local surface_w = surface:get_width()
-	local surface_h = surface:get_height()
-	if w == nil or w > surface_w then
-		w = surface_w
-	end
-	if h == nil or h > surface_h then
-		h = surface_h
-	end
+  -- Check that params are valid
+  if (fontFace ~= 'lato' and fontFace ~= 'lora') then
+    print('fontFace not found, should be lato or lora')
+    return false
+  elseif (fontSize ~= 'small' and fontSize ~= 'medium' and fontSize ~= 'large') then
+    print('fontsize not found, should be small, medium or large')
+    return false
+  end
 
-	for i = 1, #text do -- For each character in the text
-		local c = text:sub(i,i) -- Get the character
-		for j = 1, #font.chars do -- For each character in the font
-			local fc = font.chars[j] -- Get the character information
-			if fc.char == c then
-				if x + fc.width > sx + w then -- If the text is gonna be out the surface, popup a new line
-					x = math.floor(sx)
-					y = math.floor(y + font.height * fontScale)
-                end
+  local font = require ("fonts/lookups/" .. fontFace .. "_" .. fontSize)
+  local font_spritesheet = gfx.loadpng("fonts/spritesheets/" .. fontFace .. "_" .. fontSize .. "_" .. fontColor .. ".png")
 
-				dx = math.floor(x + (fc.ox * fontScale)) -- dx is the x positon of the character, some characters need offset
-				dy = math.floor(y + (font.metrics.ascender * fontScale) - (fc.oy * fontScale)) -- dy is the y position of the character, some characters need offset
+  local sx = x -- Start x position on the surface
+  local surface_w = surface:get_width()
+  local surface_h = surface:get_height()
 
-                surface:copyfrom(font_spritesheet, {x=fc.x, y=fc.y, w=fc.w, h=fc.h}, {x=dx, y=dy, w = fc.w * fontScale, h = fc.h * fontScale}, true)
+  if w == nil or w > surface_w then
+      w = surface_w
+  end
 
-                x = math.floor(x + (fc.width * fontScale)) -- add offset for next character
+  if h == nil or h > surface_h then
+      h = surface_h
+  end
 
-                break
-			end
-		end
-	end
+  for i = 1, #text do -- For each character in the text
+      local c = text:sub(i,i) -- Get the character
+      for j = 1, #font.chars do -- For each character in the font
+          local fc = font.chars[j] -- Get the character information
+          if fc.char == c then
+              if x + fc.width > sx + w then -- If the text is gonna be out the surface, popup a new line
+                  x = math.floor(sx)
+                  y = y + font.height
+              end
 
-	gfx.update()
+              dx = math.floor(x + fc.ox) -- dx is the x positon of the character, some characters need offset
+              dy = math.floor(y + font.metrics.ascender - fc.oy) -- dy is the y position of the character, some characters need offset
+
+              surface:copyfrom(font_spritesheet, {x=fc.x, y=fc.y, w=fc.w, h=fc.h}, {x=dx, y=dy, w = fc.w, h = fc.h}, true)
+
+              x = math.floor(x + fc.width) -- add offset for next character
+
+              break
+          end
+      end
+  end
+
+  gfx.update()
+
 end
+
 --- Returns the width of the string in pixels
--- @param font 
--- @param text The text that is beoing mesured
-function text.getStringLength(font, text)
-	local strLength = 0
-	for i =1, #text do
-		local c = text:sub(i,i)
-		for j = 1, #font.chars do 
-			local fc = font.chars[j]
-			if fc.char == c then
-				strLength = strLength + fc.width
-			end
-		end
-	end	
-	return strLength
+-- @param fontFace The font-face to check the width of
+-- @param fontSize The font size to cehck the width of
+-- @param text The text that is being mesured
+-- @return integer The width of the tested string in px
+function text.getStringLength(fontFace, fontSize, text)
+  font = require ("fonts/lookups/" .. fontFace .. "_" .. fontSize)
+
+  local strLength = 0
+
+  for i = 1, #text do
+      local c = text:sub(i,i)
+      for j = 1, #font.chars do
+          local fc = font.chars[j]
+          if fc.char == c then
+              strLength = strLength + fc.width
+          end
+      end
+  end
+
+  return strLength
 end
 
 --- Returns the height of the font
--- @param font 
-function text.getFontHeight(font)
-	return font.height
+-- @param fontFace The fontFace to get the height of
+-- @param fontSize The font size to get the height of
+-- @return integer The height of the requested font
+function text.getFontHeight(fontFace, fontSize)
+  font = require ("fonts/lookups/" .. fontFace .. "_" .. fontSize)
+  return font.height
 end
 
--- Print something to the screen for test purposes
-text.print(gfx.screen, arial, 50, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi maximus auctor tellus. In interdum maximus odio consequat posuere. Suspendisse convallis condimentum pharetra. Ut luctus massa eget consequat iaculis. Nunc blandit semper odio, et tristique justo vestibulum nec. Donec ex justo, iaculis eget fringilla at, tempus sed justo. Pellentesque a odio orci. Integer vel lorem sodales, laoreet quam non, porta velit.", 0, 0, 500, 500)
+--[[ Print something to the screen for test purposes ]]
+
+gfx.screen:clear({218,218,218})
+gfx.update()
+
+text.print(gfx.screen, 'lato', 'white', 'small', "Tja!", 0, 0, 500, 500)
+text.print(gfx.screen, 'lato', 'white', 'medium', "Tja!", 150, 0, 500, 500)
+text.print(gfx.screen, 'lato', 'white', 'large', "Tja!", 300, 0, 500, 500)
+
+text.print(gfx.screen, 'lato', 'black', 'small', "Tja!", 0, 100, 500, 500)
+text.print(gfx.screen, 'lato', 'black', 'medium', "Tja!", 150, 100, 500, 500)
+text.print(gfx.screen, 'lato', 'black', 'large', "Tja!", 300, 100, 500, 500)
+
+text.print(gfx.screen, 'lora', 'white', 'small', "Tjo!", 0, 200, 500, 500)
+text.print(gfx.screen, 'lora', 'white', 'medium', "Tjo!", 150, 200, 500, 500)
+text.print(gfx.screen, 'lora', 'white', 'large', "Tjo!", 300, 200, 500, 500)
+
+text.print(gfx.screen, 'lora', 'black', 'small', "Tjo!", 0, 300, 500, 500)
+text.print(gfx.screen, 'lora', 'black', 'medium', "Tjo!", 150, 300, 500, 500)
+text.print(gfx.screen, 'lora', 'black', 'large', "Tjo!", 300, 300, 500, 500)
+
 
 return text
