@@ -5,25 +5,56 @@ gfx.screen:clear({122,219,228})
 
 text.print(gfx.screen, arial, "Spelling Game coming soon!", 70 , 300 )
 
-answerTable = {
-  {'across',{5,6},{'ss','s','cs','x'}}
-}
 
-function main() {
-    question = generateQuestion()
-    printQuestion(question)
-}
+function init()
+  answerTable = {
+    {'across',{{5,6}},{{'ss','s','cs','x'}}}
+  }
+  rightAlternatives = {}  
+end
 
-function generateQuestion()
+function main()
+  init() 
+  wordArray = selectRandomWord()
+  question = generateQuestion(wordArray)
+  --printQuestion(question)
+end
+
+--- Genrates a random number between 1 and the size of the table answer table and picks that word in the table. 
+function selectRandomWord()
   math.randomseed(os.time())
   math.random()
   math.random()
   local questionPosition = tonumber(math.random(1, #answerTable))
   local question = answerTable[questionPosition]
+  return question
+end
+
+function scrambleOrder(alternatives)
+  
+end
+
+function generateQuestion(wordArray)
+  for i = 1, #wordArray[3] do
+    rightAlternatives[i] = wordArray[3][i][1]
+  end
+
+  local numberOfWordParts = 5
+
+  if wordArray[1]:len() == wordArray[2][#wordArray[2]][2] then
+    numberOfWordParts = #wordArray[2]
+  elseif wordArray[1]:len() > wordArray[2][#wordArray[2]][2] then
+    numberOfWordParts = #wordArray[2] + 1
+  end
+
 end
 
 function printQuestion(question)
-  
+  gfx.screen:clear({122,219,228})
+  wordLeftSide = question[1]:sub(1,question[2][1][1]-1)
+  text.print(gfx.screen, arial, wordLeftSide, gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
+
+  --text.print(gfx.screen, arial, w, gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
 end
 
 
