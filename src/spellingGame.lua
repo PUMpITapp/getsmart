@@ -17,7 +17,7 @@ function main()
   init() 
   wordArray = selectRandomWord()
   question = generateQuestion(wordArray)
-  --printQuestion(question)
+  printQuestion(question)
 end
 
 --- Genrates a random number between 1 and the size of the table answer table and picks that word in the table. 
@@ -30,8 +30,31 @@ function selectRandomWord()
   return question
 end
 
-function scrambleOrder(alternatives)
-  
+function shuffleOrder(alternatives)
+  local n = #alternatives
+
+  while n >= 2 do
+    -- n is now the last pertinent index
+    local k = math.random(n) -- 1 <= k <= n
+    -- Quick swap
+    alternatives[n], alternatives[k] = alternatives[k], alternatives[n]
+    n = n - 1
+  end
+ 
+  return alternatives
+end
+
+function splitIntoWordParts(word,Intervalls)
+  local wordParts = {}
+
+  local previousUpperLimit = 0
+
+  for i = 1, #Intervalls do
+    wordParts[i] = word:sub(previousUpperLimit + 1, Intervalls[i][1] - 1)
+    previousUpperLimit = Intervalls[i][2]    
+  end
+
+  return wordParts
 end
 
 function generateQuestion(wordArray)
@@ -47,13 +70,25 @@ function generateQuestion(wordArray)
     numberOfWordParts = #wordArray[2] + 1
   end
 
+  wordParts = splitIntoWordParts(wordArray[1],wordArray[2])
+  scrambledAlternatives = {}
+
+  for i=1, #wordArray[3] do
+    scrambledAlternatives[i] = shuffleOrder(wordArray[3][i])
+  end
+
+  question = {wordParts, scrambledAlternatives}
+
+  return question
 end
 
 function printQuestion(question)
   gfx.screen:clear({122,219,228})
-  wordLeftSide = question[1]:sub(1,question[2][1][1]-1)
-  text.print(gfx.screen, arial, wordLeftSide, gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
-
+  -- wordLeftSide = question[1]:sub(1,question[2][1][1]-1)
+  text.print(gfx.screen, arial, question[1][1], gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
+  for i=1, #question[2][1] do
+    text.print(gfx.screen, arial, question[2][1][i], gfx.screen:get_height() /2 + 150,  gfx.screen:get_height() /2 - 50*(i-1))    
+  end
   --text.print(gfx.screen, arial, w, gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
 end
 
