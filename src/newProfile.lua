@@ -109,6 +109,7 @@ function runGame(path, testingModeOn)
 	end
 end
 
+-- Prints the number of the player at center of screen !!! FOR DEVELOPMENT ONLY !!!
 local function printPlayerNumber()
 	local fh = text.getFontHeight('lato', 'large')
 	local fw = text.getStringLength('lato', 'large', tostring('Player'..playerNumber))
@@ -119,7 +120,7 @@ end
 -- Main function that runs the program
 local function main()
 
- printPlayerNumber()
+     --printPlayerNumber()
 
 	local newForm = {
 		laststate = "newProfile.lua",
@@ -128,12 +129,10 @@ local function main()
 		
     assert(loadfile("Keyboard.lua"))(newForm)
 
+
   --printMenuCircles()  
   --printLogotype()
   --print(profiles.player1['name'])
-  
-
-  --print("Player: " .. playerNumber)
 
 end
 
