@@ -215,6 +215,7 @@ end
 -- Runs chosen game (file) if testing mode is off
 function runGame(path, testingModeOn)
 	if(not testingModeOn) then
+--		assert(loadfile(path))(1)
 		dofile(path)
 	end
 end
