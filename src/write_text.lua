@@ -1,26 +1,5 @@
 local text = {}
 
-function checkTestMode()
-  runFile = debug.getinfo(2, "S").source:sub(2,3)
-  if (runFile ~= './' ) then
-    underGoingTest = false
-  elseif (runFile == './') then
-    underGoingTest = true
-  end
-  return underGoingTest
-end
-
-function chooseGfx(underGoingTest)
-  if not underGoingTest then
-    tempGfx = require "gfx"
-  elseif underGoingTest then
-    tempGfx = require "gfx_stub"
-  end
-  return tempGfx
-end
-
-gfx = chooseGfx(checkTestMode())
-
 --- Prints text to the screen
 -- @param surface The surface to print to
 -- @param fontFace The font to use, possible values: 'lora', 'lato'
@@ -114,26 +93,28 @@ function text.getFontHeight(fontFace, fontSize)
   return font.height
 end
 
---[[ Print something to the screen for test purposes ]]
+--[[ Print some text for test purposes.
 
+gfx = require "gfx"
 gfx.screen:clear({218,218,218})
 gfx.update()
 
-text.print(gfx.screen, 'lato', 'white', 'small', "Tja!", 0, 0, 500, 500)
-text.print(gfx.screen, 'lato', 'white', 'medium', "Tja!", 150, 0, 500, 500)
-text.print(gfx.screen, 'lato', 'white', 'large', "Tja!", 300, 0, 500, 500)
+text.print(gfx.screen, 'lato', 'white', 'small', "Test", 0, 0, 500, 500)
+text.print(gfx.screen, 'lato', 'white', 'medium', "Test", 150, 0, 500, 500)
+text.print(gfx.screen, 'lato', 'white', 'large', "Test", 300, 0, 500, 500)
 
-text.print(gfx.screen, 'lato', 'black', 'small', "Tja!", 0, 100, 500, 500)
-text.print(gfx.screen, 'lato', 'black', 'medium', "Tja!", 150, 100, 500, 500)
-text.print(gfx.screen, 'lato', 'black', 'large', "Tja!", 300, 100, 500, 500)
+text.print(gfx.screen, 'lato', 'black', 'small', "Test", 0, 100, 500, 500)
+text.print(gfx.screen, 'lato', 'black', 'medium', "Test", 150, 100, 500, 500)
+text.print(gfx.screen, 'lato', 'black', 'large', "Test", 300, 100, 500, 500)
 
-text.print(gfx.screen, 'lora', 'white', 'small', "Tjo!", 0, 200, 500, 500)
-text.print(gfx.screen, 'lora', 'white', 'medium', "Tjo!", 150, 200, 500, 500)
-text.print(gfx.screen, 'lora', 'white', 'large', "Tjo!", 300, 200, 500, 500)
+text.print(gfx.screen, 'lora', 'white', 'small', "Test", 0, 200, 500, 500)
+text.print(gfx.screen, 'lora', 'white', 'medium', "Test", 150, 200, 500, 500)
+text.print(gfx.screen, 'lora', 'white', 'large', "Test", 300, 200, 500, 500)
 
-text.print(gfx.screen, 'lora', 'black', 'small', "Tjo!", 0, 300, 500, 500)
-text.print(gfx.screen, 'lora', 'black', 'medium', "Tjo!", 150, 300, 500, 500)
-text.print(gfx.screen, 'lora', 'black', 'large', "Tjo!", 300, 300, 500, 500)
+text.print(gfx.screen, 'lora', 'black', 'small', "Test", 0, 300, 500, 500)
+text.print(gfx.screen, 'lora', 'black', 'medium', "Test", 150, 300, 500, 500)
+text.print(gfx.screen, 'lora', 'black', 'large', "Test", 300, 300, 500, 500)
 
+--]]
 
 return text

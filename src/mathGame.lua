@@ -54,7 +54,6 @@ function chooseText(underGoingTest)
   return tempText
 end
 
-
 -- Require the graphics library and setting the background color
 
 gfx = chooseGfx(checkTestMode())
@@ -244,7 +243,7 @@ local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
   -- Printing the numbers on the correct position on the screen
   local sw = gfx.screen:get_width()  -- screen width
   local sh = gfx.screen:get_height() -- screen height
-  local fh = text.getFontHeight(arial) -- font height
+  local fh = text.getFontHeight('lato', 'large') -- font height
 
   position = {termOne   = {x = sw * 0.13, y = sh * 0.4},
                     operator  = {x = sw * 0.23, y = sh * 0.4},
@@ -266,31 +265,31 @@ local cutOut ={  red    = {x = xs     , y = y, w = d, h = d},
 
   local xOffset = 0     -- the horizontal offset to center the text over the position, half the strings width
   local yOffset = fh/2  -- the vertical offset to venter the text over the position, half the font height
-  xOffset = text.getStringLength(arial, tostring(mathProblem.termOne)) / 2
-  text.print(gfx.screen, arial, tostring(mathProblem['termOne']), position.termOne.x - xOffset ,position.termOne.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(mathProblem.termOne)) / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', tostring(mathProblem['termOne']), position.termOne.x - xOffset ,position.termOne.y + yOffset, xOffset*2, fh)
 
-  xOffset = text.getStringLength(arial, tostring(mathProblem.operator)) / 2
-  text.print(gfx.screen, arial, tostring(mathProblem['operator']), position.operator.x - xOffset, position.operator.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(mathProblem.operator)) / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', tostring(mathProblem['operator']), position.operator.x - xOffset, position.operator.y + yOffset, xOffset*2, fh)
 
-  xOffset = text.getStringLength(arial, tostring(mathProblem.termTwo)) / 2
-  text.print(gfx.screen, arial, tostring(mathProblem['termTwo']), position.termTwo.x -xOffset, position.termTwo.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(mathProblem.termTwo)) / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', tostring(mathProblem['termTwo']), position.termTwo.x -xOffset, position.termTwo.y + yOffset, xOffset*2, fh)
 
-  xOffset = text.getStringLength(arial, "=") / 2
-  text.print(gfx.screen, arial, "=", position.equals.x - xOffset, position.equals.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', "=") / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', "=", position.equals.x - xOffset, position.equals.y + yOffset, xOffset*2, fh)
 
   -- Printing the answers
  
-  xOffset = text.getStringLength(arial, tostring(answers[1])) / 2
-  text.print(gfx.screen, arial, tostring(answers[1]), position.red.x - xOffset, position.red.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(answers[1])) / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', tostring(answers[1]), position.red.x - xOffset, position.red.y + yOffset, xOffset*2, fh)
 
-  xOffset = text.getStringLength(arial, tostring(answers[2])) / 2
-  text.print(gfx.screen, arial, tostring(answers[2]), position.green.x - xOffset, position.green.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(answers[2])) / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', tostring(answers[2]), position.green.x - xOffset, position.green.y + yOffset, xOffset*2, fh)
 
-  xOffset = text.getStringLength(arial, tostring(answers[3])) / 2
-  text.print(gfx.screen, arial, tostring(answers[3]), position.yellow.x - xOffset, position.yellow.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(answers[3])) / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', tostring(answers[3]), position.yellow.x - xOffset, position.yellow.y + yOffset, xOffset*2, fh)
 
-  xOffset = text.getStringLength(arial, tostring(answers[4])) / 2  
-  text.print(gfx.screen, arial, tostring(answers[4]), position.blue.x - xOffset, position.blue.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(answers[4])) / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', tostring(answers[4]), position.blue.x - xOffset, position.blue.y + yOffset, xOffset*2, fh)
 
 
 end
@@ -303,10 +302,10 @@ function checkAnswer(correctAnswer, userAnswer)
 
   if (correctAnswer == userAnswer) then
    gfx.screen:clear({0,255,0})
-   message = text.print(gfx.screen, arial, "Correct", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
+   message = text.print(gfx.screen, 'lato', 'black', 'large', "Correct", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
   else 
    gfx.screen:clear({255,0,0})
-   message = text.print(gfx.screen, arial, "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)  
+   message = text.print(gfx.screen, 'lato', 'black', 'large', "Wrong", gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 - 100)
   end
 end
 
