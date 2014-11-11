@@ -60,14 +60,14 @@ local sh = gfx.screen:get_height() -- screen height
 local fh = text.getFontHeight('lato', 'large') -- font height
 local d = 160 -- diameter of circle
 
-position = {termOne   = {x = sw * 0.13, y = sh * 0.4 - d/5},
-          operator  = {x = sw * 0.23, y = sh * 0.4 - d/5},
-          termTwo   = {x = sw * 0.33, y = sh * 0.4 - d/5},
-          equals    = {x = sw * 0.43, y = sh * 0.4 - d/5}, 
-          red       = {x = sw * 0.55 - d/2, y = sh * 0.40, w = d, h = d}, --red answer circle position
-          yellow    = {x = sw * 0.70 - d/2, y = sh * 0.55, w = d, h = d}, --yellow answer circle position
-          blue      = {x = sw * 0.85 - d/2, y = sh * 0.40, w = d, h = d}, --blue answer circle
-          green     = {x = sw * 0.70 - d/2, y = sh * 0.25, w = d, h = d}} --green answer circle
+position = {termOne   = {x = sw * 0.13, y = sh * 0.37 },
+            operator  = {x = sw * 0.23, y = sh * 0.37 },
+            termTwo   = {x = sw * 0.33, y = sh * 0.37 },
+            equals    = {x = sw * 0.43, y = sh * 0.37 }, 
+            red       = {x = sw * 0.47, y = sh * 0.40 , w = d, h = d}, --red answer circle position
+            yellow    = {x = sw * 0.62, y = sh * 0.55 , w = d, h = d}, --yellow answer circle position
+            blue      = {x = sw * 0.77, y = sh * 0.40 , w = d, h = d}, --blue answer circle position
+            green     = {x = sw * 0.62, y = sh * 0.25 , w = d, h = d}} --green answer circle position
 
 
 
@@ -252,7 +252,7 @@ function placeAnswersOnCircles(answers)
   text.print(circle.red, 'lato', 'black', 'large', tostring(answers[1]), circle.red:get_width() /2 - xOffset, circle.red:get_height() /2 - yOffset, xOffset*2, fh)
  
   xOffset = text.getStringLength('lato', 'large', tostring(answers[2])) / 2
-  text.print(circle.green, 'lato', 'black', 'large', tostring(answers[2]), circle.green:get_width() /2 - xOffset, circle.green:get_height() /2 - yOffset, math.ceil(xOffset*2), fh)
+  text.print(circle.green, 'lato', 'black', 'large', tostring(answers[2]), circle.green:get_width() /2 - xOffset, circle.green:get_height() /2 - yOffset, xOffset*2, fh)
   
   xOffset = text.getStringLength('lato', 'large', tostring(answers[3])) / 2
   text.print(circle.yellow, 'lato', 'black', 'large', tostring(answers[3]), circle.yellow:get_width() /2 - xOffset, circle.yellow:get_height() /2 - yOffset, xOffset*2, fh)
