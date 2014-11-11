@@ -44,8 +44,9 @@ gfx = chooseGfx(checkTestMode())
 text = chooseText(checkTestMode())
 
 --gfx.screen:clear({255,255,255}) --RGB
+
 local background = gfx.loadpng('./images/background.png')
-gfx.screen:copyfrom(background,nil)
+gfx.screen:copyfrom(background, nil)
 
 gfx.update()
 
@@ -56,28 +57,29 @@ sideMenu = false
 gamePath = ''
 
 -- Create a new surface with 33% width and 100% height of the screen
-local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width()/3, gfx.screen:get_height())
+local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width() / 3, gfx.screen:get_height())
 local transparentSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
 local mainSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
-
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_menu_circle_width = 149
 local png_menu_circle_height = 147
-local png_menu_circles = { 	game1 = 'images/menu/main-menu_math.png',
-							game2 = 'images/menu/main-menu_memory.png',
-							game3 = 'images/menu/main-menu_spelling.png',
-							game4 = 'images/menu/main-menu_geography.png'
+local png_menu_circles = {
+  game1 = 'images/menu/main-menu_math.png',
+  game2 = 'images/menu/main-menu_memory.png',
+  game3 = 'images/menu/main-menu_spelling.png',
+  game4 = 'images/menu/main-menu_geography.png'
 }
 
 -- All side menu items as .png pictures as transparent background with width and height variables
 local png_side_menu_circle_width = 115
 local png_circle_height = 112
-local png_side_menu_circles = { game1 = 'images/side-menu/side-menu-math.png',
-								game2 = 'images/side-menu/side-menu-memory.png',
-								game3 = 'images/side-menu/side-menu-spelling.png',
-								game4 = 'images/side-menu/side-menu-geography.png',
-								game5 = 'images/side-menu/side-menu-users.png'
+local png_side_menu_circles = {
+  game1 = 'images/side-menu/side-menu-math.png',
+  game2 = 'images/side-menu/side-menu-memory.png',
+  game3 = 'images/side-menu/side-menu-spelling.png',
+  game4 = 'images/side-menu/side-menu-geography.png',
+  game5 = 'images/side-menu/side-menu-users.png'
 }
 
 -- Logotype as .png pictuere with transparent background with width variable
@@ -92,7 +94,7 @@ function printSideMenu()
 	local function printTransparentSurface()
 
 		transparentSrfc:clear() -- Initializes transparentSrfc
-		transparentSrfc:fill({0,0,0,127}) --RGBA -- should be 50% transparent
+		transparentSrfc:fill({0, 0, 0, 127}) --RGBA -- should be 50% transparent
 		gfx.screen:copyfrom(transparentSrfc, nil, {x=0, y=0}) -- Prints transparentSrfc
 
 	end
