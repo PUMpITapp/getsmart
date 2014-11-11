@@ -1,20 +1,60 @@
 --- Menu
 -- 
--- The menu for the application GetSmart
+-- The start- and side menu for the application GetSmart
 --
--- !! Contains main menu functions and variables until side menu is fully functional and tested !!
+
+--- Checks if the file was called from a test file.
+-- Returs true if it was, 
+--   - which would mean that the file is being tested.
+-- Returns false if it was not,
+--   - which wold mean that the file was being used.  
+function checkTestMode()
+  runFile = debug.getinfo(2, "S").source:sub(2,3)
+  if (runFile ~= './' ) then
+    underGoingTest = false
+  elseif (runFile == './') then
+    underGoingTest = true
+  end
+  return underGoingTest
+end
+
+--- Chooses either the actual or he dummy gfx.
+-- Returns dummy gfx if the file is being tested.
+-- Rerunes actual gfx if the file is being run.
+function chooseGfx(underGoingTest)
+  if not underGoingTest then
+    tempGfx = require "gfx"
+  elseif underGoingTest then
+    tempGfx = require "gfx_stub"
+  end
+  return tempGfx
+end
+
+function chooseText(underGoingTest)
+  if not underGoingTest then
+    tempText = require "write_text"
+  elseif underGoingTest then
+    tempText = require "write_text_stub"
+  end
+  return tempText
+end
 
 -- Require the grafics library and setting the background color
-local gfx = require "gfx"
---gfx.screen
--- -- :clear({255,255,255}) --RGB
+gfx = chooseGfx(checkTestMode())
+text = chooseText(checkTestMode())
+
+--gfx.screen:clear({255,255,255}) --RGB
+
 local background = gfx.loadpng('./images/background.png')
 gfx.screen:copyfrom(background, nil)
 
 gfx.update()
 
--- set boolean controlling if side menu is showing to false
+-- Boolean controlling if side menu is showing
 sideMenu = false
+
+-- String which holds what game is to be loaded
+gamePath = ''
 
 -- Create a new surface with 33% width and 100% height of the screen
 local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width() / 3, gfx.screen:get_height())
@@ -143,18 +183,23 @@ function onKey(key,state)
   elseif state == 'up' then
 	  if(key == 'red') then
         sideMenu = false
-        dofile('mathGame.lua')
+        gamePath = 'mathGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'green') then
         sideMenu = false
-        dofile('memoryGame.lua')
+        gamePath = 'memoryGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'yellow') then
         sideMenu = false
-        dofile('spellingGame.lua')
+        gamePath = 'spellingGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'blue') then
         sideMenu = false
-        dofile('geographyGame.lua')
+        gamePath = 'geographyGame.lua'
+        runGame(gamePath, underGoingTest)
+		--[[
 	  elseif(key=='M') then
-	  	if(not sideMenu) then
+	  	if(not sideMenu ) then
 	  		sideMenu = true
 	  		setMainSrfc()
 	  		printSideMenu()
@@ -162,8 +207,16 @@ function onKey(key,state)
 	  		sideMenu = false
 	  		changeSrfc()
 	  	end
+	  	]]
 	  end
   end
+end
+
+-- Runs chosen game (file) if testing mode is off
+function runGame(path, testingModeOn)
+	if(not testingModeOn) then
+		dofile(path)
+	end
 end
 
 -- Main function that runs the program
