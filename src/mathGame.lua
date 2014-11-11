@@ -84,7 +84,7 @@ local function main()
   local mathProblem = produceMathProblem(level)
   correctAnswer = solveProblem(mathProblem)
   local answers = produceAnswers(correctAnswer)
-  placeAnswerBackground()
+  --placeAnswerBackground()
   printProblem(mathProblem, answers)
 
 end

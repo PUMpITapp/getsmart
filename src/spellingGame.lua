@@ -8,10 +8,11 @@ text.print(gfx.screen, arial, "Spelling Game coming soon!", 70 , 300 )
 
 function init()
   answerTable = {
-    {'Yesterday',{{2,3},{6,7}},{{'es','is','ez','oys'},{'rd','d','rp','ld'}}}
+    {'Yesterday',{{2,3},{6,7}},{{'es','is','ez','oys'},{'rd','d','rp','ld'}}},
+    {'Artichoke',{{3,4}},{{'ti','tie','te','to'}}}
   }
   rightAlternatives = {} 
-  imagers = {['colors'] = "images/color_choices.png"} 
+  images = {['colors'] = "images/color_choices.png"} 
 end
 
 function main()
@@ -93,8 +94,11 @@ function printAlternatives(alternatives, position, selected, diameter)
     selected = 3
   end
 
+  createAnswerBackground()
+  placeAnswersOnCircles(alternatives)
+
   for i = 1, #alternatives do
-    text.print(gfx.screen, arial, alternatives[i], position.x, position.y - diameter*selected + diameter*(i-1))
+    text.print(gfx.screen, 'lato', 'black', 'large', alternatives[i], position.x, position.y - diameter*selected + diameter*(i-1))
   end
 
 end
@@ -152,22 +156,20 @@ end
 
 function printQuestion(question)
   gfx.screen:clear({122,219,228})
-  -- wordLeftSide = question[1]:sub(1,question[2][1][1]-1)
+  
   local diameter = 120
   local position = {
     x = gfx.screen:get_height() /2 - diameter,
     y = gfx.screen:get_height()/ 2 - 100
   }
 
-  colorsImg = gfx.loadpng(images.colors)
-
   for i = 1, #question[1] do
 
     position.x = position.x + diameter
 
-    text.print(gfx.screen, arial, question[1][i], position.x ,  position.y)
+    text.print(gfx.screen, 'lato', 'black', 'large', question[1][i], position.x ,  position.y)
 
-    position.x = position.x + text.getStringLength(arial,question[1][i])  
+    position.x = position.x + text.getStringLength('lato', 'large',question[1][i])  
 
     if  i <= #question[2] then
       printAlternatives(question[2][i],position,'yellow',diameter)
