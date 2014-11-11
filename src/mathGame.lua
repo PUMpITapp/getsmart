@@ -53,20 +53,22 @@ answered = {red = false,
             green = false}
 
 
+
 -- Printing the numbers on the correct position on the screen
 local sw = gfx.screen:get_width()  -- screen width
 local sh = gfx.screen:get_height() -- screen height
-local fh = text.getFontHeight(arial) -- font height
+local fh = text.getFontHeight('lato', 'large') -- font height
 local d = 160 -- diameter of circle
 
-position = {termOne   = {x = sw * 0.13, y = sh * 0.4},
-          operator  = {x = sw * 0.23, y = sh * 0.4},
-          termTwo   = {x = sw * 0.33, y = sh * 0.4},
-          equals    = {x = sw * 0.43, y = sh * 0.4},
-          red       = {x = sw * 0.55 - d/2, y = sh * 0.40, w = d, h = d},
-          yellow    = {x = sw * 0.70 - d/2, y = sh * 0.55, w = d, h = d},
-          blue      = {x = sw * 0.85 - d/2, y = sh * 0.40, w = d, h = d},
-          green     = {x = sw * 0.70 - d/2, y = sh * 0.25, w = d, h = d}}
+position = {termOne   = {x = sw * 0.13, y = sh * 0.4 - d/5},
+          operator  = {x = sw * 0.23, y = sh * 0.4 - d/5},
+          termTwo   = {x = sw * 0.33, y = sh * 0.4 - d/5},
+          equals    = {x = sw * 0.43, y = sh * 0.4 - d/5}, 
+          red       = {x = sw * 0.55 - d/2, y = sh * 0.40, w = d, h = d}, --red answer circle position
+          yellow    = {x = sw * 0.70 - d/2, y = sh * 0.55, w = d, h = d}, --yellow answer circle position
+          blue      = {x = sw * 0.85 - d/2, y = sh * 0.40, w = d, h = d}, --blue answer circle
+          green     = {x = sw * 0.70 - d/2, y = sh * 0.25, w = d, h = d}} --green answer circle
+
 
 
 
@@ -243,20 +245,20 @@ end
 --@param #number answers The answer options that is given to the user 
 function placeAnswersOnCircles(answers)
 -- Printing the answers
-  local fh = text.getFontHeight(arial) -- font height
-  local yOffset = text.getFontHeight(arial) /2
+  local fh = text.getFontHeight('lato', 'large') -- font height
+  local yOffset = fh /2
 
-  local xOffset = text.getStringLength(arial, tostring(answers[1])) / 2
-  text.print(circle.red, arial, tostring(answers[1]), circle.red:get_width() /2 - xOffset, circle.red:get_height() /2 - yOffset, xOffset*2, fh)
+  local xOffset = text.getStringLength('lato', 'large', tostring(answers[1])) / 2
+  text.print(circle.red, 'lato', 'black', 'large', tostring(answers[1]), circle.red:get_width() /2 - xOffset, circle.red:get_height() /2 - yOffset, xOffset*2, fh)
  
-  xOffset = text.getStringLength(arial, tostring(answers[2])) / 2
-  text.print(circle.green, arial, tostring(answers[2]), circle.green:get_width() /2 - xOffset, circle.green:get_height() /2 - yOffset, math.ceil(xOffset*2), fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(answers[2])) / 2
+  text.print(circle.green, 'lato', 'black', 'large', tostring(answers[2]), circle.green:get_width() /2 - xOffset, circle.green:get_height() /2 - yOffset, math.ceil(xOffset*2), fh)
   
-  xOffset = text.getStringLength(arial, tostring(answers[3])) / 2
-  text.print(circle.yellow, arial, tostring(answers[3]), circle.yellow:get_width() /2 - xOffset, circle.yellow:get_height() /2 - yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(answers[3])) / 2
+  text.print(circle.yellow, 'lato', 'black', 'large', tostring(answers[3]), circle.yellow:get_width() /2 - xOffset, circle.yellow:get_height() /2 - yOffset, xOffset*2, fh)
   
-  xOffset = text.getStringLength(arial, tostring(answers[4])) / 2
-  text.print(circle.blue, arial, tostring(answers[4]), circle.blue:get_width() /2 - xOffset, circle.blue:get_height() /2 - yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(answers[4])) / 2
+  text.print(circle.blue, 'lato', 'black', 'large', tostring(answers[4]), circle.blue:get_width() /2 - xOffset, circle.blue:get_height() /2 - yOffset, xOffset*2, fh)
 end
 
 
@@ -269,24 +271,25 @@ function placeAnswerCircles()
 end
 
 
-
 --- Displays the problem and the answers on the screen by invoking write_text.lua.
 -- @param #table mathProblem The problem to be displayed on the screen.
 function printProblem(mathProblem)
 
   local xOffset = 0     -- the horizontal offset to center the text over the position, half the strings width
   local yOffset = fh/2  -- the vertical offset to venter the text over the position, half the font height
-  xOffset = text.getStringLength(arial, tostring(mathProblem.termOne)) / 2
-  text.print(gfx.screen, arial, tostring(mathProblem['termOne']), position.termOne.x - xOffset ,position.termOne.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(mathProblem.termOne)) / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', tostring(mathProblem['termOne']), position.termOne.x - xOffset ,position.termOne.y + yOffset, xOffset*2, fh)
 
-  xOffset = text.getStringLength(arial, tostring(mathProblem.operator)) / 2
-  text.print(gfx.screen, arial, tostring(mathProblem['operator']), position.operator.x - xOffset, position.operator.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(mathProblem.operator)) / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', tostring(mathProblem['operator']), position.operator.x - xOffset, position.operator.y + yOffset, xOffset*2, fh)
 
-  xOffset = text.getStringLength(arial, tostring(mathProblem.termTwo)) / 2
-  text.print(gfx.screen, arial, tostring(mathProblem['termTwo']), position.termTwo.x -xOffset, position.termTwo.y + yOffset, xOffset*2, fh)
+  xOffset = text.getStringLength('lato', 'large', tostring(mathProblem.termTwo)) / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', tostring(mathProblem['termTwo']), position.termTwo.x -xOffset, position.termTwo.y + yOffset, xOffset*2, fh)
 
-  xOffset = text.getStringLength(arial, "=") / 2
-  text.print(gfx.screen, arial, "=", position.equals.x - xOffset, position.equals.y + yOffset, xOffset*2, fh)
+
+  xOffset = text.getStringLength('lato', 'large', "=") / 2
+  text.print(gfx.screen, 'lato', 'black', 'large', "=", position.equals.x - xOffset, position.equals.y + yOffset, xOffset*2, fh)
+
 end
 
 
@@ -296,6 +299,7 @@ end
 -- @param #string key The button pressed
 function checkAnswer(correctAnswer, userAnswer, key)
   if (correctAnswer == userAnswer) then
+
     answered[key] = true
     for key,val in pairs(answered) do
       if (not val) then
