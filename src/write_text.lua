@@ -10,7 +10,9 @@ local text = {}
 -- @param w Width of textbox
 -- @param h Height of textbox
 function text.print(surface, fontFace, fontColor, fontSize, text, x, y, w, h)
-
+  fontFace = string.lower(fontFace)
+  fontColor = string.lower(fontColor)
+  fontSize = string.lower(fontSize)
   -- Check that params are valid
   if (fontFace ~= 'lato' and fontFace ~= 'lora') then
     print('fontFace not found, should be lato or lora')
