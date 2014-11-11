@@ -48,11 +48,17 @@ local background = gfx.loadpng('./images/background_login.png')
 gfx.screen:copyfrom(background,nil)
 gfx.update()
 
--- 
-local chosenPlayer = 0
+-- String which holds what game is to be loaded
+local gamePath = ''
+
+-- Table which holds the table containing the profiles and all of it's variables. Is initialized in initialize()
+local localProfiles = {}
 
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 require "profiles"
+
+-- The recieved argument, in this case the player number
+local playerNumber = ...
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_profile_circle_width = 149
@@ -74,6 +80,30 @@ local png_logo = 'images/logo.png'
 -- Directory of images
 local dir = './'
 
+-- Copys whole table and all of it's children
+-- Source: http://lua-users.org/wiki/CopyTable
+function deepCopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[deepCopy(orig_key)] = deepCopy(orig_value)
+        end
+        setmetatable(copy, deepCopy(getmetatable(orig)))
+    else 
+        copy = orig
+    end
+    return copy
+end
+
+-- Does all necessary initialization of tables and variables
+function initialize()
+
+	localProfiles = deepCopy(profiles)
+	
+end
+
 -- Prints main menu
 function printMenuCircles()
 
@@ -89,9 +119,9 @@ function printMenuCircles()
 
 	-- Prints menu items
 	for i = 50, 1000, 250 do
-
+	
 		-- Checks if the user is active
-		if(profiles['player'..gameCounter]['isActive']) then
+		if(localProfiles['player'..gameCounter]['isActive']) then
 			status = 'active'
 		else
 			status = 'inactive'
@@ -124,40 +154,55 @@ function onKey(key,state)
 
   elseif state == 'up' then
 	  if(key == 'red') then
-        gamePath = 'mathGame.lua'
-        chosenPlayer = 1
-        runGame(gamePath, underGoingTest, chosenPlayer)
+        sideMenu = false
+        
+		local newForm = {
+			laststate = "RegistrationStep1.lua",
+			currentInputField = "name",
+			name = "",
+			address= "",
+			zipCode ="",
+			city = "",
+			phone="",
+			email = ""
+			}
+			
+        assert(loadfile("Keyboard.lua"))(newForm)
+        --runGame(gamePath, underGoingTest)
       elseif(key == 'green') then
+        sideMenu = false
         gamePath = 'memoryGame.lua'
-		chosenPlayer = 2
-        runGame(gamePath, underGoingTest, chosenPlayer)
+        --runGame(gamePath, underGoingTest)
       elseif(key == 'yellow') then
+        sideMenu = false
         gamePath = 'spellingGame.lua'
-        chosenPlayer = 3
-        runGame(gamePath, underGoingTest, chosenPlayer)
+        --runGame(gamePath, underGoingTest)
       elseif(key == 'blue') then
+        sideMenu = false
         gamePath = 'geographyGame.lua'
-        chosenPlayer = 4
-        runGame(gamePath, underGoingTest, chosenPlayer)
+        --runGame(gamePath, underGoingTest)
 	  end
   end
 end
 
--- Runs chosen game (file) if testing mode is off 
-function runGame(path, testingModeOn, chosenPlayer)
-	if(not testingModeOn and profiles['player'..chosenPlayer]['isActive']) then
-		assert(loadfile("menu.lua"))(chosenPlayer)
-	elseif(not testingModeOn and not profiles['player'..chosenPlayer]['isActive']) then
-		assert(loadfile("newProfile.lua"))(chosenPlayer)
+-- Runs chosen game (file) if testing mode is off
+function runGame(path, testingModeOn)
+	if(not testingModeOn) then
+		dofile(path)
 	end
 end
+
 
 
 -- Main function that runs the program
 local function main()
 
-  printMenuCircles()  
+  --printMenuCircles()  
   --printLogotype()
+  --print(profiles.player1['name'])
+  
+
+  print("Player: " .. playerNumber)
 
 end
 
