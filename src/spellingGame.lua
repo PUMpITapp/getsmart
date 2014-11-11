@@ -99,6 +99,57 @@ function printAlternatives(alternatives, position, selected, diameter)
 
 end
 
+
+----------------------------------------------------
+--- create the background and the "circles" for the answers
+function createAnswerBackground()
+  colorsImg = gfx.loadpng(images.colors)
+
+  -- Positions in the circle sprite.
+  local xs =40  -- x starting coordinate
+  local y = xs  -- y position
+  local d = 160 -- diameter of circle
+  local cutOut ={  red    = {x= xs      , y = y, w = d, h = d},
+                   yellow = {x= xs + d  , y = y, w = d, h = d},
+                   blue   = {x= xs + d*2, y = y, w = d, h = d},
+                   green  = {x= xs + d*3, y = y, w = d, h = d}}
+
+
+  circle = {
+  red = gfx.new_surface(cutOut.red.w, cutOut.red.h),
+  green = gfx.new_surface(cutOut.green.w, cutOut.green.h),
+  yellow = gfx.new_surface(cutOut.yellow.w, cutOut.yellow.h),
+  blue = gfx.new_surface(cutOut.blue.w, cutOut.blue.h)}
+
+  circle.red:copyfrom(colorsImg, cutOut.red, true)
+  circle.green:copyfrom(colorsImg, cutOut.green, true)
+  circle.yellow:copyfrom(colorsImg, cutOut.yellow, true)
+  circle.blue:copyfrom(colorsImg, cutOut.blue, true)
+
+end
+--- place the answers to the right position in their circle
+--@param #number answers The answer options that is given to the user 
+function placeAnswersOnCircles(answers)
+-- Printing the answers
+  local fh = text.getFontHeight('lato', 'large') -- font height
+  local yOffset = fh /2
+
+  local xOffset = text.getStringLength('lato', 'large', tostring(answers[1])) / 2
+  text.print(circle.red, 'lato', 'black', 'large', tostring(answers[1]), circle.red:get_width() /2 - xOffset, circle.red:get_height() /2 - yOffset, xOffset*2, fh)
+ 
+  xOffset = text.getStringLength('lato', 'large', tostring(answers[2])) / 2
+  text.print(circle.green, 'lato', 'black', 'large', tostring(answers[2]), circle.green:get_width() /2 - xOffset, circle.green:get_height() /2 - yOffset, math.ceil(xOffset*2), fh)
+  
+  xOffset = text.getStringLength('lato', 'large', tostring(answers[3])) / 2
+  text.print(circle.yellow, 'lato', 'black', 'large', tostring(answers[3]), circle.yellow:get_width() /2 - xOffset, circle.yellow:get_height() /2 - yOffset, xOffset*2, fh)
+  
+  xOffset = text.getStringLength('lato', 'large', tostring(answers[4])) / 2
+  text.print(circle.blue, 'lato', 'black', 'large', tostring(answers[4]), circle.blue:get_width() /2 - xOffset, circle.blue:get_height() /2 - yOffset, xOffset*2, fh)
+end
+
+
+----------------------------------------------------
+
 function printQuestion(question)
   gfx.screen:clear({122,219,228})
   -- wordLeftSide = question[1]:sub(1,question[2][1][1]-1)
