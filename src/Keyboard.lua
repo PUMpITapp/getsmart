@@ -13,14 +13,19 @@ local symbolPressedPNG = gfx.loadpng("Images/KeyboardPics/symbolPressed.png")
 local spacePressedPNG = gfx.loadpng("Images/KeyboardPics/spacePressed.png")
 local keyboardState = lowerCasePNG
 
+-- Scrum team 1 changes
+local keyboardPositionY = 4.7	-- Originally 3
+local keyboardPositionX = 3		-- Originally 3
+-- End Scrum team 1 changes
+
 local xUnit = gfx.screen:get_width()/16	-- units of the screen. based on 16:9 ratio
 local yUnit = gfx.screen:get_height()/9	-- units of the screen. based on 16:9 ratio
 local keyboardWidth = 10 * xUnit 	-- width of keyboard. can be changed to fit
 local keyboardHeight = 4 * yUnit 	-- height of keyabord. can be changed to fit
 local keyboardXUnit = keyboardWidth/10 -- margin in x for keyboard keys. 10 keys each row
 local keyboardYUnit = keyboardHeight/4 -- margin in y for keyboard keys. 4 keys each column
-local keyboardPosX = 3 * xUnit 		-- keyboard start posx. can be changed
-local keyboardPosY = 3 * yUnit 		-- keyboard start posy. can be changed
+local keyboardPosX = keyboardPositionX * xUnit 		-- keyboard start posx. can be changed
+local keyboardPosY = keyboardPositionY * yUnit 		-- keyboard start posy. can be changed
 local highlightPosX = 1 			-- pos on keyboard posx
 local highlightPosY = 1 			-- pos on keyboard posy
 local inputText = ""	-- text to display
@@ -220,7 +225,7 @@ end
 function displayKeyboardSurface()
 	keyboardSurface:clear()
 	keyboardSurface:copyfrom(keyboardPNG)
-	gfx.screen:copyfrom(keyboardSurface,nil, {x=4 * xUnit, y= 4 * yUnit, w=keyboardWidth, h=keyboardHeight})
+	gfx.screen:copyfrom(keyboardSurface,nil, {x=keyboardPositionX * xUnit, y=keyboardPositionY * yUnit, w=keyboardWidth, h=keyboardHeight})
 	-- gfx.screen:copyfrom(keyboardPNG,nil, {x=3 * xUnit, y= 3 * yUnit, w=keyboardWidth, h=keyboardHeight})
 end
 
@@ -267,7 +272,7 @@ end
 function displayKeyboardLetters()
 	-- letterSurface:clear()
 	-- letterSurface:copyfrom(lowerCasePNG)
-	gfx.screen:copyfrom(keyboardState,nil,{x=3 * xUnit, y= 3 * yUnit, w=keyboardWidth, h=keyboardHeight})
+	gfx.screen:copyfrom(keyboardState,nil,{x=keyboardPositionX * xUnit, y=keyboardPositionY * yUnit, w=keyboardWidth, h=keyboardHeight})
 end
 
 -- displays the saved text on screen

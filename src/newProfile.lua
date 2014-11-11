@@ -56,6 +56,7 @@ require "profiles"
 
 -- The recieved argument, in this case the player number
 local playerNumber = ...
+playerNumber = tonumber(playerNumber)
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_profile_circle_width = 149
@@ -84,19 +85,6 @@ function onKey(key,state)
   elseif state == 'up' then
 	  if(key == 'red') then
         sideMenu = false
-        
-		local newForm = {
-			laststate = "newProfile.lua",
-			currentInputField = "name",
-			name = "",
-			address= "",
-			zipCode ="",
-			city = "",
-			phone="",
-			email = ""
-			}
-			
-        assert(loadfile("Keyboard.lua"))(newForm)
         --runGame(gamePath, underGoingTest)
       elseif(key == 'green') then
         sideMenu = false
@@ -123,6 +111,13 @@ end
 
 -- Main function that runs the program
 local function main()
+
+	local newForm = {
+		laststate = "newProfile.lua",
+		currentInputField = "name"
+		}
+		
+    assert(loadfile("Keyboard.lua"))(newForm)
 
   --printMenuCircles()  
   --printLogotype()
