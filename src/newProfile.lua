@@ -1,6 +1,6 @@
---- Login
+--- New Profile
 -- 
--- The login function for the app GetSmart
+-- This file handles the creation of a new user
 --
 
 --- Checks if the file was called from a test file.
@@ -80,74 +80,6 @@ local png_logo = 'images/logo.png'
 -- Directory of images
 local dir = './'
 
--- Copys whole table and all of it's children
--- Source: http://lua-users.org/wiki/CopyTable
-function deepCopy(orig)
-    local orig_type = type(orig)
-    local copy
-    if orig_type == 'table' then
-        copy = {}
-        for orig_key, orig_value in next, orig, nil do
-            copy[deepCopy(orig_key)] = deepCopy(orig_value)
-        end
-        setmetatable(copy, deepCopy(getmetatable(orig)))
-    else 
-        copy = orig
-    end
-    return copy
-end
-
--- Does all necessary initialization of tables and variables
-function initialize()
-
-	localProfiles = deepCopy(profiles)
-	
-end
-
--- Prints main menu
-function printMenuCircles()
-
-	-- Prints circle according to img, x and y values
-	function printCircle(img, xIn, yIn)
-		local scale = 0.5
-		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale})
-	end
-
-	local toScreen = nil
-	local gameCounter = 1
-	local status = ''
-
-	-- Prints menu items
-	for i = 50, 1000, 250 do
-	
-		-- Checks if the user is active
-		if(localProfiles['player'..gameCounter]['isActive']) then
-			status = 'active'
-		else
-			status = 'inactive'
-		end
-		
-		toScreen = gfx.loadpng(dir..png_profile_circles['profile'..gameCounter.."_"..status])
-		printCircle(toScreen, i, 450)
-		gameCounter = gameCounter+1
-	end
-		
-	gfx.update()
-
-end
-
--- Prints logotype in the middle of the screen
-function printLogotype()
-	
-	local toScreen = nil
-	
-	toScreen = gfx.loadpng(dir..png_logo)
-	scale = 0.5
-	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2 *scale), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
-	gfx.update()
-
-end
-
 -- Gets input from user and executes chosen script
 function onKey(key,state)
  if state == 'down' then
@@ -157,7 +89,7 @@ function onKey(key,state)
         sideMenu = false
         
 		local newForm = {
-			laststate = "RegistrationStep1.lua",
+			laststate = "newProfile.lua",
 			currentInputField = "name",
 			name = "",
 			address= "",
@@ -192,8 +124,6 @@ function runGame(path, testingModeOn)
 	end
 end
 
-
-
 -- Main function that runs the program
 local function main()
 
@@ -202,7 +132,7 @@ local function main()
   --print(profiles.player1['name'])
   
 
-  print("Player: " .. playerNumber)
+  --print("Player: " .. playerNumber)
 
 end
 
