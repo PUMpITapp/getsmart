@@ -51,9 +51,6 @@ gfx.update()
 -- String which holds what game is to be loaded
 local gamePath = ''
 
--- Table which holds the table containing the profiles and all of it's variables. Is initialized in initialize()
-local localProfiles = {}
-
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 require "profiles"
 

@@ -220,7 +220,7 @@ end
 function displayKeyboardSurface()
 	keyboardSurface:clear()
 	keyboardSurface:copyfrom(keyboardPNG)
-	gfx.screen:copyfrom(keyboardSurface,nil, {x=3 * xUnit, y= 3 * yUnit, w=keyboardWidth, h=keyboardHeight})
+	gfx.screen:copyfrom(keyboardSurface,nil, {x=4 * xUnit, y= 4 * yUnit, w=keyboardWidth, h=keyboardHeight})
 	-- gfx.screen:copyfrom(keyboardPNG,nil, {x=3 * xUnit, y= 3 * yUnit, w=keyboardWidth, h=keyboardHeight})
 end
 
