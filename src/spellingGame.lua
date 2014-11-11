@@ -8,9 +8,10 @@ text.print(gfx.screen, arial, "Spelling Game coming soon!", 70 , 300 )
 
 function init()
   answerTable = {
-    {'across',{{5,6}},{{'ss','s','cs','x'}}}
+    {'Yesterday',{{2,3},{6,7}},{{'es','is','ez','oys'},{'rd','d','rp','ld'}}}
   }
-  rightAlternatives = {}  
+  rightAlternatives = {} 
+  imagers = {['colors'] = "images/color_choices.png"} 
 end
 
 function main()
@@ -50,8 +51,15 @@ function splitIntoWordParts(word,Intervalls)
   local previousUpperLimit = 0
 
   for i = 1, #Intervalls do
-    wordParts[i] = word:sub(previousUpperLimit + 1, Intervalls[i][1] - 1)
-    previousUpperLimit = Intervalls[i][2]    
+    if Intervalls[i][1] > 1 then
+      wordParts[i] = word:sub(previousUpperLimit + 1, Intervalls[i][1] - 1)
+    end
+
+    previousUpperLimit = Intervalls[i][2]
+  end
+
+  if Intervalls[#Intervalls][2] < word:len() then
+    wordParts[#Intervalls+1] = word:sub(previousUpperLimit+1)
   end
 
   return wordParts
@@ -62,16 +70,8 @@ function generateQuestion(wordArray)
     rightAlternatives[i] = wordArray[3][i][1]
   end
 
-  local numberOfWordParts = 5
-
-  if wordArray[1]:len() == wordArray[2][#wordArray[2]][2] then
-    numberOfWordParts = #wordArray[2]
-  elseif wordArray[1]:len() > wordArray[2][#wordArray[2]][2] then
-    numberOfWordParts = #wordArray[2] + 1
-  end
-
   wordParts = splitIntoWordParts(wordArray[1],wordArray[2])
-  scrambledAlternatives = {}
+  local scrambledAlternatives = {}
 
   for i=1, #wordArray[3] do
     scrambledAlternatives[i] = shuffleOrder(wordArray[3][i])
@@ -82,13 +82,51 @@ function generateQuestion(wordArray)
   return question
 end
 
+function printAlternatives(alternatives, position, selected, diameter)
+  if selected == 'red' then
+    selected = 0
+  elseif selected == 'green' then
+    selected = 1
+  elseif selected == 'yellow' then
+    selected = 2
+  elseif selected == 'blue' then
+    selected = 3
+  end
+
+  for i = 1, #alternatives do
+    text.print(gfx.screen, arial, alternatives[i], position.x, position.y - diameter*selected + diameter*(i-1))
+  end
+
+end
+
 function printQuestion(question)
   gfx.screen:clear({122,219,228})
   -- wordLeftSide = question[1]:sub(1,question[2][1][1]-1)
-  text.print(gfx.screen, arial, question[1][1], gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
-  for i=1, #question[2][1] do
-    text.print(gfx.screen, arial, question[2][1][i], gfx.screen:get_height() /2 + 150,  gfx.screen:get_height() /2 - 50*(i-1))    
+  local diameter = 120
+  local position = {
+    x = gfx.screen:get_height() /2 - diameter,
+    y = gfx.screen:get_height()/ 2 - 100
+  }
+
+  colorsImg = gfx.loadpng(images.colors)
+
+  for i = 1, #question[1] do
+
+    position.x = position.x + diameter
+
+    text.print(gfx.screen, arial, question[1][i], position.x ,  position.y)
+
+    position.x = position.x + text.getStringLength(arial,question[1][i])  
+
+    if  i <= #question[2] then
+      printAlternatives(question[2][i],position,'yellow',diameter)
+    end
+
   end
+
+  --[[for i=1, #question[2][1] do
+    text.print(gfx.screen, arial, question[2][1][i], gfx.screen:get_height() /2 + 150,  gfx.screen:get_height() /2 - 50*(i-1))    
+  end]]
   --text.print(gfx.screen, arial, w, gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
 end
 
