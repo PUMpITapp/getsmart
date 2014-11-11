@@ -109,8 +109,17 @@ function runGame(path, testingModeOn)
 	end
 end
 
+local function printPlayerNumber()
+	local fh = text.getFontHeight('lato', 'large')
+	local fw = text.getStringLength('lato', 'large', tostring('Player'..playerNumber))
+	text.print(gfx.screen, "lato", "black", "large", tostring("Player"..playerNumber), (gfx.screen:get_width()/2 - (fw/2)), (gfx.screen:get_height()*0.05), fw, fh)
+
+end
+
 -- Main function that runs the program
 local function main()
+
+ printPlayerNumber()
 
 	local newForm = {
 		laststate = "newProfile.lua",
