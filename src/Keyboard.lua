@@ -14,12 +14,14 @@ local spacePressedPNG = gfx.loadpng("Images/KeyboardPics/spacePressed.png")
 local keyboardState = lowerCasePNG
 
 -- Scrum team 1 changes
-local keyboardPositionY = 4.7	-- Originally 3
+local keyboardPositionY = 7	-- Originally 3
 local keyboardPositionX = 3		-- Originally 3
+local inputPositionY = 3		-- Originally 3
+local inputPositionX = 2		-- Originally 3
 -- End Scrum team 1 changes
 
 local xUnit = gfx.screen:get_width()/16	-- units of the screen. based on 16:9 ratio
-local yUnit = gfx.screen:get_height()/9	-- units of the screen. based on 16:9 ratio
+local yUnit = gfx.screen:get_height()/12	-- units of the screen. based on 16:9 ratio
 local keyboardWidth = 10 * xUnit 	-- width of keyboard. can be changed to fit
 local keyboardHeight = 4 * yUnit 	-- height of keyabord. can be changed to fit
 local keyboardXUnit = keyboardWidth/10 -- margin in x for keyboard keys. 10 keys each row
@@ -281,9 +283,9 @@ function displayInputField()
 	inputSurface:clear()
 	inputSurface:copyfrom(textAreaPNG)
 	-- inputSurface:fill({r=255, g=255, b=255, a=0})
-	gfx.screen:copyfrom(inputSurface, nil ,{x=2 * xUnit, y=2 * yUnit, w=12 * xUnit, h=yUnit}) --colours the saved text field
+	gfx.screen:copyfrom(inputSurface, nil ,{ x = inputPositionX * xUnit, y = inputPositionY * yUnit, w = 12 * xUnit, h = 2 * yUnit}) --colours the saved text field
 	-- gfx.screen:copyfrom(textAreaPNG, nil ,{x=2 * xUnit, y=2 *yUnit,w = 12* xUnit, h = yUnit})
-	text.print(gfx.screen, arial, inputText, 2 * xUnit, 2 * yUnit, 12 * xUnit, yUnit)
+	text.print(gfx.screen, 'lato', 'black', 'large', inputText, inputPositionX * xUnit, inputPositionY * yUnit, 12 * xUnit, yUnit)
 end
 
 --gets the coordinate of arguments

@@ -44,8 +44,8 @@ gfx = chooseGfx(checkTestMode())
 text = chooseText(checkTestMode())
 
 --gfx.screen:clear({255,255,255}) --RGB
-local background = gfx.loadpng('./images/background_login.png')
-gfx.screen:copyfrom(background,nil)
+local background = gfx.loadpng('./images/background_new_player.png')
+gfx.screen:copyfrom(background, nil)
 gfx.update()
 
 -- String which holds what game is to be loaded
@@ -71,7 +71,7 @@ local png_profile_circles = { 	profile1_inactive = 'images/profile/red-inactive.
 								profile4_active = 'images/profile/blue-active.png'
 }
 
--- Logotype as .png pictuere with transparent background with width variable
+-- Logotype as .png picture with transparent background with width variable
 local png_logo_width = 447
 local png_logo = 'images/logo.png'
 
@@ -79,7 +79,7 @@ local png_logo = 'images/logo.png'
 local dir = './'
 
 -- Gets input from user and executes chosen script
-function onKey(key,state)
+function onKey(key, state)
  if state == 'down' then
 
   elseif state == 'up' then
@@ -113,14 +113,13 @@ end
 local function printPlayerNumber()
 	local fh = text.getFontHeight('lato', 'large')
 	local fw = text.getStringLength('lato', 'large', tostring('Player'..playerNumber))
-	text.print(gfx.screen, "lato", "black", "large", tostring("Player"..playerNumber), (gfx.screen:get_width()/2 - (fw/2)), (gfx.screen:get_height()*0.05), fw, fh)
-
+	text.print(gfx.screen, 'lato', 'black', 'large', tostring("Player"..playerNumber), (gfx.screen:get_width()/2 - (fw/2)), (gfx.screen:get_height()*0.05), fw, fh)
 end
 
 -- Main function that runs the program
 local function main()
 
-     --printPlayerNumber()
+     printPlayerNumber()
 
 	local newForm = {
 		laststate = "newProfile.lua",
