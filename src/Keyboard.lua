@@ -1,6 +1,6 @@
 local gfx = require "gfx"
 local text = require "write_text"
-local keyboardPNG = gfx.loadpng("Images/KeyboardPics/keyboardblank.png")
+local keyboardPNG = gfx.loadpng("images/KeyboardPics/keyboardblank.png")
 local textAreaPNG = gfx.loadpng("Images/KeyboardPics/textArea.png") -- change this to correct
 local lowerCasePNG = gfx.loadpng("Images/KeyboardPics/lowerCase.png")
 local upperCasePNG = gfx.loadpng("Images/KeyboardPics/upperCase.png")
@@ -16,8 +16,8 @@ local keyboardState = lowerCasePNG
 -- Scrum team 1 changes
 local keyboardPositionY = 7	-- Originally 3
 local keyboardPositionX = 3		-- Originally 3
-local inputPositionY = 3		-- Originally 3
-local inputPositionX = 2		-- Originally 3
+local inputPositionY = 3		-- Originally 2
+local inputPositionX = 2		-- Originally 2
 -- End Scrum team 1 changes
 
 local xUnit = gfx.screen:get_width()/16	-- units of the screen. based on 16:9 ratio
@@ -313,7 +313,7 @@ end
 
 --saves character to string
 function setToString(character)
-	if character then
+	if character and (string.len(inputText) < 10) then -- Scrum team 1: added condition about string length
 	inputText = inputText .. character
 	end
 end
@@ -391,7 +391,15 @@ end
 -- calls functions on keys
 function onKey(key, state)
 	if(state == 'up')then
-		if(key == 'Up') then
+	
+		-- Scrum team 1 changes: Added functionality for green and red buttons
+		if(key == 'green') then
+			sendFormBackToState(lastStateForm.laststate, lastStateForm) -- Same functionality as for pressing enter on keyboard
+		elseif(key == 'red') then
+			dofile("login.lua")
+		-- Scrum team 1 changes: end
+	
+		elseif(key == 'Up') then
 			movehighlightKey(key)
 		elseif(key == 'Down') then
 			movehighlightKey(key)
@@ -430,6 +438,7 @@ function onKey(key, state)
 				displayInputField()
 			end
 		end
+
 	end
 	gfx.update()
 

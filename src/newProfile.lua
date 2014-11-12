@@ -54,8 +54,15 @@ local gamePath = ''
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 require "profiles"
 
+-- Information to be sent to the keyboard, more can be included but it's not necessary
+local keyboardInput = {
+	laststate = "menu.lua", --The view to be sent to after input is done
+	currentInputField = "name"
+}
+
 -- The recieved argument, in this case the player number
-local playerNumber = ...
+local playerNumber = 1
+playerNumber = ...
 playerNumber = tonumber(playerNumber)
 
 -- All main menu items as .png pictures as transparent background with width and height variables
@@ -77,37 +84,6 @@ local png_logo = 'images/logo.png'
 
 -- Directory of images
 local dir = './'
-
--- Gets input from user and executes chosen script
-function onKey(key, state)
- if state == 'down' then
-
-  elseif state == 'up' then
-	  if(key == 'red') then
-        sideMenu = false
-        --runGame(gamePath, underGoingTest)
-      elseif(key == 'green') then
-        sideMenu = false
-        gamePath = 'memoryGame.lua'
-        --runGame(gamePath, underGoingTest)
-      elseif(key == 'yellow') then
-        sideMenu = false
-        gamePath = 'spellingGame.lua'
-        --runGame(gamePath, underGoingTest)
-      elseif(key == 'blue') then
-        sideMenu = false
-        gamePath = 'geographyGame.lua'
-        --runGame(gamePath, underGoingTest)
-	  end
-  end
-end
-
--- Runs chosen game (file) if testing mode is off
-function runGame(path, testingModeOn)
-	if(not testingModeOn) then
-		dofile(path)
-	end
-end
 
 -- Prints the number of the player at center of screen !!! FOR DEVELOPMENT ONLY !!!
 local function printPlayerNumber()
@@ -134,23 +110,36 @@ local function printNavigationButtons()
 
 end
 
+-- Gets input from user and executes chosen script
+function onKey(key, state)
+ if state == 'down' then
+
+  elseif state == 'up' then
+	  if(key == 'red') then
+        --runGame(gamePath, underGoingTest)
+      elseif(key == 'green') then
+        --runGame(gamePath, underGoingTest)
+      elseif(key == 'yellow') then
+        --runGame(gamePath, underGoingTest)
+      elseif(key == 'blue') then
+        --runGame(gamePath, underGoingTest)
+	  end
+  end
+end
+
+-- Runs chosen game (file) if testing mode is off
+function runGame(path, testingModeOn)
+	if(not testingModeOn) then
+		dofile(path)
+	end
+end
+
 -- Main function that runs the program
 local function main()
 
-     printPlayerNumber()
-     printNavigationButtons()
-
-	local newForm = {
-		laststate = "newProfile.lua",
-		currentInputField = "name"
-		}
-		
-    assert(loadfile("Keyboard.lua"))(newForm)
-
-
-  --printMenuCircles()  
-  --printLogotype()
-  --print(profiles.player1['name'])
+	printPlayerNumber()
+	printNavigationButtons()
+	assert(loadfile("Keyboard.lua"))(keyboardInput)
 
 end
 
