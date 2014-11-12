@@ -116,10 +116,29 @@ local function printPlayerNumber()
 	text.print(gfx.screen, 'lato', 'black', 'large', tostring("Player"..playerNumber), (gfx.screen:get_width()/2 - (fw/2)), (gfx.screen:get_height()*0.05), fw, fh)
 end
 
+-- Prints save- and back buttons in the corners of the image
+local function printNavigationButtons()
+
+	local backButton = gfx.loadpng(png_profile_circles['profile1_active'])
+	local saveButton = gfx.loadpng(png_profile_circles['profile2_active'])
+	local toScreen = nil
+	local scale = 0.3
+	local positionY = 0.021
+	local positionX = 0.03
+	
+	gfx.screen:copyfrom(backButton, nil, {x=gfx.screen:get_height()*positionX, y=gfx.screen:get_width()*positionY, w=backButton:get_width()*scale, h=backButton:get_height()*scale})
+	
+	positionX = 1.2
+	
+	gfx.screen:copyfrom(saveButton, nil, {x=gfx.screen:get_height()*positionX, y=gfx.screen:get_width()*positionY, w=saveButton:get_width()*scale, h=saveButton:get_height()*scale})
+
+end
+
 -- Main function that runs the program
 local function main()
 
      printPlayerNumber()
+     printNavigationButtons()
 
 	local newForm = {
 		laststate = "newProfile.lua",
