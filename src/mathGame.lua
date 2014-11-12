@@ -42,13 +42,21 @@ function setRequire(underGoingTest)
     gfx = require "gfx"
     text = require "write_text"
     animation = require "animation"
+    profileHandler = require "profileHandler"
   elseif underGoingTest then 
     gfx = require "gfx_stub"
     text = require "write_text_stub"
     animation = require "animation_stub"
   end
 end 
+
+
 setRequire(checkTestMode())
+--- OBS!! This is only to be run once to set up the tables in profiles.lua
+-- if you want to change anything in profile.lua do the changes in profiles_init.lua 
+-- and run following command once, then comment it away again.
+--dofile("profiles_init.lua")
+
 
 answers = {}
 answered = {red = false,
@@ -312,10 +320,11 @@ function checkAnswer(correctAnswer, userAnswer, key)
       end
         answered[key] = false
     end
-    -- Zoom in on correct answer
-   answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
+     -- Zoom in on correct answer
+    answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
+    -- Updates the players score 
+    profileHandler.update(1,'mathGame', 'additionPoints', 1)
     sleep(1)
-
     main()
   else 
    answered[key]= true 
