@@ -303,20 +303,24 @@ end
 -- @param #string key The button pressed
 function checkAnswer(correctAnswer, userAnswer, key)
   if (correctAnswer == userAnswer) then
-
     answered[key] = true
+    answerIsCorrect = nil
+    -- Zoom out all the incorrect remaining answers
     for key,val in pairs(answered) do
       if (not val) then
-        animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
+       answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
       end
         answered[key] = false
     end
-    animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
+    -- Zoom in on correct answer
+   answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
     sleep(1)
+
     main()
   else 
    answered[key]= true 
-   animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.5)
+   -- Zoom out incorrect answer
+  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.5)
    sleep(1)
   end
 end
