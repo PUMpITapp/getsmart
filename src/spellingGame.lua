@@ -116,7 +116,8 @@ function createAnswerBackground()
   local cutOut ={  red    = {x= xs      , y = y, w = d, h = d},
                    yellow = {x= xs + d  , y = y, w = d, h = d},
                    blue   = {x= xs + d*2, y = y, w = d, h = d},
-                   green  = {x= xs + d*3, y = y, w = d, h = d}}
+                   green  = {x= xs + d*3, y = y, w = d, h = d}
+                 }
 
 
   circle = {
