@@ -59,6 +59,33 @@ describe('Testing generateQuestion: ', function ()
 		assert.are.equals(expected, got)
 	end)
 
+	local testWord = {'question',{{1,2},{4,5},{7,8}},{{'qu','qw','er','ty'},{'st','qw','er','ty'},{'on','qw','er','ty'}}}
+	local testQuestion = generateQuestion(testWord)
+	for i=1, #testQuestion[2] do
+		local message = 'Checks that the '..i..'st alternative set contains the correct alternative'
+		it('message', function ()
+			local found = true 
+			for j=1, #testQuestion[2][i] do
+				if testQuestion[2][i][j] == testWord[3][i][1] then
+				 	found = true
+				end
+			end
+			assert.is_true(found)
+		end)
+	end
+
+end)
+
+describe('Testing shuffleOrder: ', function ()
+	it('Calculating sum of the shuffled set {1,2,3,4}, expecting 10', function ()
+		local expected = shuffleOrder()
+		local got = 0
+		for i=1, #expected do
+			got = got + expected[i]
+		end
+		expected = 10
+		assert.are.equals(expected, got)
+	end)
 end)
 
 describe('Testing splitIntoWordParts: ', function ()
@@ -82,10 +109,35 @@ describe('Testing splitIntoWordParts: ', function ()
 
 end)
 
-describe('Testing printQuestion: ', function ()
+describe('Testing checkAnswer: ', function ()
+	testAlternatives = {{'qw','er','ty','ui'}}
+	rightAnswer = {'qw'}
+	it('Right answar is red, chosen is red. Expecting true', function () 
+		local got = checkAnswer('red',testAlternatives,rightAnswer)
+		assert.is_true(got)
+	end)
+
+	it('Right answar is red, chosen is green . Expecting false', function () 
+		local got = checkAnswer('green',testAlternatives,rightAnswer)
+		assert.is_false(got)
+	end)
+
+	it('Right answar is red, chosen is yellow. Expecting false', function () 
+		local got = checkAnswer('yellow',testAlternatives,rightAnswer)
+		assert.is_false(got)
+	end)
+
+	it('Right answar is red, chosen is blue. Expecting false', function () 
+		local got = checkAnswer('blue',testAlternatives,rightAnswer)
+		assert.is_false(got)
+	end)
+
+end)
+
+--[[describe('Testing printQuestion: ', function ()
 	it('', function ()
-		expected = 
-		got = 
+		local expected = 
+		local got = 
 		assert.are.equals(expected, got)
 	end)	
-end)
+end)]]
