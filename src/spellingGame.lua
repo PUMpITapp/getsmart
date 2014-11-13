@@ -112,8 +112,9 @@ function printAlternatives(alternatives, position, selected, diameter)
 
   createAnswerBackground()
 
-  placeAnswerCircles(circlePositions)
   placeAnswersOnCircles(alternatives)
+  placeAnswerCircles(circlePositions)
+  
   gfx.update()
 
 end
