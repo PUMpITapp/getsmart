@@ -81,3 +81,11 @@ describe('Testing splitIntoWordParts: ', function ()
 	end)	
 
 end)
+
+describe('Testing printQuestion: ', function ()
+	it('', function ()
+		expected = 
+		got = 
+		assert.are.equals(expected, got)
+	end)	
+end)

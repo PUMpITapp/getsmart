@@ -239,7 +239,7 @@ function printQuestion(question)
 
     position.x = position.x + diameter
 
-    text.print(gfx.screen, 'lato', 'black', 'large', question[1][i], position.x ,  position.y)
+    text_testValue = text.print(gfx.screen, 'lato', 'black', 'large', question[1][i], position.x ,  position.y)
 
     position.x = position.x + text.getStringLength('lato', 'large',question[1][i])  
 
