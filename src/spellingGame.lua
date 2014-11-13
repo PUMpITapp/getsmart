@@ -249,16 +249,19 @@ function placeAnswersOnCircles(answers)
   text.print(circle.blue, 'lato', 'black', 'large', tostring(answers[4]), circle.blue:get_width() /2 - xOffset, circle.blue:get_height() /2 - yOffset, xOffset*2, fh)
 end
 
-----------------------------------------------------
 --- Printing the enitre question on the screen
 -- @param #table question a table with a word, its intervalls and spelling options
 -- @param #string key the choise made by the user
 function printQuestion(question, key)
+
   gfx.screen:clear({122,219,228})
   
   local diameter = 125
+
+  local questionLength = questionLength(question, diameter)
+
   local position = {
-    x = gfx.screen:get_height() /2 - diameter,
+    x = gfx.screen:get_width()/2 - questionLength/2 - diameter,
     y = gfx.screen:get_height()/ 2
   }
 
@@ -276,6 +279,18 @@ function printQuestion(question, key)
 
   end
 
+end
+
+--- Determines the length of the question
+-- @Param #table question The question consisting of the word parts and alternatives
+-- @Param #number diameter The diameter of the colored circles
+-- @return #number questionLength The pixel length of the question to be printed on the screen.
+function questionLength(question, diameter)
+  local questionLength = diameter * #question[2]
+  for i=1, #question[1] do
+    questionLength = questionLength + text.getStringLength('lato','large',question[1][i])
+  end
+  return questionLength
 end
 
 ---Check if the answer is correct
@@ -306,7 +321,6 @@ function checkAnswer(key,alternatives,rightanswer)
     return false
   end
 end
-
 
 --- Gets input from user and checks answer
 -- @param key The key that has been pressed
