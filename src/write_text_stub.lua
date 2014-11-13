@@ -1,13 +1,12 @@
 local text = {}
 
 
-arial = require "apple_symbols_regular_65"
-
-function text.print(surface, font, text, x, y, w, h)
+function text.print(surface, fontFace, fontColor, fontSize, text, x, y, w, h)
 	return text
 end
 
-function text.getStringLength(font, text)
+function text.getStringLength(fontFace, fontSize, text)
+    font = require ("fonts/lookups/" .. fontFace .. "_" .. fontSize)
 	local strLength = 0
 	for i =1, #text do
 		local c = text:sub(i,i)
@@ -21,8 +20,9 @@ function text.getStringLength(font, text)
 	return strLength
 end
 
-function text.getFontHeight(font)
-	return font.height
+function text.getFontHeight(fontFace, fontSize)
+  font = require ("fonts/lookups/" .. fontFace .. "_" .. fontSize)
+  return font.height
 end
 
 
