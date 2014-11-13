@@ -52,10 +52,6 @@ end
 
 
 setRequire(checkTestMode())
---- OBS!! This is only to be run once to set up the tables in profiles.lua
--- if you want to change anything in profile.lua do the changes in profiles_init.lua 
--- and run following command once, then comment it away again.
---dofile("profiles_init.lua")
 
 
 answers = {}
