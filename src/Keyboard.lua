@@ -18,6 +18,7 @@ local keyboardPositionY = 7	-- Originally 3
 local keyboardPositionX = 3		-- Originally 3
 local inputPositionY = 3		-- Originally 2
 local inputPositionX = 2		-- Originally 2
+keyboardInput = 'sfasf'
 -- End Scrum team 1 changes
 
 local xUnit = gfx.screen:get_width()/16	-- units of the screen. based on 16:9 ratio
@@ -394,7 +395,8 @@ function onKey(key, state)
 	
 		-- Scrum team 1 changes: Added functionality for green and red buttons
 		if(key == 'green') then
-			sendFormBackToState(lastStateForm.laststate, lastStateForm) -- Same functionality as for pressing enter on keyboard
+			keyboardInput = inputText
+			--sendFormBackToState(lastStateForm.laststate, lastStateForm) -- Same functionality as for pressing enter on keyboard
 		elseif(key == 'red') then
 			dofile("login.lua")
 		-- Scrum team 1 changes: end
@@ -410,7 +412,7 @@ function onKey(key, state)
 		elseif(key == 'Return') then
 			local letterToDisplay = getKeyboardChar(highlightPosX,highlightPosY)
 			if (letterToDisplay == "ENTER") then
-				sendFormBackToState(lastStateForm.laststate, lastStateForm)
+				--sendFormBackToState(lastStateForm.laststate, lastStateForm)
 			elseif(letterToDisplay == "DELETE") then
 
 				inputText = removeLastChar(inputText)

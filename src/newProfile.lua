@@ -56,14 +56,9 @@ require "profiles"
 
 -- Information to be sent to the keyboard, more can be included but it's not necessary
 local keyboardInput = {
-	laststate = "menu.lua", --The view to be sent to after input is done
+	laststate = "newProfile.lua", --The view to be sent to after input from keyboard is done
 	currentInputField = "name"
 }
-
--- The recieved argument, in this case the player number
-local playerNumber = 1
-playerNumber = ...
-playerNumber = tonumber(playerNumber)
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_profile_circle_width = 149
@@ -87,16 +82,18 @@ local dir = './'
 
 -- Prints the number of the player at center of screen !!! FOR DEVELOPMENT ONLY !!!
 local function printPlayerNumber()
-	local fh = text.getFontHeight('lato', 'large')
-	local fw = text.getStringLength('lato', 'large', tostring('Player'..playerNumber))
-	text.print(gfx.screen, 'lato', 'black', 'large', tostring("Player"..playerNumber), (gfx.screen:get_width()/2 - (fw/2)), (gfx.screen:get_height()*0.05), fw, fh)
+	if(not playerNumber == nil) then
+		local fh = text.getFontHeight('lato', 'large')
+		local fw = text.getStringLength('lato', 'large', tostring('Player'..playerNumber))
+		text.print(gfx.screen, 'lato', 'black', 'large', tostring("Player"..playerNumber), (gfx.screen:get_width()/2 - (fw/2)), (gfx.screen:get_height()*0.05), fw, fh)
+	end
 end
 
 -- Prints save- and back buttons in the corners of the image
 local function printNavigationButtons()
 
-	local backButton = gfx.loadpng(png_profile_circles['profile1_active'])
-	local saveButton = gfx.loadpng(png_profile_circles['profile2_active'])
+	local backButton = gfx.loadpng(dir..'images/profile/profile-go-back.png')
+	local saveButton = gfx.loadpng(dir..'images/profile/profile-go-forward.png')
 	local toScreen = nil
 	local scale = 0.3
 	local positionY = 0.021
@@ -134,14 +131,15 @@ function runGame(path, testingModeOn)
 	end
 end
 
+require "keyboard"
+
 -- Main function that runs the program
 local function main()
 
 	printPlayerNumber()
 	printNavigationButtons()
-	assert(loadfile("Keyboard.lua"))(keyboardInput)
+	updateScreen()
+	print("Keyboard: " ..keyboardInput[1])
 
 end
-
-
 main()

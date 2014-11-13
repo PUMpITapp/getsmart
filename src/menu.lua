@@ -225,6 +225,12 @@ local function main()
 
   printMenuCircles()  
   printLogotype()
+  
+  if(player['fromLogin'] == 1) then
+  	print("player with nr")
+  else
+  	print("player with name")
+  end
 
 end
 

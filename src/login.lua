@@ -48,9 +48,6 @@ local background = gfx.loadpng('./images/background_login.png')
 gfx.screen:copyfrom(background,nil)
 gfx.update()
 
--- 
-local chosenPlayer = 0
-
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 dofile('table.save.lua')
 profiles, err = table.load('profiles.lua')
@@ -154,9 +151,9 @@ end
 
 -- Runs chosen game (file) if testing mode is off 
 function runGame(path, testingModeOn, chosenPlayer)
-	if(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 1) then
+	if(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 1) then -- If player exists (is active) then go to game menu
 		assert(loadfile("menu.lua"))(chosenPlayer)
-	elseif(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 0) then
+	elseif(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 0) then -- If player does not exist (is not active) go and create new profile
 		assert(loadfile("newProfile.lua"))(chosenPlayer)
 	end
 end
