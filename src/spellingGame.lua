@@ -3,7 +3,7 @@ gfx = require "gfx"
 
 gfx.screen:clear({122,219,228})
 
-text.print(gfx.screen, arial, "Spelling Game coming soon!", 70 , 300 )
+--text.print(gfx.screen, arial, "Spelling Game coming soon!", 70 , 300 )
 
 
 function init()
@@ -19,7 +19,12 @@ function main()
   init() 
   wordArray = selectRandomWord()
   question = generateQuestion(wordArray)
+  
   printQuestion(question)
+
+  
+  
+
 end
 
 --- Genrates a random number between 1 and the size of the table answer table and picks that word in the table. 
@@ -94,15 +99,24 @@ function printAlternatives(alternatives, position, selected, diameter)
     selected = 3
   end
 
-  createAnswerBackground()
-  placeAnswersOnCircles(alternatives)
+  local d = diameter
+  local sh = gfx.screen:get_height()
 
-  for i = 1, #alternatives do
-    text.print(gfx.screen, 'lato', 'black', 'large', alternatives[i], position.x, position.y - diameter*selected + diameter*(i-1))
-  end
+  local startY = position.y - selected * d
+
+  circlePositions = {
+            red     = {x = position.x, y = startY , w = d, h = d}, --red answer circle position
+            green   = {x = position.x, y = startY + d , w = d, h = d}, --yellow answer circle position
+            yellow  = {x = position.x, y = startY + 2*d, w = d, h = d}, --blue answer circle position
+            blue    = {x = position.x, y = startY + 3*d, w = d, h = d}} --green answer circle position
+
+  createAnswerBackground()
+
+  placeAnswerCircles(circlePositions)
+  placeAnswersOnCircles(alternatives)
+  --gfx.update()
 
 end
-
 
 ----------------------------------------------------
 --- create the background and the "circles" for the answers
@@ -116,15 +130,15 @@ function createAnswerBackground()
   local cutOut ={  red    = {x= xs      , y = y, w = d, h = d},
                    yellow = {x= xs + d  , y = y, w = d, h = d},
                    blue   = {x= xs + d*2, y = y, w = d, h = d},
-                   green  = {x= xs + d*3, y = y, w = d, h = d}
-                 }
+                   green  = {x= xs + d*3, y = y, w = d, h = d}}
 
 
   circle = {
-  red = gfx.new_surface(cutOut.red.w, cutOut.red.h),
-  green = gfx.new_surface(cutOut.green.w, cutOut.green.h),
-  yellow = gfx.new_surface(cutOut.yellow.w, cutOut.yellow.h),
-  blue = gfx.new_surface(cutOut.blue.w, cutOut.blue.h)}
+    red = gfx.new_surface(cutOut.red.w, cutOut.red.h),
+    green = gfx.new_surface(cutOut.green.w, cutOut.green.h),
+    yellow = gfx.new_surface(cutOut.yellow.w, cutOut.yellow.h),
+    blue = gfx.new_surface(cutOut.blue.w, cutOut.blue.h)
+  }
 
   circle.red:copyfrom(colorsImg, cutOut.red, true)
   circle.green:copyfrom(colorsImg, cutOut.green, true)
@@ -132,6 +146,20 @@ function createAnswerBackground()
   circle.blue:copyfrom(colorsImg, cutOut.blue, true)
 
 end
+
+--- Places the colored answer circles on their positions
+function placeAnswerCircles(circlePosition)
+  local fh = text.getFontHeight('lato', 'large') -- font height
+
+  local position = circlePosition
+
+  gfx.screen:copyfrom(circle.red, nil, position.red, true)
+  gfx.screen:copyfrom(circle.green, nil, position.green, true)
+  gfx.screen:copyfrom(circle.blue, nil, position.blue, true)
+  gfx.screen:copyfrom(circle.yellow, nil, position.yellow, true)
+
+end
+
 --- place the answers to the right position in their circle
 --@param #number answers The answer options that is given to the user 
 function placeAnswersOnCircles(answers)
@@ -139,18 +167,28 @@ function placeAnswersOnCircles(answers)
   local fh = text.getFontHeight('lato', 'large') -- font height
   local yOffset = fh /2
 
+  print(answers[1])
+
   local xOffset = text.getStringLength('lato', 'large', tostring(answers[1])) / 2
+  print(xOffset)
   text.print(circle.red, 'lato', 'black', 'large', tostring(answers[1]), circle.red:get_width() /2 - xOffset, circle.red:get_height() /2 - yOffset, xOffset*2, fh)
  
+  print(answers[2])
   xOffset = text.getStringLength('lato', 'large', tostring(answers[2])) / 2
+  print(xOffset)
   text.print(circle.green, 'lato', 'black', 'large', tostring(answers[2]), circle.green:get_width() /2 - xOffset, circle.green:get_height() /2 - yOffset, math.ceil(xOffset*2), fh)
   
+  print(answers[3])
   xOffset = text.getStringLength('lato', 'large', tostring(answers[3])) / 2
+  print(xOffset)
   text.print(circle.yellow, 'lato', 'black', 'large', tostring(answers[3]), circle.yellow:get_width() /2 - xOffset, circle.yellow:get_height() /2 - yOffset, xOffset*2, fh)
   
+  print(answers[4])
   xOffset = text.getStringLength('lato', 'large', tostring(answers[4])) / 2
+  print(xOffset)
   text.print(circle.blue, 'lato', 'black', 'large', tostring(answers[4]), circle.blue:get_width() /2 - xOffset, circle.blue:get_height() /2 - yOffset, xOffset*2, fh)
 end
+
 
 
 ----------------------------------------------------
@@ -158,10 +196,10 @@ end
 function printQuestion(question)
   gfx.screen:clear({122,219,228})
   
-  local diameter = 120
+  local diameter = 125
   local position = {
     x = gfx.screen:get_height() /2 - diameter,
-    y = gfx.screen:get_height()/ 2 - 100
+    y = gfx.screen:get_height()/ 2
   }
 
   for i = 1, #question[1] do
@@ -173,15 +211,11 @@ function printQuestion(question)
     position.x = position.x + text.getStringLength('lato', 'large',question[1][i])  
 
     if  i <= #question[2] then
-      printAlternatives(question[2][i],position,'yellow',diameter)
+      printAlternatives(question[2][i],position,'blue',diameter)
     end
 
   end
 
-  --[[for i=1, #question[2][1] do
-    text.print(gfx.screen, arial, question[2][1][i], gfx.screen:get_height() /2 + 150,  gfx.screen:get_height() /2 - 50*(i-1))    
-  end]]
-  --text.print(gfx.screen, arial, w, gfx.screen:get_height() /2 ,  gfx.screen:get_height() /2 -100)
 end
 
 

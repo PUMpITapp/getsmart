@@ -6,7 +6,10 @@ local gfx = {}
 
 Surface = {}
 
-function Surface:new(w, h)
+function Surface:new(w, h)  
+  dummyTable = { cref = dummySurface }
+  self.__index = self
+  return setmetatable(dummyTable, self)
 end
 
 function Surface:newJPEG(path)
@@ -66,6 +69,7 @@ function gfx.set_auto_update()
 end
 
 function gfx.new_surface(w, h)
+  return Surface:new(w, h)
 end
 
 function gfx.get_memory_use()
