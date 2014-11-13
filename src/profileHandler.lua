@@ -10,17 +10,19 @@ function profileHandler.update(player, game, gameType, points)
 	--profileUpdater.printToFile(profiles)
 end
 
-function profileHandler.updateName(player, name)
+function profileHandler.setName(player, name)
 	profiles, err = table.load('profiles.lua')
-	player = "player" .. player
-	profiles[player][name] = profiles[player][name]
+	player = "player" .. tostring(player)
+	print("Profilehandler: " ..player)
+	profiles[player]['name'] = name
+	profiles[player]['isActive'] = 1
 	assert( table.save( profiles, "profiles.lua" ) == nil )
-	--profileUpdater.printToFile(profiles)
+	--profileHandler.printToFile(profiles)
 end
 
 function profileHandler.printToFile(profiles)
---	local file = io.open("profiles.lua", 'w')
---	file:write(profiles)
+	--local file = io.open("profiles.lua", 'w')
+	--file:write(profile)
 
 end
 

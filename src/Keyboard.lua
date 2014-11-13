@@ -18,7 +18,18 @@ local keyboardPositionY = 7	-- Originally 3
 local keyboardPositionX = 3		-- Originally 3
 local inputPositionY = 3		-- Originally 2
 local inputPositionX = 2		-- Originally 2
-keyboardInput = 'sfasf'
+keyboard_player = {...}
+
+function getInputText()
+	return inputText
+end
+
+function sendNameAndGoBack()
+	keyboard_player[1].name = getInputText()
+	assert(loadfile('newProfile.lua'))(keyboard_player)
+end
+
+
 -- End Scrum team 1 changes
 
 local xUnit = gfx.screen:get_width()/16	-- units of the screen. based on 16:9 ratio
@@ -31,8 +42,8 @@ local keyboardPosX = keyboardPositionX * xUnit 		-- keyboard start posx. can be 
 local keyboardPosY = keyboardPositionY * yUnit 		-- keyboard start posy. can be changed
 local highlightPosX = 1 			-- pos on keyboard posx
 local highlightPosY = 1 			-- pos on keyboard posy
-local inputText = ""	-- text to display
-local lastStateForm = ...	-- gets last state form
+inputText = ""	-- text to display
+--local lastStateForm = ...	-- gets last state form
 
 local keyboardSurface = gfx.new_surface(keyboardWidth,keyboardHeight)
 local letterSurface = gfx.new_surface(keyboardWidth,keyboardHeight)
@@ -302,7 +313,7 @@ end
 --gets the correct movement of cursor when moving in y-axis
 function getYmove(xVal,yVal,move)
 	local coordinates = "p"..xVal..yVal
-	print(coordinates)
+	--print(coordinates)
 	return map[coordinates][move]
 end
 
@@ -395,7 +406,7 @@ function onKey(key, state)
 	
 		-- Scrum team 1 changes: Added functionality for green and red buttons
 		if(key == 'green') then
-			keyboardInput = inputText
+			sendNameAndGoBack()
 			--sendFormBackToState(lastStateForm.laststate, lastStateForm) -- Same functionality as for pressing enter on keyboard
 		elseif(key == 'red') then
 			dofile("login.lua")
@@ -412,7 +423,10 @@ function onKey(key, state)
 		elseif(key == 'Return') then
 			local letterToDisplay = getKeyboardChar(highlightPosX,highlightPosY)
 			if (letterToDisplay == "ENTER") then
+				-- Scrum team 1 changes
 				--sendFormBackToState(lastStateForm.laststate, lastStateForm)
+				sendNameAndGoBack()
+				-- Scrum team 1 changes: end
 			elseif(letterToDisplay == "DELETE") then
 
 				inputText = removeLastChar(inputText)

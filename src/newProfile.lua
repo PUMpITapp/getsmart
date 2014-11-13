@@ -18,32 +18,23 @@ function checkTestMode()
   return underGoingTest
 end
 
---- Chooses either the actual or he dummy gfx.
--- Returns dummy gfx if the file is being tested.
--- Rerunes actual gfx if the file is being run.
-function chooseGfx(underGoingTest)
+--- Chooses either the actual or the stubs depending on if a test file started the program.
+-- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
   if not underGoingTest then
-    tempGfx = require "gfx"
-  elseif underGoingTest then
-    tempGfx = require "gfx_stub"
+    gfx = require "gfx"
+    text = require "write_text"
+    animation = require "animation"
+    profileHandler = require "profileHandler"
+  elseif underGoingTest then 
+    gfx = require "gfx_stub"
+    text = require "write_text_stub"
+    animation = require "animation_stub"
   end
-  return tempGfx
-end
+end 
 
-function chooseText(underGoingTest)
-  if not underGoingTest then
-    tempText = require "write_text"
-  elseif underGoingTest then
-    tempText = require "write_text_stub"
-  end
-  return tempText
-end
+setRequire(checkTestMode())
 
--- Require the grafics library and setting the background color
-gfx = chooseGfx(checkTestMode())
-text = chooseText(checkTestMode())
-
---gfx.screen:clear({255,255,255}) --RGB
 local background = gfx.loadpng('./images/background_new_player.png')
 gfx.screen:copyfrom(background, nil)
 gfx.update()
@@ -53,12 +44,6 @@ local gamePath = ''
 
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 require "profiles"
-
--- Information to be sent to the keyboard, more can be included but it's not necessary
-local keyboardInput = {
-	laststate = "newProfile.lua", --The view to be sent to after input from keyboard is done
-	currentInputField = "name"
-}
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_profile_circle_width = 149
@@ -131,15 +116,32 @@ function runGame(path, testingModeOn)
 	end
 end
 
-require "keyboard"
+--require "keyboard"
+
+profilePlayer = ...
+--require "profileHandler"
+--assert( table.save( ..., "table_dump.lua" ) == nil )
+
+function isPlayerNew()
+
+	if(string.len(profilePlayer[1].name) > 0) then
+		profileHandler.setName(tonumber(profilePlayer[1].number), tostring(profilePlayer[1].name))
+		sleep(1)
+		assert(loadfile('menu.lua'))(profilePlayer)
+		return false
+	else
+		return true
+	end
+end
 
 -- Main function that runs the program
 local function main()
 
-	printPlayerNumber()
-	printNavigationButtons()
-	updateScreen()
-	print("Keyboard: " ..keyboardInput[1])
+	if(isPlayerNew()) then
+		printPlayerNumber()
+		printNavigationButtons()
+		assert(loadfile('Keyboard.lua'))(profilePlayer)
+	end	
 
 end
 main()

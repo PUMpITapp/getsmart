@@ -220,18 +220,15 @@ function runGame(path, testingModeOn)
 	end
 end
 
+currentPlayer = ...
+
 -- Main function that runs the program
 local function main()
-
-  printMenuCircles()  
-  printLogotype()
-  
-  if(player['fromLogin'] == 1) then
-  	print("player with nr")
-  else
-  	print("player with name")
-  end
-
+	
+	print("Menu user name: " ..tostring(currentPlayer[1].name))
+	print("Menu user number: " ..tostring(currentPlayer[1].number))
+ 	printMenuCircles()  
+ 	printLogotype()
 end
 
 

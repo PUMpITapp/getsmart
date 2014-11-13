@@ -132,29 +132,37 @@ function onKey(key,state)
 	  if(key == 'red') then
         gamePath = 'mathGame.lua'
         chosenPlayer = 1
+        login_player.number = chosenPlayer
         runGame(gamePath, underGoingTest, chosenPlayer)
       elseif(key == 'green') then
         gamePath = 'memoryGame.lua'
 		chosenPlayer = 2
+		login_player.number = chosenPlayer
         runGame(gamePath, underGoingTest, chosenPlayer)
       elseif(key == 'yellow') then
         gamePath = 'spellingGame.lua'
         chosenPlayer = 3
+        login_player.number = chosenPlayer
+        --print("Login nr: "..login_player.number)
         runGame(gamePath, underGoingTest, chosenPlayer)
       elseif(key == 'blue') then
         gamePath = 'geographyGame.lua'
         chosenPlayer = 4
+        login_player.number = chosenPlayer
         runGame(gamePath, underGoingTest, chosenPlayer)
 	  end
   end
 end
 
+-- Table to be sent to newProfile or menu containing information about the user
+login_player = { [1] = {name = "", number = 0} }
+
 -- Runs chosen game (file) if testing mode is off 
 function runGame(path, testingModeOn, chosenPlayer)
 	if(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 1) then -- If player exists (is active) then go to game menu
-		assert(loadfile("menu.lua"))(chosenPlayer)
+		assert(loadfile("menu.lua"))(login_player)
 	elseif(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 0) then -- If player does not exist (is not active) go and create new profile
-		assert(loadfile("newProfile.lua"))(chosenPlayer)
+		assert(loadfile("newProfile.lua"))(login_player)
 	end
 end
 
