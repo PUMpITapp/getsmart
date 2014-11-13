@@ -28,40 +28,41 @@ setRequire(checkTestMode())
 
 gfx.screen:clear({122,219,228})
 
---text.print(gfx.screen, arial, "Spelling Game coming soon!", 70 , 300 )
-
-
+---Initiating all global variables
 function init()
   answerTable = {
     {'Yesterday',{{2,3},{6,7}},{{'es','is','ez','oys'},{'rd','d','rp','ld'}}},
-    {'Artichoke',{{3,4}},{{'ti','tie','te','to'}}}
+    {'Artichoke',{{3,4}},{{'ti','tie','te','to'}}},
+    {'Scrummaster',{{2,3},{5,6}},{{'cr','ckr','kr','crr'},{'mm','m','me','mme'}}}
   }
   rightAlternatives = {} 
   images = {['colors'] = "images/color_choices.png"} 
 end
 
+--- Main function that runs the program
 function main()
   init() 
   wordArray = selectRandomWord()
   question = generateQuestion(wordArray)
   
   printQuestion(question)
-
-  
-  
-
 end
 
---- Genrates a random number between 1 and the size of the table answer table and picks that word in the table. 
+
+--- Genrates a random number between 1 and the size of the table answer table and picks that word in the table
+-- @return #table question a table with a word, its intervalls and the different spelling options
 function selectRandomWord()
   math.randomseed(os.time())
   math.random()
   math.random()
-  local questionPosition = tonumber(math.random(1, #answerTable))
+  local questionPosition = tonumber(math.random(#answerTable))
   local question = answerTable[questionPosition]
   return question
 end
 
+--- Shuffles the order of answer alternetives
+-- @param #table alternatives A table with possible answer alternatives
+-- @return #table alternatives Same table but in different order
 function shuffleOrder(alternatives)
   local n = #alternatives
 
@@ -76,6 +77,10 @@ function shuffleOrder(alternatives)
   return alternatives
 end
 
+---Slitting the word into parts so the system know which parts to give altenatives to
+-- @param #string word the word that will be split
+-- @param #table Intervalls the intervalls the word will be split into
+-- @renurn #table wordParts a teble of the parts of the word
 function splitIntoWordParts(word,Intervalls)
   local wordParts = {}
 
@@ -96,6 +101,9 @@ function splitIntoWordParts(word,Intervalls)
   return wordParts
 end
 
+--- Generates a word with some parts taken out and instead given alternatives to that part
+-- @param #table wordArray a table with a word split up in parts
+-- @return #table question a Table with the word in parts plus the altenatives to the parts with alternatives
 function generateQuestion(wordArray)
   for i = 1, #wordArray[3] do
     rightAlternatives[i] = wordArray[3][i][1]
@@ -113,6 +121,11 @@ function generateQuestion(wordArray)
   return question
 end
 
+--- Printing the alternatives on the screen in circles with different colors
+-- @param #table alternatives the diffrent answer alternatives to be printed in circles on the screen
+-- @param #table position a table with a position x and a position y
+-- @param #string selected a string with the answer selected by the user, options: red, green, yellow, blue
+-- @param #number diameter a number with the diameter of the circles
 function printAlternatives(alternatives, position, selected, diameter)
   if selected == 'red' then
     selected = 0
@@ -136,16 +149,13 @@ function printAlternatives(alternatives, position, selected, diameter)
             blue    = {x = position.x, y = startY + 3*d, w = d, h = d}} --green answer circle position
 
   createAnswerBackground()
-
   placeAnswersOnCircles(alternatives)
   placeAnswerCircles(circlePositions)
-  
   gfx.update()
 
 end
 
-----------------------------------------------------
---- create the background and the "circles" for the answers
+--- create the background and the circles for the answers
 function createAnswerBackground()
   colorsImg = gfx.loadpng(images.colors)
 
@@ -174,6 +184,7 @@ function createAnswerBackground()
 end
 
 --- Places the colored answer circles on their positions
+-- @param #table circlePosition a table with the positions of the positions of the four circles
 function placeAnswerCircles(circlePosition)
   local fh = text.getFontHeight('lato', 'large') -- font height
 
@@ -192,7 +203,6 @@ function placeAnswersOnCircles(answers)
   local fh = text.getFontHeight('lato', 'large') -- font height
   local yOffset = fh /2
 
-
   local xOffset = text.getStringLength('lato', 'large', tostring(answers[1])) / 2
 
   text.print(circle.red, 'lato', 'black', 'large', tostring(answers[1]), circle.red:get_width() /2 - xOffset, circle.red:get_height() /2 - yOffset, xOffset*2, fh)
@@ -210,10 +220,9 @@ function placeAnswersOnCircles(answers)
   text.print(circle.blue, 'lato', 'black', 'large', tostring(answers[4]), circle.blue:get_width() /2 - xOffset, circle.blue:get_height() /2 - yOffset, xOffset*2, fh)
 end
 
-
-
 ----------------------------------------------------
-
+--- Printing the enitre question on the screen
+-- @param #table question a table with a word, its intervalls and spelling options
 function printQuestion(question)
   gfx.screen:clear({122,219,228})
   
