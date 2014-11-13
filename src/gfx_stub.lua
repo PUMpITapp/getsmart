@@ -69,7 +69,7 @@ function gfx.set_auto_update()
 end
 
 function gfx.new_surface(w, h)
-    return Surface:new(w, h)
+  return Surface:new(w, h)
 end
 
 function gfx.get_memory_use()
