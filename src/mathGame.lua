@@ -49,10 +49,10 @@ function setRequire(underGoingTest)
     animation = require "animation_stub"
   end
 end 
-
-
 setRequire(checkTestMode())
 
+-- Set player
+player = 1
 
 answers = {}
 answered = {red = false,
@@ -95,7 +95,7 @@ local function main()
   --  INCOMPLETE! 
   -- level will come from user but at the moment it is a static number. --
   ------------------------------------------------------------------------
-  local level = tonumber(4)
+  local level = tonumber(1)
 
 
   local mathProblem = produceMathProblem(level)
@@ -113,17 +113,33 @@ end
 -- @param #int level The difficulty level of the problem
 function produceMathProblem(level)
  -- level not implemented yet
-  local operator = getOperator(level)
-  local lowerBound = tonumber(getLowerBound(level))
-  local upperBound = tonumber(getUpperBound(level))
+  local operator = getOperator()
+  gameType = getOperatorString(operator)
+  print("Game type: "..gameType)
+  local gameLevel = getGameLevel(gameType)
+  print("Game level: " ..gameLevel)
+  local boundries = getBoundries(gameType, gameLevel)
+  print("Boundries: "..boundries['termOne'][1] .. " - " ..boundries['termOne'][2])
+
 
   -- Because of Lua random being semi-random from fixed lists
   -- this solution provides a more random behavior
   math.randomseed(os.time())
   math.random()
   math.random()
-  local termOne = tonumber(math.random(lowerBound, upperBound))
-  local termTwo = tonumber(math.random(lowerBound, upperBound))
+
+  local termOne = nil
+  local termTwo = nil
+  if gameType == 'division' then
+    termOne = tonumber(math.random(boundries['termOne'][1], boundries['termOne'][2]))
+    termTwo = tonumber(math.random(boundries['termTwo'][1], boundries['termTwo'][2]))
+    termOne = termOne * termTwo
+  else
+    termOne = tonumber(math.random(boundries['termOne'][1], boundries['termOne'][2]))
+    termTwo = tonumber(math.random(boundries['termTwo'][1], boundries['termTwo'][2]))
+    
+  end
+  
 
   local problem = {}
   problem["termOne"] = termOne
@@ -131,6 +147,8 @@ function produceMathProblem(level)
   problem["operator"] = operator
   return problem
 end
+
+
 
 --- Solves a math problem
 -- Gets a table with the first and second term and the operator.
@@ -159,18 +177,42 @@ end
 
 --- Get the operator for a math problem given its difficulty level.
 -- The mathematical operation of a given problem depends on its difficulty level.
--- @param #number level The difficulty level of the math problem.
 -- @return #string Returns the operator for a math problem.
-function getOperator(level)
-  local operator = nil
-
-  if(level > 8) then      operator = '/'
-  elseif(level > 4) then  operator = '*'
-  elseif(level > 2) then  operator = '-'
-  else                    operator = '+'
-  end
-
+function getOperator()
+  local operator = {'+','-','*','/'} 
+  operator = operator[math.random(#operator)]
   return operator
+end
+
+function getOperatorString(operator)
+  stringOperator = nil
+  if(operator == '+') then
+    stringOperator = 'addition'
+    elseif(operator == '-') then
+    stringOperator = 'subtraction'
+  elseif(operator == '*') then
+    stringOperator = 'multiplication'
+  elseif(operator == '/') then
+    stringOperator = 'division'
+  end
+  return stringOperator 
+end
+
+function getGameLevel(gameType)
+
+  return profileHandler.getGameLevel('player'..player,'mathGame',gameType..'Points')
+end
+
+
+--- 
+function getBoundries(gameType, level)
+  difficulties = require "mathGameDifficulties"
+
+  if(tonumber(level) > #difficulties[gameType]) then 
+    level = #difficulties[gameType]
+  end
+ 
+  return difficulties[gameType][level]
 end
 
 --- The lowest number that a term within a math problem should have.
@@ -319,7 +361,7 @@ function checkAnswer(correctAnswer, userAnswer, key)
      -- Zoom in on correct answer
     answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
     -- Updates the players score 
-    profileHandler.update(1,'mathGame', 'additionPoints', 1)
+    profileHandler.update(player,'mathGame', gameType..'Points', 1)
     sleep(1)
     main()
   else 
