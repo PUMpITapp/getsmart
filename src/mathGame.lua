@@ -18,6 +18,10 @@
 -- will display if the answer is correct or not and take the user onwards
 -- to new questions. 
 
+-- Import the number of the player
+--player = "player" .. tonumber(...)
+
+
 --- Checks if the file was called from a test file.
 -- @return #boolean If called from test file return true (indicating file is being tested) else false  
 function checkTestMode()
@@ -38,13 +42,21 @@ function setRequire(underGoingTest)
     gfx = require "gfx"
     text = require "write_text"
     animation = require "animation"
+    profileHandler = require "profileHandler"
   elseif underGoingTest then 
     gfx = require "gfx_stub"
     text = require "write_text_stub"
     animation = require "animation_stub"
   end
 end 
+
+
 setRequire(checkTestMode())
+--- OBS!! This is only to be run once to set up the tables in profiles.lua
+-- if you want to change anything in profile.lua do the changes in profiles_init.lua 
+-- and run following command once, then comment it away again.
+--dofile("profiles_init.lua")
+
 
 answers = {}
 answered = {red = false,
@@ -299,20 +311,25 @@ end
 -- @param #string key The button pressed
 function checkAnswer(correctAnswer, userAnswer, key)
   if (correctAnswer == userAnswer) then
-
     answered[key] = true
+    answerIsCorrect = nil
+    -- Zoom out all the incorrect remaining answers
     for key,val in pairs(answered) do
       if (not val) then
-        animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
+       answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
       end
         answered[key] = false
     end
-    animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
+     -- Zoom in on correct answer
+    answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
+    -- Updates the players score 
+    profileHandler.update(1,'mathGame', 'additionPoints', 1)
     sleep(1)
     main()
   else 
    answered[key]= true 
-   animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.5)
+   -- Zoom out incorrect answer
+  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.5)
    sleep(1)
   end
 end
