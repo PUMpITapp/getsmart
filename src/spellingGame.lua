@@ -96,9 +96,12 @@ function splitIntoWordParts(word,Intervalls)
   end
 
   if Intervalls[#Intervalls][2] < word:len() then
-    wordParts[#Intervalls+1] = word:sub(previousUpperLimit+1)
+    if Intervalls[#Intervalls][1] == 1 then
+      wordParts[1] = word:sub(Intervalls[#Intervalls][2])
+    else
+      wordParts[#Intervalls+1] = word:sub(previousUpperLimit+1)
+    end
   end
-
   return wordParts
 end
 
