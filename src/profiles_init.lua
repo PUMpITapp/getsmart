@@ -7,7 +7,7 @@ dofile('table.save.lua')
 profiles = {
 			['player1'] = {
 						name = 'Per',
-						isActive = true,
+						isActive = 1,
 						mathGame = {
 									userLevel = 1,
 									additionPoints = 0,
@@ -21,7 +21,7 @@ profiles = {
 						},
 			['player2'] = {
 						name = 'Frida',
-						isActive = true,
+						isActive = 1,
 						mathGame = {
 									userLevel = 1,
 									additionPoints = 0,
@@ -35,7 +35,7 @@ profiles = {
 						},						
 			['player3'] = {
 						name = '',
-						isActive = false,
+						isActive = 0,
 						mathGame = {
 									userLevel = 1,
 									additionPoints = 0,
@@ -49,7 +49,7 @@ profiles = {
 						},
 			['player4'] = {
 						name = '',
-						isActive = false,
+						isActive = 0,
 						mathGame = {
 									userLevel = 1,
 									additionPoints = 0,

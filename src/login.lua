@@ -52,7 +52,8 @@ gfx.update()
 local chosenPlayer = 0
 
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
-require "profiles"
+dofile('table.save.lua')
+profiles, err = table.load('profiles.lua')
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_profile_circle_width = 149
@@ -86,12 +87,14 @@ function printMenuCircles()
 	local toScreen = nil
 	local gameCounter = 1
 	local status = ''
+	local textSize = 'medium'
+	local fh = text.getFontHeight('lato', textSize)
 
 	-- Prints menu items
 	for i = 50, 1000, 250 do
 
 		-- Checks if the user is active
-		if(profiles['player'..gameCounter]['isActive']) then
+		if(profiles['player'..gameCounter]['isActive'] == 1) then
 			status = 'active'
 		else
 			status = 'inactive'
@@ -99,6 +102,12 @@ function printMenuCircles()
 		
 		toScreen = gfx.loadpng(dir..png_profile_circles['profile'..gameCounter.."_"..status])
 		printCircle(toScreen, i, 450)
+		
+		if(status == 'active') then
+			local fw = text.getStringLength('lato', textSize, profiles['player'..gameCounter]['name'])
+			text.print(gfx.screen, 'lato', 'black', textSize, profiles['player'..gameCounter]['name'], i+35, 450+140, fw, fh)
+		end
+		
 		gameCounter = gameCounter+1
 	end
 		
@@ -145,9 +154,9 @@ end
 
 -- Runs chosen game (file) if testing mode is off 
 function runGame(path, testingModeOn, chosenPlayer)
-	if(not testingModeOn and profiles['player'..chosenPlayer]['isActive']) then
+	if(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 1) then
 		assert(loadfile("menu.lua"))(chosenPlayer)
-	elseif(not testingModeOn and not profiles['player'..chosenPlayer]['isActive']) then
+	elseif(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 0) then
 		assert(loadfile("newProfile.lua"))(chosenPlayer)
 	end
 end
