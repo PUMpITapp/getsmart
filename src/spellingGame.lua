@@ -316,8 +316,11 @@ function checkAnswer(key,alternatives,rightanswer)
   local choosenAlternative = alternatives[1][userChoice]
   local correctAnswer = rightanswer[1]
   if (choosenAlternative==correctAnswer) then
+    main()
     return true
   else
+    print('false')
+
     return false
   end
 end
@@ -349,41 +352,25 @@ function onKey(key, state)
       --give answer
       if(key == 'red') then
         if(key==keyState) then --if you have highlighted an answer and choose it as answer
-          if (checkAnswer(key,question[2],rightAlternatives)==true) then -- checking if answer is true
-            main()
-          else
-            print('wrong')
-          end
+          checkAnswer(key,question[2],rightAlternatives)
         else
          printQuestion(question,key)
         end
       elseif(key == 'green') then
         if(key==keyState) then 
-          if (checkAnswer(key,question[2],rightAlternatives)==true) then 
-            main()
-          else
-            print('wrong')
-          end
+          checkAnswer(key,question[2],rightAlternatives) 
         else
           printQuestion(question,key)
        end
       elseif(key == 'yellow') then
         if(key==keyState) then
-          if (checkAnswer(key,question[2],rightAlternatives)==true) then
-            main()
-          else
-            print('wrong')
-          end
+          checkAnswer(key,question[2],rightAlternatives)
         else
           printQuestion(question,key)
         end
       elseif(key == 'blue') then
         if(key==keyState) then
-          if (checkAnswer(key,question[2],rightAlternatives)==true) then
-          main()
-          else
-            print('wrong')
-          end
+          checkAnswer(key,question[2],rightAlternatives)
         else
           printQuestion(question,key)
         end
