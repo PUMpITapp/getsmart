@@ -37,6 +37,8 @@ function init()
   }
   rightAlternatives = {} 
   images = {['colors'] = "images/color_choices.png"} 
+  key = 'yellow'
+  keyState = nil
 end
 
 --- Main function that runs the program
@@ -44,8 +46,7 @@ function main()
   init() 
   wordArray = selectRandomWord()
   question = generateQuestion(wordArray)
-  
-  printQuestion(question)
+  printQuestion(question,key)
 end
 
 
@@ -223,7 +224,8 @@ end
 ----------------------------------------------------
 --- Printing the enitre question on the screen
 -- @param #table question a table with a word, its intervalls and spelling options
-function printQuestion(question)
+-- @param #string key the choise made by the user
+function printQuestion(question, key)
   gfx.screen:clear({122,219,228})
   
   local diameter = 125
@@ -241,7 +243,7 @@ function printQuestion(question)
     position.x = position.x + text.getStringLength('lato', 'large',question[1][i])  
 
     if  i <= #question[2] then
-      printAlternatives(question[2][i],position,'yellow',diameter)
+      printAlternatives(question[2][i],position,key,diameter)
     end
 
   end
@@ -272,19 +274,27 @@ function onKey(key, state)
 
       -- In-game control when side menu is down
     elseif(not sideMenu) then
+
       if(key == 'red') then
-     --   checkAnswer(correctAnswer, answers[1])
+        print(keyState)
+        if(keyState=='red')
+          keyState == nil 
+        else
+         printQuestion(question,key)
+        end
+
       elseif(key == 'green') then
-     --   checkAnswer(correctAnswer, answers[2])
+     printQuestion(question,key)
       elseif(key == 'yellow') then
-      --  checkAnswer(correctAnswer, answers[3])
+      printQuestion(question,key)
       elseif(key == 'blue') then
-      --  checkAnswer(correctAnswer, answers[4])
+      printQuestion(question,key)
       elseif(key == "M") then
         sideMenu = true
         setMainSrfc()
         printSideMenu()
       end
+      keyState = key
     end
          
   elseif (state == "repeat") then
