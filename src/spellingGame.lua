@@ -114,7 +114,7 @@ function printAlternatives(alternatives, position, selected, diameter)
 
   placeAnswerCircles(circlePositions)
   placeAnswersOnCircles(alternatives)
-  --gfx.update()
+  gfx.update()
 
 end
 
@@ -163,29 +163,24 @@ end
 --- place the answers to the right position in their circle
 --@param #number answers The answer options that is given to the user 
 function placeAnswersOnCircles(answers)
--- Printing the answers
   local fh = text.getFontHeight('lato', 'large') -- font height
   local yOffset = fh /2
 
-  print(answers[1])
 
   local xOffset = text.getStringLength('lato', 'large', tostring(answers[1])) / 2
-  print(xOffset)
+
   text.print(circle.red, 'lato', 'black', 'large', tostring(answers[1]), circle.red:get_width() /2 - xOffset, circle.red:get_height() /2 - yOffset, xOffset*2, fh)
  
-  print(answers[2])
   xOffset = text.getStringLength('lato', 'large', tostring(answers[2])) / 2
-  print(xOffset)
+
   text.print(circle.green, 'lato', 'black', 'large', tostring(answers[2]), circle.green:get_width() /2 - xOffset, circle.green:get_height() /2 - yOffset, math.ceil(xOffset*2), fh)
   
-  print(answers[3])
   xOffset = text.getStringLength('lato', 'large', tostring(answers[3])) / 2
-  print(xOffset)
+
   text.print(circle.yellow, 'lato', 'black', 'large', tostring(answers[3]), circle.yellow:get_width() /2 - xOffset, circle.yellow:get_height() /2 - yOffset, xOffset*2, fh)
   
-  print(answers[4])
   xOffset = text.getStringLength('lato', 'large', tostring(answers[4])) / 2
-  print(xOffset)
+
   text.print(circle.blue, 'lato', 'black', 'large', tostring(answers[4]), circle.blue:get_width() /2 - xOffset, circle.blue:get_height() /2 - yOffset, xOffset*2, fh)
 end
 
@@ -211,7 +206,7 @@ function printQuestion(question)
     position.x = position.x + text.getStringLength('lato', 'large',question[1][i])  
 
     if  i <= #question[2] then
-      printAlternatives(question[2][i],position,'blue',diameter)
+      printAlternatives(question[2][i],position,'yellow',diameter)
     end
 
   end
