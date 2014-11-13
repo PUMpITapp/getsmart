@@ -39,6 +39,7 @@ function init()
   images = {['colors'] = "images/color_choices.png"} 
   key = 'yellow'
   keyState = nil
+  alternatives = {}
 end
 
 --- Main function that runs the program
@@ -61,10 +62,10 @@ function selectRandomWord()
   return question
 end
 
---- Shuffles the order of answer alternetives
+--- Shuffles the order of answer alternatives
 -- @param #table alternatives A table with possible answer alternatives
 -- @return #table alternatives Same table but in different order
-function shuffleOrder(alternatives)
+--[[function shuffleOrder(alternatives)
   local n = #alternatives
 
   while n >= 2 do
@@ -76,6 +77,29 @@ function shuffleOrder(alternatives)
   end
  
   return alternatives
+end]]
+
+function shuffleOrder()
+  local order = {1,2,3,4}
+  local n = #order
+
+  while n >= 2 do
+    -- n is now the last pertinent index
+    local k = math.random(n) -- 1 <= k <= n
+    -- Quick swap
+    order[n], order[k] = order[k], order[n]
+    n = n - 1
+  end
+ 
+  return order
+end
+
+function reorderAlternatives(alternatives, order)
+  local shuffleAlternatives = {}
+  for i = 1, #order do
+    shuffleAlternatives[order[i]]=alternatives[i]
+  end
+  return shuffleAlternatives
 end
 
 ---Slitting the word into parts so the system know which parts to give altenatives to
@@ -114,10 +138,11 @@ function generateQuestion(wordArray)
   end
 
   wordParts = splitIntoWordParts(wordArray[1],wordArray[2])
+  order = shuffleOrder()
   local scrambledAlternatives = {}
 
   for i=1, #wordArray[3] do
-    scrambledAlternatives[i] = shuffleOrder(wordArray[3][i])
+    scrambledAlternatives[i] = reorderAlternatives(wordArray[3][i],order)
   end
 
   question = {wordParts, scrambledAlternatives}
@@ -253,6 +278,36 @@ function printQuestion(question, key)
 
 end
 
+---Check if the answer is correct
+-- @param #string key the button the user choose, options: red, green, yellow, blue
+-- @param #table alternatives All answer options in a specific order
+-- @param #string rightanswer The correct answer
+-- @return #boolean correct returns true if the answer is correct
+
+function checkAnswer(key,alternatives,rightanswer)
+  local userChoice = 0
+  --local alternatives = alternatives
+  if (key=='red') then
+    userChoice = 1
+  elseif(key=='green') then
+    userChoice = 2
+  elseif(key== 'yellow') then
+    userChoice = 3
+  elseif (key=='blue') then
+    userChoice = 4
+  end
+  --checks which 
+  --has to check how many answers the question has and if which of them to check
+  local choosenAlternative = alternatives[1][userChoice]
+  local correctAnswer = rightanswer[1]
+  if (choosenAlternative==correctAnswer) then
+    return true
+  else
+    return false
+  end
+end
+
+
 --- Gets input from user and checks answer
 -- @param key The key that has been pressed
 -- @param state
@@ -277,21 +332,47 @@ function onKey(key, state)
 
       -- In-game control when side menu is down
     elseif(not sideMenu) then
-
+      --give answer
       if(key == 'red') then
-        print(keyState)
-        if(keyState=='red')
-          keyState == nil 
+        if(key==keyState) then --if you have highlighted an answer and choose it as answer
+          if (checkAnswer(key,question[2],rightAlternatives)==true) then -- checking if answer is true
+            main()
+          else
+            print('wrong')
+          end
         else
          printQuestion(question,key)
         end
-
       elseif(key == 'green') then
-     printQuestion(question,key)
+        if(key==keyState) then 
+          if (checkAnswer(key,question[2],rightAlternatives)==true) then 
+            main()
+          else
+            print('wrong')
+          end
+        else
+          printQuestion(question,key)
+       end
       elseif(key == 'yellow') then
-      printQuestion(question,key)
+        if(key==keyState) then
+          if (checkAnswer(key,question[2],rightAlternatives)==true) then
+            main()
+          else
+            print('wrong')
+          end
+        else
+          printQuestion(question,key)
+        end
       elseif(key == 'blue') then
-      printQuestion(question,key)
+        if(key==keyState) then
+          if (checkAnswer(key,question[2],rightAlternatives)==true) then
+          main()
+          else
+            print('wrong')
+          end
+        else
+          printQuestion(question,key)
+        end
       elseif(key == "M") then
         sideMenu = true
         setMainSrfc()
