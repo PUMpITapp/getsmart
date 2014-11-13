@@ -333,7 +333,7 @@ function onKey(key, state)
   if state == 'down' then
   elseif state == 'repeat' then
   elseif state == 'up' then
-
+    print(key)
     --if side menu is up
     if(sideMenu) then
       
@@ -349,7 +349,7 @@ function onKey(key, state)
       elseif(key == 'blue') then
         sideMenu = false
         dofile('geographyGame.lua')
-      elseif(key == "M") then
+      elseif(key == "right") then
         sideMenu = false
          changeSrfc()
       end
@@ -368,7 +368,7 @@ function onKey(key, state)
       elseif(key == 'blue' and not answered[key]) then
         checkAnswer(correctAnswer, answers[4], key)
        
-      elseif(key == "M") then
+      elseif(key == "right") then
         sideMenu = true
         setMainSrfc()
         printSideMenu()

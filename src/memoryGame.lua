@@ -24,7 +24,7 @@ function onKey(key, state)
         dofile('spellingGame.lua')
       elseif(key == 'blue') then
         dofile('geographyGame.lua')
-      elseif(key == "M") then
+      elseif(key == "right") then
          changeSrfc()
       end
 
@@ -38,7 +38,7 @@ function onKey(key, state)
       --  checkAnswer(correctAnswer, answers[3])
       elseif(key == 'blue') then
       --  checkAnswer(correctAnswer, answers[4])
-      elseif(key == "M") then
+      elseif(key == "right") then
         sideMenu = true
         setMainSrfc()
         printSideMenu()
