@@ -1,5 +1,30 @@
-text = require "write_text"
-gfx = require "gfx"
+--- Checks if the file was called from a test file.
+-- @return #boolean If called from test file return true (indicating file is being tested) else false  
+function checkTestMode()
+  runFile = debug.getinfo(2, "S").source:sub(2,3)
+  if (runFile ~= './' ) then
+    underGoingTest = false
+  elseif (runFile == './') then
+    underGoingTest = true
+  end
+  return underGoingTest
+end
+
+
+--- Chooses either the actual or the stubs depending on if a test file started the program.
+-- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
+  if not underGoingTest then
+    gfx = require "gfx"
+    text = require "write_text"
+    --animation = require "animation"
+  elseif underGoingTest then 
+    gfx = require "gfx_stub"
+    text = require "write_text_stub"
+    --animation = require "animation_stub"
+  end
+end 
+setRequire(checkTestMode())
 
 gfx.screen:clear({122,219,228})
 
