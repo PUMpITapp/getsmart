@@ -5,9 +5,16 @@ function profileHandler.update(player, game, gameType, points)
 	profiles, err = table.load('profiles.lua')
 	player = "player" .. player
 
-	profiles[player][game][gameType] = profiles[player][game][gameType] + points
-	assert( table.save( profiles, "profiles.lua" ) == nil )
-	profileHandler.updateUserLevel(player, game)
+	if game == 'mathGame' then
+		profiles[player][game][gameType] = profiles[player][game][gameType] + points
+		assert( table.save( profiles, "profiles.lua" ) == nil )
+		profileHandler.updateUserLevel(player, game)
+	else
+		profiles[player][game] = profiles[player][game]+ points
+		assert( table.save( profiles, "profiles.lua" ) == nil )
+	end
+	
+	
 end
 
 function profileHandler.updateUserLevel(player, game)

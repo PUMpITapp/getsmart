@@ -17,6 +17,7 @@ function setRequire(underGoingTest)
   if not underGoingTest then
     gfx = require "gfx"
     text = require "write_text"
+    profileHandler = require "profileHandler"
     --animation = require "animation"
   elseif underGoingTest then 
     gfx = require "gfx_stub"
@@ -25,6 +26,11 @@ function setRequire(underGoingTest)
   end
 end 
 setRequire(checkTestMode())
+
+
+-- Set player
+player = 1
+
 
 gfx.screen:clear({122,219,228})
 
@@ -316,6 +322,7 @@ function checkAnswer(key,alternatives,rightanswer)
   local choosenAlternative = alternatives[1][userChoice]
   local correctAnswer = rightanswer[1]
   if (choosenAlternative==correctAnswer) then
+    profileHandler.update(player,'spellingGame', nil, 1)
     main()
     return true
   else
