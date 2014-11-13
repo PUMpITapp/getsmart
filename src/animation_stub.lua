@@ -15,7 +15,11 @@ circle = gfx.loadpng('./images/menu/main-menu_math.png')
 -- @param zoom The scale to where the zoom should end, 1 = 100%, 2 = 200%
 -- @param speed The amount of seconds from start of animation to end.
 function animation.zoom(background, surface, x, y, zoom, speed)
-	
+	if zoom > 1 then
+		return true
+	else 
+		return false
+	end
 end
 
 function sleep(time)

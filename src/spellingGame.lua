@@ -3,6 +3,7 @@ gfx = require "gfx"
 
 gfx.screen:clear({122,219,228})
 
+<<<<<<< HEAD
 --text.print(gfx.screen, arial, "Spelling Game coming soon!", 70 , 300 )
 
 
@@ -218,6 +219,9 @@ function printQuestion(question)
 
 end
 
+=======
+text.print(gfx.screen, 'lato', 'black', 'medium', "Spelling Game coming soon!", 250 , 300 )
+>>>>>>> developer
 
 
 --- Gets input from user and checks answer

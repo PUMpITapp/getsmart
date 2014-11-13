@@ -6,7 +6,7 @@ local gfx = {}
 
 Surface = {}
 
-function Surface:new(w, h)  
+function Surface:new(w, h)
   dummyTable = { cref = dummySurface }
   self.__index = self
   return setmetatable(dummyTable, self)
