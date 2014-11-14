@@ -1,5 +1,6 @@
 require "spellingGame"
 
+
 describe('Testing init: ', function ()	
 	-- The following test checks that the words in the answer table has the 
 	-- same number of intervalls as alternative sets. 
@@ -134,10 +135,13 @@ describe('Testing checkAnswer: ', function ()
 
 end)
 
---[[describe('Testing printQuestion: ', function ()
-	it('', function ()
-		local expected = 
-		local got = 
+describe('Testing printQuestion: ', function ()
+	it('Running printQuestion expecting the string printed in return', function ()
+		local testWord = {'question',{{1,2},{4,5},{7,8}},{{'qu','qw','er','ty'},{'st','qw','er','ty'},{'on','qw','er','ty'}}}
+		local testQuestion = generateQuestion(testWord)
+
+		local expected = 'printed' 
+		local got = printQuestion(testQuestion, 'yellow')
 		assert.are.equals(expected, got)
 	end)	
-end)]]
+end)

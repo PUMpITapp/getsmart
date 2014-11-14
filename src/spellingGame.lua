@@ -278,7 +278,7 @@ function printQuestion(question, key)
     end
 
   end
-
+  return "printed"
 end
 
 --- Determines the length of the question
