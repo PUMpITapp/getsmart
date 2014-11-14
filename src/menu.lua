@@ -18,32 +18,22 @@ function checkTestMode()
   return underGoingTest
 end
 
---- Chooses either the actual or he dummy gfx.
--- Returns dummy gfx if the file is being tested.
--- Rerunes actual gfx if the file is being run.
-function chooseGfx(underGoingTest)
+--- Chooses either the actual or the stubs depending on if a test file started the program.
+-- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
   if not underGoingTest then
-    tempGfx = require "gfx"
-  elseif underGoingTest then
-    tempGfx = require "gfx_stub"
+    gfx = require "gfx"
+    text = require "write_text"
+    animation = require "animation"
+    profileHandler = require "profileHandler"
+  elseif underGoingTest then 
+    gfx = require "gfx_stub"
+    text = require "write_text_stub"
+    animation = require "animation_stub"
   end
-  return tempGfx
-end
+end 
 
-function chooseText(underGoingTest)
-  if not underGoingTest then
-    tempText = require "write_text"
-  elseif underGoingTest then
-    tempText = require "write_text_stub"
-  end
-  return tempText
-end
-
--- Require the grafics library and setting the background color
-gfx = chooseGfx(checkTestMode())
-text = chooseText(checkTestMode())
-
---gfx.screen:clear({255,255,255}) --RGB
+setRequire(checkTestMode())
 
 local background = gfx.loadpng('./images/background.png')
 gfx.screen:copyfrom(background, nil)
@@ -55,6 +45,9 @@ sideMenu = false
 
 -- String which holds what game is to be loaded
 gamePath = ''
+
+-- The number of the playing user
+currentPlayer = ...
 
 -- Create a new surface with 33% width and 100% height of the screen
 local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width() / 3, gfx.screen:get_height())
@@ -88,6 +81,19 @@ local png_logo = 'images/logo.png'
 
 -- Directory of images
 local dir = './'
+
+function printPlayerName()
+	
+	local playerName = profileHandler.getName(currentPlayer)
+	
+
+	local fw = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
+	local fh = text.getFontHeight('lato', 'medium')
+	local scale = 0.02
+
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_height()*scale, gfx.screen:get_width()*scale, fw, fh)
+
+end
 
 function printSideMenu()
 
@@ -220,13 +226,10 @@ function runGame(path, testingModeOn)
 	end
 end
 
-currentPlayer = ...
-
 -- Main function that runs the program
 local function main()
-	
-	print("Menu user name: " ..tostring(currentPlayer[1].name))
-	print("Menu user number: " ..tostring(currentPlayer[1].number))
+
+	printPlayerName()
  	printMenuCircles()  
  	printLogotype()
 end

@@ -20,6 +20,13 @@ function profileHandler.setName(player, name)
 	--profileHandler.printToFile(profiles)
 end
 
+function profileHandler.getName(player)
+	profiles, err = table.load('profiles.lua')
+	player = "player" .. tostring(player)
+	print("Profilehandler: " ..player)
+	return profiles[player]['name']
+end
+
 function profileHandler.printToFile(profiles)
 	--local file = io.open("profiles.lua", 'w')
 	--file:write(profile)

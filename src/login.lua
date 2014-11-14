@@ -18,30 +18,22 @@ function checkTestMode()
   return underGoingTest
 end
 
---- Chooses either the actual or he dummy gfx.
--- Returns dummy gfx if the file is being tested.
--- Rerunes actual gfx if the file is being run.
-function chooseGfx(underGoingTest)
+--- Chooses either the actual or the stubs depending on if a test file started the program.
+-- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
   if not underGoingTest then
-    tempGfx = require "gfx"
-  elseif underGoingTest then
-    tempGfx = require "gfx_stub"
+    gfx = require "gfx"
+    text = require "write_text"
+    animation = require "animation"
+    profileHandler = require "profileHandler"
+  elseif underGoingTest then 
+    gfx = require "gfx_stub"
+    text = require "write_text_stub"
+    animation = require "animation_stub"
   end
-  return tempGfx
-end
+end 
 
-function chooseText(underGoingTest)
-  if not underGoingTest then
-    tempText = require "write_text"
-  elseif underGoingTest then
-    tempText = require "write_text_stub"
-  end
-  return tempText
-end
-
--- Require the grafics library and setting the background color
-gfx = chooseGfx(checkTestMode())
-text = chooseText(checkTestMode())
+setRequire(checkTestMode())
 
 --gfx.screen:clear({255,255,255}) --RGB
 local background = gfx.loadpng('./images/background_login.png')
@@ -132,37 +124,32 @@ function onKey(key,state)
 	  if(key == 'red') then
         gamePath = 'mathGame.lua'
         chosenPlayer = 1
-        login_player.number = chosenPlayer
         runGame(gamePath, underGoingTest, chosenPlayer)
       elseif(key == 'green') then
         gamePath = 'memoryGame.lua'
 		chosenPlayer = 2
-		login_player.number = chosenPlayer
         runGame(gamePath, underGoingTest, chosenPlayer)
       elseif(key == 'yellow') then
         gamePath = 'spellingGame.lua'
         chosenPlayer = 3
-        login_player.number = chosenPlayer
-        --print("Login nr: "..login_player.number)
         runGame(gamePath, underGoingTest, chosenPlayer)
       elseif(key == 'blue') then
         gamePath = 'geographyGame.lua'
         chosenPlayer = 4
-        login_player.number = chosenPlayer
         runGame(gamePath, underGoingTest, chosenPlayer)
 	  end
   end
 end
 
 -- Table to be sent to newProfile or menu containing information about the user
-login_player = { [1] = {name = "", number = 0} }
+--login_player = 0
 
 -- Runs chosen game (file) if testing mode is off 
 function runGame(path, testingModeOn, chosenPlayer)
 	if(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 1) then -- If player exists (is active) then go to game menu
-		assert(loadfile("menu.lua"))(login_player)
+		assert(loadfile("menu.lua"))(chosenPlayer)
 	elseif(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 0) then -- If player does not exist (is not active) go and create new profile
-		assert(loadfile("newProfile.lua"))(login_player)
+		assert(loadfile("newProfile.lua"))(chosenPlayer)
 	end
 end
 

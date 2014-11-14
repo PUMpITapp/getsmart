@@ -6,8 +6,8 @@ return {
 -- Table: {2}
 {
    {3},
-   ["name"]="qqq",
-   ["number"]=3,
+   ["number"]=2,
+   ["name"]="qqqq",
 },
 -- Table: {3}
 {

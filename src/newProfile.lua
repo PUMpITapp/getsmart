@@ -45,6 +45,9 @@ local gamePath = ''
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 require "profiles"
 
+-- The current user, either a number (coming from login) or a string (coming from keyboard)
+profilePlayer = ...
+
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_profile_circle_width = 149
 local png_profile_circle_height = 147
@@ -64,6 +67,17 @@ local png_logo = 'images/logo.png'
 
 -- Directory of images
 local dir = './'
+
+function isNewPlayer()
+
+	if(tonumber(profilePlayer) == nil) then		-- If name (coming from Keyboard)	
+		name, number = profilePlayer:match("([^,]+),([^,]+)")
+		profileHandler.setName(tonumber(number), tostring(name))
+		assert(loadfile('menu.lua'))(number)
+	else										-- If number (coming from Keyboard)
+		return true
+	end
+end
 
 -- Prints the number of the player at center of screen !!! FOR DEVELOPMENT ONLY !!!
 local function printPlayerNumber()
@@ -116,28 +130,10 @@ function runGame(path, testingModeOn)
 	end
 end
 
---require "keyboard"
-
-profilePlayer = ...
---require "profileHandler"
---assert( table.save( ..., "table_dump.lua" ) == nil )
-
-function isPlayerNew()
-
-	if(string.len(profilePlayer[1].name) > 0) then
-		profileHandler.setName(tonumber(profilePlayer[1].number), tostring(profilePlayer[1].name))
-		sleep(1)
-		assert(loadfile('menu.lua'))(profilePlayer)
-		return false
-	else
-		return true
-	end
-end
-
 -- Main function that runs the program
 local function main()
 
-	if(isPlayerNew()) then
+	if(isNewPlayer()) then
 		printPlayerNumber()
 		printNavigationButtons()
 		assert(loadfile('Keyboard.lua'))(profilePlayer)

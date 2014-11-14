@@ -14,18 +14,19 @@ local spacePressedPNG = gfx.loadpng("Images/KeyboardPics/spacePressed.png")
 local keyboardState = lowerCasePNG
 
 -- Scrum team 1 changes
+profileHandler = require "profileHandler"
 local keyboardPositionY = 7	-- Originally 3
 local keyboardPositionX = 3		-- Originally 3
 local inputPositionY = 3		-- Originally 2
 local inputPositionX = 2		-- Originally 2
-keyboard_player = {...}
+keyboard_player = ...
 
 function getInputText()
 	return inputText
 end
 
 function sendNameAndGoBack()
-	keyboard_player[1].name = getInputText()
+	keyboard_player = getInputText()..','..keyboard_player
 	assert(loadfile('newProfile.lua'))(keyboard_player)
 end
 
