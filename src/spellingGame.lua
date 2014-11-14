@@ -43,8 +43,7 @@ function init()
   }
   rightAlternatives = {} 
   images = {['colors'] = "images/color_choices.png"} 
-  key = 'yellow'
-  keyState = nil
+  inFocus = nil
   alternatives = {}
 end
 
@@ -259,7 +258,9 @@ end
 -- @param #table question a table with a word, its intervalls and spelling options
 -- @param #string key the choise made by the user
 function printQuestion(question, key)
-
+  if key == nil then 
+    key ="yellow"
+  end
   gfx.screen:clear({122,219,228})
   
   local diameter = 125
@@ -284,6 +285,7 @@ function printQuestion(question, key)
     end
 
   end
+  key = nil
   return "printed"
 end
 
@@ -323,8 +325,8 @@ function checkAnswer(key,alternatives,rightanswer)
   local correctAnswer = rightanswer[1]
   if (choosenAlternative==correctAnswer) then
     profileHandler.update(player,'spellingGame', nil, 1)
+    inFocus = nil
     main()
-    return true
   else
     print('false')
 
@@ -357,28 +359,33 @@ function onKey(key, state)
       -- In-game control when side menu is down
     elseif(not sideMenu) then
       --give answer
+     
       if(key == 'red') then
-        if(key==keyState) then --if you have highlighted an answer and choose it as answer
+        if(key==inFocus) then --if you have highlighted an answer and choose it as answer
           checkAnswer(key,question[2],rightAlternatives)
         else
+          inFocus = key
          printQuestion(question,key)
         end
       elseif(key == 'green') then
-        if(key==keyState) then 
+        if(key==inFocus) then 
           checkAnswer(key,question[2],rightAlternatives) 
         else
+          inFocus = key
           printQuestion(question,key)
        end
       elseif(key == 'yellow') then
-        if(key==keyState) then
+        if(key==inFocus) then
           checkAnswer(key,question[2],rightAlternatives)
         else
+          inFocus = key
           printQuestion(question,key)
         end
       elseif(key == 'blue') then
-        if(key==keyState) then
+        if(key==inFocus) then
           checkAnswer(key,question[2],rightAlternatives)
         else
+          inFocus = key
           printQuestion(question,key)
         end
       elseif(key == "right") then
@@ -386,7 +393,7 @@ function onKey(key, state)
         setMainSrfc()
         printSideMenu()
       end
-      keyState = key
+      
     end
          
   elseif (state == "repeat") then
