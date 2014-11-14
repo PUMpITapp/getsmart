@@ -113,9 +113,11 @@ end)
 describe('Testing checkAnswer: ', function ()
 	testAlternatives = {{'qw','er','ty','ui'}}
 	rightAnswer = {'qw'}
-	it('Right answar is red, chosen is red. Expecting true', function () 
-		local got = checkAnswer('red',testAlternatives,rightAnswer)
-		assert.is_true(got)
+	it('Right answar is red, chosen is red. Expecting inFocus = nil', function () 
+		checkAnswer('red',testAlternatives,rightAnswer)
+		local expected = nil
+		local got = inFocus
+		assert.are.same(expected, got)
 	end)
 
 	it('Right answar is red, chosen is green . Expecting false', function () 

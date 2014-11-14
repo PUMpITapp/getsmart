@@ -328,7 +328,7 @@ function checkAnswer(key,alternatives,rightanswer)
     inFocus = nil
     main()
   else
-    print('false')
+    --print('false')
 
     return false
   end
