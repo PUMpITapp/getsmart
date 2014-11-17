@@ -116,11 +116,11 @@ function produceMathProblem(level)
  -- level not implemented yet
   local operator = getOperator()
   gameType = getOperatorString(operator)
-  print("Game type: "..gameType)
+  --print("Game type: "..gameType)
   local gameLevel = getGameLevel(gameType)
-  print("Game level: " ..gameLevel)
+  --print("Game level: " ..gameLevel)
   local boundries = getBoundries(gameType, gameLevel)
-  print("Boundries: "..boundries['termOne'][1] .. " - " ..boundries['termOne'][2])
+  --print("Boundries: "..boundries['termOne'][1] .. " - " ..boundries['termOne'][2])
 
 
   -- Because of Lua random being semi-random from fixed lists

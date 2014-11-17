@@ -19,7 +19,7 @@ end
 
 function profileHandler.updateUserLevel(player, game)
 	local gameValue = 1
-	print("update level")
+	--print("update level")
 
 	for key,value in pairs(profiles[player][game]) do
 		if key ~= 'userLevel' then
@@ -28,7 +28,7 @@ function profileHandler.updateUserLevel(player, game)
 		end
 	end
 	gameValue = math.floor(math.log(gameValue))
-	print(gameValue)
+	--print(gameValue)
 	profiles[player][game]['userLevel']=gameValue
 	assert( table.save( profiles, "profiles.lua" ) == nil )
 end
