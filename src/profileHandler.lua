@@ -9,11 +9,11 @@ function profileHandler.update(player, game, gameType, points)
 	if game == 'mathGame' then
 		profiles[player][game][gameType] = profiles[player][game][gameType] + points
 		assert( table.save( profiles, "profiles.lua" ) == nil )
-		profileHandler.updateUserLevel(player, game)
 	else
-		profiles[player][game] = profiles[player][game]+ points
+		profiles[player][game]['points'] = profiles[player][game]['points']+ points
 		assert( table.save( profiles, "profiles.lua" ) == nil )
 	end
+	profileHandler.updateUserLevel(player, game)
 	
 	
 end
