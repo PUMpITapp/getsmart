@@ -99,14 +99,19 @@ function gfx.update()
 end
 
 function gfx.loadpng(path)
-  return Surface:newPNG(path)
+  local img = Surface:newPNG(path)
+  if img.cref ~= nil then
+    return img
+  end
+  return nil
 end
 
 function gfx.loadjpeg(path)
-  return Surface:newJPEG(path)
+  local img = Surface:newJPEG(path)
+  if img.cref ~= nil then
+    return img
+  end
+  return nil
 end
 
-
-return gfx  
-
-
+return gfx
