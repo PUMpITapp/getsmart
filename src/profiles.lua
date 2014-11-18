@@ -68,10 +68,75 @@ return {
 },
 -- Table: {9}
 {
+   ["points"]=0,
+   ["userLevel"]=1,
+},
+-- Table: {10}
+{
+   ["points"]=0,
+   ["userLevel"]=1,
+},
+-- Table: {11}
+{
+   ["points"]=0,
+   ["userLevel"]=1,
+},
+-- Table: {12}
+{
+   ["additionPoints"]=1,
+   ["divisionPoints"]=1,
+   ["subtractionPoints"]=1,
    ["multiplicationPoints"]=1,
+   ["userLevel"]=0,
+},
+-- Table: {13}
+{
+   ["points"]=0,
+   ["userLevel"]=1,
+},
+-- Table: {14}
+{
+   ["points"]=0,
+   ["userLevel"]=1,
+},
+-- Table: {15}
+{
+   ["points"]=0,
+   ["userLevel"]=1,
+},
+-- Table: {16}
+{
+   ["additionPoints"]=1,
    ["divisionPoints"]=1,
    ["subtractionPoints"]=1,
    ["userLevel"]=1,
+},
+-- Table: {17}
+{
+   ["points"]=0,
+   ["userLevel"]=1,
+},
+-- Table: {18}
+{
+   ["points"]=0,
+   ["userLevel"]=1,
+},
+-- Table: {19}
+{
+   ["points"]=0,
+   ["userLevel"]=1,
+},
+-- Table: {20}
+{
    ["additionPoints"]=1,
+   ["divisionPoints"]=1,
+   ["subtractionPoints"]=1,
+   ["multiplicationPoints"]=1,
+   ["userLevel"]=0,
+},
+-- Table: {21}
+{
+   ["points"]=0,
+   ["userLevel"]=1,
 },
 }

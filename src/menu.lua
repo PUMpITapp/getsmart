@@ -30,7 +30,6 @@ function setRequire(underGoingTest)
     gfx = require "gfx_stub"
     text = require "write_text_stub"
     animation = require "animation_stub"
-    profileHandler = require "profileHandler_stub"
   end
 end 
 
@@ -86,44 +85,49 @@ local dir = './'
 function printPlayerName()
 	
 	local playerName = profileHandler.getName(currentPlayer)
-	
 
 	local fw = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
 	local fh = text.getFontHeight('lato', 'medium')
-	local scale = 0.02
+	local position = 0.02
 
-	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_height()*scale, gfx.screen:get_width()*scale, fw, fh)
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw, fh)
 
 end
 
+
+
+-- Prints the side menu
 function printSideMenu()
 
-	local function printTransparentSurface()
+-- Prints the side menu
+local function printsideMenuSurface()
 
-		transparentSrfc:clear() -- Initializes transparentSrfc
-		transparentSrfc:fill({0, 0, 0, 127}) --RGBA -- should be 50% transparent
-		gfx.screen:copyfrom(transparentSrfc, nil, {x=0, y=0}) -- Prints transparentSrfc
+	local toScreen = nil
+	local gameCounter = 1
 
+	sideMenuSrfc:clear() -- Initializes sideMenuSrfc
+
+	sideMenuSrfc:fill({100, 100, 100}) --RGB
+
+	gfx.screen:copyfrom(sideMenuSrfc, nil, {x=0, y=0}) -- Prints sideMenuSrfc
+
+	-- Prints menu items
+	for i = 35, 650, 145 do
+		toScreen = gfx.loadpng(dir..png_side_menu_circles['game'..gameCounter])
+		printCircle(toScreen, (gfx.screen:get_width()/3)/2-(png_side_menu_circle_width/2), i)
+		gameCounter = gameCounter+1
 	end
-	
-	local function printsideMenuSurface()
 
-		local toScreen = nil
-		local gameCounter = 1
-	
-		sideMenuSrfc:clear() -- Initializes sideMenuSrfc
-	
-		sideMenuSrfc:fill({100, 100, 100}) --RGB
-	
-		gfx.screen:copyfrom(sideMenuSrfc, nil, {x=0, y=0}) -- Prints sideMenuSrfc
-	
-		-- Prints menu items
-		for i = 35, 650, 145 do
-			toScreen = gfx.loadpng(dir..png_side_menu_circles['game'..gameCounter])
-			printCircle(toScreen, (gfx.screen:get_width()/3)/2-(png_side_menu_circle_width/2), i)
-			gameCounter = gameCounter+1
-		end
-	end
+end
+
+-- Prints the transparent surface above the gfx.screen
+local function printTransparentSurface()
+
+	transparentSrfc:clear() -- Initializes transparentSrfc
+	transparentSrfc:fill({0, 0, 0, 127}) --RGBA -- should be 50% transparent
+	gfx.screen:copyfrom(transparentSrfc, nil, {x=0, y=0}) -- Prints transparentSrfc
+
+end
 
 	printTransparentSurface()
 	printsideMenuSurface()
@@ -143,11 +147,12 @@ function printMenuCircles()
 
 	local toScreen = nil
 	local gameCounter = 1
+	local verticalGrid = gfx.screen:get_width()/5
 
 	-- Prints menu items
-	for i = 50, 1000, 250 do
+	for i = 1, 4, 1 do
 		toScreen = gfx.loadpng(dir..png_menu_circles['game'..gameCounter])
-		printCircle(toScreen, i, 450)
+		printCircle(toScreen, verticalGrid*i-(png_menu_circle_width/2), 450)
 		gameCounter = gameCounter+1
 	end
 		
@@ -204,28 +209,14 @@ function onKey(key,state)
         sideMenu = false
         gamePath = 'geographyGame.lua'
         runGame(gamePath, underGoingTest)
-		--[[
-	  elseif(key=='M') then
-	  	if(not sideMenu ) then
-	  		sideMenu = true
-	  		setMainSrfc()
-	  		printSideMenu()
-	  	else
-	  		sideMenu = false
-	  		changeSrfc()
-	  	end
-	  	]]
-	  end
+		end	  
   end
 end
 
 -- Runs chosen game (file) if testing mode is off
 function runGame(path, testingModeOn)
-	--print(testingModeOn)
 	if(not testingModeOn) then
---		assert(loadfile(path))(1)
-		print(path)
-		dofile(path)
+		assert(loadfile(path))(currentPlayer)
 	end
 end
 
