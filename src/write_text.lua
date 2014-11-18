@@ -10,9 +10,11 @@ local text = {}
 -- @param w Width of textbox
 -- @param h Height of textbox
 function text.print(surface, fontFace, fontColor, fontSize, text, x, y, w, h)
+
   fontFace = string.lower(fontFace)
   fontColor = string.lower(fontColor)
   fontSize = string.lower(fontSize)
+
   -- Check that params are valid
   if (fontFace ~= 'lato' and fontFace ~= 'lora') then
     print('fontFace not found, should be lato or lora')
@@ -20,6 +22,8 @@ function text.print(surface, fontFace, fontColor, fontSize, text, x, y, w, h)
   elseif (fontSize ~= 'small' and fontSize ~= 'medium' and fontSize ~= 'large') then
     print('fontsize not found, should be small, medium or large')
     return false
+  elseif (fontColor ~= 'white' and fontColor ~= 'black') then
+    print('Font color not found, should be white or black')
   end
 
   local font = require ("fonts/lookups/" .. fontFace .. "_" .. fontSize)

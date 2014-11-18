@@ -28,6 +28,7 @@ end
 setRequire(checkTestMode())
 
 
+
 -- Set player
 player = 1
 
@@ -44,6 +45,8 @@ function init()
   rightAlternatives = {} 
   images = {['colors'] = "images/color_choices.png"} 
   inFocus = nil
+  --key = 'yellow'
+  --keyState = nil
   alternatives = {}
 end
 
@@ -189,8 +192,10 @@ function printAlternatives(alternatives, position, selected, diameter)
 
 end
 
+
 --- create the background and the circles for the answers
 function createAnswerBackground()
+
   colorsImg = gfx.loadpng(images.colors)
 
   -- Positions in the circle sprite.
@@ -258,9 +263,11 @@ end
 -- @param #table question a table with a word, its intervalls and spelling options
 -- @param #string key the choise made by the user
 function printQuestion(question, key)
+
   if key == nil then 
     key ="yellow"
   end
+
   gfx.screen:clear({122,219,228})
   
   local diameter = 125
@@ -285,7 +292,9 @@ function printQuestion(question, key)
     end
 
   end
+
   key = nil
+
   return "printed"
 end
 
@@ -328,8 +337,6 @@ function checkAnswer(key,alternatives,rightanswer)
     inFocus = nil
     main()
   else
-    --print('false')
-
     return false
   end
 end
@@ -358,8 +365,7 @@ function onKey(key, state)
 
       -- In-game control when side menu is down
     elseif(not sideMenu) then
-      --give answer
-     
+      --give answer     
       if(key == 'red') then
         if(key==inFocus) then --if you have highlighted an answer and choose it as answer
           checkAnswer(key,question[2],rightAlternatives)
@@ -393,7 +399,6 @@ function onKey(key, state)
         setMainSrfc()
         printSideMenu()
       end
-      
     end
          
   elseif (state == "repeat") then

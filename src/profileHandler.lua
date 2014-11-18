@@ -1,6 +1,7 @@
 profileHandler = {}
 dofile('table.save.lua')
 
+--- All games
 function profileHandler.update(player, game, gameType, points)
 	profiles, err = table.load('profiles.lua')
 	player = "player" .. player
@@ -15,6 +16,11 @@ function profileHandler.update(player, game, gameType, points)
 	end
 	
 	
+end
+
+function profileHandler.getGameLevel(player, game, gameType)
+	profiles, err = table.load('profiles.lua')
+	return profiles[player][game][gameType]
 end
 
 function profileHandler.updateUserLevel(player, game)
@@ -33,9 +39,22 @@ function profileHandler.updateUserLevel(player, game)
 	assert( table.save( profiles, "profiles.lua" ) == nil )
 end
 
-function profileHandler.getGameLevel(player, game, gameType)
+function profileHandler.getName(player)
 	profiles, err = table.load('profiles.lua')
-	return profiles[player][game][gameType]
+	player = "player" .. tostring(player)
+	print("Profilehandler: " ..player)
+	return profiles[player]['name']
+end
+
+--- New profile
+function profileHandler.setName(player, name)
+	profiles, err = table.load('profiles.lua')
+	player = "player" .. tostring(player)
+	print("Profilehandler: " ..player)
+	profiles[player]['name'] = name
+	profiles[player]['isActive'] = 1
+	assert( table.save( profiles, "profiles.lua" ) == nil )
+	--profileHandler.printToFile(profiles)
 end
 
 return profileHandler
