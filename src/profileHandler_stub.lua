@@ -13,6 +13,11 @@ function profileHandler.getGameLevel(player, game, gameType)
 	return 1
 end
 
+
+function profileHandler.getLevel(player, game)
+	return 1
+end
+
 function profileHandler.getName(player)
 	return 'TestPlayer'
 end
