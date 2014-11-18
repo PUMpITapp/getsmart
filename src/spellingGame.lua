@@ -180,7 +180,10 @@ function printAlternatives(alternatives, position, selected, diameter)
     selected = 2
   elseif selected == 'blue' then
     selected = 3
-  end
+  elseif selected == 'start' then
+    selected = 1.5
+  end 
+
 
   local d = diameter
   local sh = gfx.screen:get_height()
@@ -271,10 +274,7 @@ end
 -- @param #table question a table with a word, its intervalls and spelling options
 -- @param #string key the choise made by the user
 function printQuestion(question, key)
-
-  if key == nil then 
-    key ="yellow"
-  end
+  key = key or "start"
 
   gfx.screen:clear({122,219,228})
   
