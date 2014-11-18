@@ -30,6 +30,7 @@ function setRequire(underGoingTest)
     gfx = require "gfx_stub"
     text = require "write_text_stub"
     animation = require "animation_stub"
+    profileHandler = require "profileHandler_stub"
   end
 end 
 
@@ -220,8 +221,10 @@ end
 
 -- Runs chosen game (file) if testing mode is off
 function runGame(path, testingModeOn)
+	--print(testingModeOn)
 	if(not testingModeOn) then
 --		assert(loadfile(path))(1)
+		print(path)
 		dofile(path)
 	end
 end

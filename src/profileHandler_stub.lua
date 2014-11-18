@@ -10,7 +10,15 @@ function profileHandler.updateUserLevel(player, game)
 end
 
 function profileHandler.getGameLevel(player, game, gameType)
-	return 5
+	return 1
+end
+
+function profileHandler.getName(player)
+	return 'TestPlayer'
+end
+
+--- New profile
+function profileHandler.setName(player, name)
 end
 
 return profileHandler

@@ -47,7 +47,7 @@ function setRequire(underGoingTest)
     gfx = require "gfx_stub"
     text = require "write_text_stub"
     animation = require "animation_stub"
-    profileHandler = require "profileHandler"
+    profileHandler = require "profileHandler_stub"
   end
 end 
 setRequire(checkTestMode())
