@@ -30,14 +30,13 @@ function setRequire(underGoingTest)
     gfx = require "gfx_stub"
     text = require "write_text_stub"
     animation = require "animation_stub"
-    profileHandler = require "profileHandler_stub"
   end
 end 
 
 setRequire(checkTestMode())
 
 --gfx.screen:clear({255,255,255}) --RGB
-local background = gfx.loadpng('./images/background.png')
+local background = gfx.loadpng('./images/background_login.png')
 gfx.screen:copyfrom(background,nil)
 gfx.update()
 
@@ -79,7 +78,31 @@ function printMenuCircles()
 	local status = ''
 	local textSize = 'medium'
 	local fh = text.getFontHeight('lato', textSize)
+	local verticalGrid = gfx.screen:get_width()/5
 
+	-- Prints menu items
+	for i = 1, 4, 1 do
+
+		-- Checks if the user is active
+		if(profiles['player'..gameCounter]['isActive'] == 1) then
+			status = 'active'
+		else
+			status = 'inactive'
+		end
+		
+		toScreen = gfx.loadpng(dir..png_profile_circles['profile'..gameCounter.."_"..status])
+		printCircle(toScreen, verticalGrid*i-(png_profile_circle_width/2), gfx.screen:get_height()*0.6)
+		
+		if(status == 'active') then
+			local fw = text.getStringLength('lato', textSize, profiles['player'..gameCounter]['name'])
+			text.print(gfx.screen, 'lato', 'black', textSize, profiles['player'..gameCounter]['name'], verticalGrid*i-(fw/2), gfx.screen:get_height()*0.8, fw, fh)
+		end
+		
+		gameCounter = gameCounter+1
+	end
+
+
+	--[[
 	-- Prints menu items
 	for i = 50, 1000, 250 do
 
@@ -100,6 +123,7 @@ function printMenuCircles()
 		
 		gameCounter = gameCounter+1
 	end
+	]]
 		
 	gfx.update()
 
@@ -159,7 +183,7 @@ end
 local function main()
 
   printMenuCircles()  
-  --printLogotype()
+  printLogotype()
 
 end
 

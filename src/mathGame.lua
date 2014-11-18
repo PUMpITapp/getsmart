@@ -47,13 +47,13 @@ function setRequire(underGoingTest)
     gfx = require "gfx_stub"
     text = require "write_text_stub"
     animation = require "animation_stub"
-    profileHandler = require "profileHandler_stub"
+    profileHandler = require "profileHandler"
   end
 end 
 setRequire(checkTestMode())
 
 -- Set player
-player = 1
+player = ...
 
 answers = {}
 answered = {red = false,
@@ -90,7 +90,9 @@ images ={['colors'] = "images/color_choices.png"}
 
 -- Main function that runs the program
 local function main()
+
   setBackground()
+  printPlayerName()
 
   ------------------------------------------------------------------------
   --  INCOMPLETE! 
@@ -400,6 +402,8 @@ function onKey(key, state)
       elseif(key == "right") then
         sideMenu = false
          changeSrfc()
+      elseif(key == 'up') then
+      	dofile("login.lua")
       end
       
       -- In-game control when side menu is down, controls that a button can only be pressed once
@@ -428,7 +432,6 @@ function onKey(key, state)
   end 
 end
 
-
 --- Sets the background of the screen
 function setBackground()
     background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
@@ -437,6 +440,25 @@ function setBackground()
   return 
 end
 
+--- Prints the players name in the top of the screen
+function printPlayerName()
+	
+	local playerName = profileHandler.getName(currentPlayer)
+	local playerUserLevel = profileHandler.getLevel(currentPlayer, "mathGame")
+
+	local fw_name = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
+	local fh_name = text.getFontHeight('lato', 'medium')
+	local position = 0.02
+
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw_name, fh_name)
+	
+	local fw_level = text.getStringLength('lato', 'medium', "User level: " .. playerUserLevel)
+	local fh_level = text.getFontHeight('lato', 'medium')
+	position = 0.02
+	
+	text.print(gfx.screen, 'lato', 'black', 'medium', "User level: " .. playerUserLevel, gfx.screen:get_width()*position, gfx.screen:get_height()*position+fh_name, fw_level, fh_level)
+
+end
 
 --- Pauses the system for a period of time
 -- @param #number time The amount of seconds (decimal) the system should sleep

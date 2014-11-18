@@ -27,10 +27,8 @@ function setRequire(underGoingTest)
 end 
 setRequire(checkTestMode())
 
-
-
 -- Set player
-player = 1
+player = ...
 
 
 gfx.screen:clear({122,219,228})
@@ -40,14 +38,7 @@ function init()
   answerTable = {
     {'Yesterday',{{2,3},{6,7}},{{'es','is','ez','oys'},{'rd','d','rp','ld'}}},
     {'Artichoke',{{3,4}},{{'ti','tie','te','to'}}},
-    {'Scrummaster',{{2,3},{5,6}},{{'cr','ckr','kr','crr'},{'mm','m','me','mm'}}},
-    {'acquire',{{2,3}},{{'cq','cc','q','k'}}},
-    {'guarantee',{{8,9}},{{'ee','e','ue','ie'}}},
-    {'rhythm',{{2,3}},{{'hy','y','yi','hu'}}},
-    {'vacuum',{{3,4}},{{'cu','k','c','co'}}},
-    {'questionnaire',{{2,3},{9,10}},{{'ue','oe','u','e'},{'na','a','no','n'}}},
-    {'playwright',{{5,6}},{{'wr','r','whr','ir'}}},
-    {'neighbor',{{3,5}},{{'igh','yh','ih','ygh'}}}
+    {'Scrummaster',{{2,3},{5,6}},{{'cr','ckr','kr','crr'},{'mm','m','me','mme'}}}
   }
   rightAlternatives = {} 
   images = {['colors'] = "images/color_choices.png"} 
@@ -63,9 +54,22 @@ function main()
   wordArray = selectRandomWord()
   question = generateQuestion(wordArray)
   printQuestion(question,key)
-
+  printPlayerName()
 end
 
+--- Prints the players name in the top of the screen
+function printPlayerName()
+	
+	local playerName = profileHandler.getName(currentPlayer)
+	
+
+	local fw = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
+	local fh = text.getFontHeight('lato', 'medium')
+	local scale = 0.02
+
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_height()*scale, gfx.screen:get_width()*scale, fw, fh)
+
+end
 
 --- Genrates a random number between 1 and the size of the table answer table and picks that word in the table
 -- @return #table question a table with a word, its intervalls and the different spelling options
@@ -369,6 +373,8 @@ function onKey(key, state)
         dofile('geographyGame.lua')
       elseif(key == "right") then
          changeSrfc()
+      elseif(key == 'up') then
+      	dofile("login.lua")
       end
 
       -- In-game control when side menu is down
