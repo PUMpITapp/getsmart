@@ -22,6 +22,7 @@ function setRequire(underGoingTest)
   elseif underGoingTest then 
     gfx = require "gfx_stub"
     text = require "write_text_stub"
+    profileHandler = require "profileHandler_stub"
     --animation = require "animation_stub"
   end
 end 

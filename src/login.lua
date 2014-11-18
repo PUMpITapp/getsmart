@@ -30,13 +30,14 @@ function setRequire(underGoingTest)
     gfx = require "gfx_stub"
     text = require "write_text_stub"
     animation = require "animation_stub"
+    profileHandler = require "profileHandler_stub"
   end
 end 
 
 setRequire(checkTestMode())
 
 --gfx.screen:clear({255,255,255}) --RGB
-local background = gfx.loadpng('./images/background_login.png')
+local background = gfx.loadpng('./images/background.png')
 gfx.screen:copyfrom(background,nil)
 gfx.update()
 
