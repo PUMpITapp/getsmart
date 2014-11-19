@@ -47,12 +47,13 @@ function setRequire(underGoingTest)
     gfx = require "gfx_stub"
     text = require "write_text_stub"
     animation = require "animation_stub"
+    profileHandler = require "profileHandler_stub"
   end
 end 
 setRequire(checkTestMode())
 
 -- Set player
-player = 1
+player = ...
 
 answers = {}
 answered = {red = false,
@@ -89,7 +90,9 @@ images ={['colors'] = "images/color_choices.png"}
 
 -- Main function that runs the program
 local function main()
+
   setBackground()
+  printPlayerName()
 
   ------------------------------------------------------------------------
   --  INCOMPLETE! 
@@ -115,11 +118,11 @@ function produceMathProblem(level)
  -- level not implemented yet
   local operator = getOperator()
   gameType = getOperatorString(operator)
-  print("Game type: "..gameType)
+  --print("Game type: "..gameType)
   local gameLevel = getGameLevel(gameType)
-  print("Game level: " ..gameLevel)
+  --print("Game level: " ..gameLevel)
   local boundries = getBoundries(gameType, gameLevel)
-  print("Boundries: "..boundries['termOne'][1] .. " - " ..boundries['termOne'][2])
+  --print("Boundries: "..boundries['termOne'][1] .. " - " ..boundries['termOne'][2])
 
 
   -- Because of Lua random being semi-random from fixed lists
@@ -347,28 +350,62 @@ end
 -- @param #number correctAnswer The correct answer to the problem.
 -- @param #number userAnswer The answer given by the user.
 -- @param #string key The button pressed
-function checkAnswer(correctAnswer, userAnswer, key)
-  if (correctAnswer == userAnswer) then
-    answered[key] = true
-    answerIsCorrect = nil
-    -- Zoom out all the incorrect remaining answers
-    for key,val in pairs(answered) do
-      if (not val) then
-       answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
-      end
-        answered[key] = false
+function handleAnswer(correctAnswer, userAnswer, key)
+
+ local isCorrectAnswer = checkAnswer( correctAnswer, userAnswer, key )
+ local givePoints = checkGivePoints()
+ local points = 1
+
+ answered[key] = true
+ if isCorrectAnswer then
+    zoomOutIncorrectAnswers()
+    resetAnswered()
+    zoomAnswered(isCorrectAnswer, key)
+    if (givePoints) then
+      profileHandler.update(player, 'mathGame', gameType, points)
     end
-     -- Zoom in on correct answer
-    answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
-    -- Updates the players score 
-    profileHandler.update(player,'mathGame', gameType..'Points', 1)
-    sleep(1)
     main()
-  else 
-   answered[key]= true 
-   -- Zoom out incorrect answer
-  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.5)
-   sleep(1)
+  else
+    zoomAnswered(isCorrectAnswer, key)
+ end  
+
+end
+
+function checkAnswer( correctAnswer, userAnswer, key )
+  if (correctAnswer == userAnswer) then 
+    return true
+  else return false
+  end
+end
+
+function checkGivePoints ()
+  local giveAnswerPoints = false
+   for key,val in pairs(answered) do
+    giveAnswerPoints = giveAnswerPoints or answered[key]
+  end
+  return not giveAnswerPoints
+end
+
+function zoomOutIncorrectAnswers()
+  for key,val in pairs(answered) do
+    if (not val) then
+     answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
+    end
+  end
+end
+
+function zoomAnswered(isCorrectAnswer, key)
+  local zoom = 0.000001
+  if (isCorrectAnswer) then
+    zoom = 1.5
+  end
+  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, zoom, 0.5)
+  sleep(1)
+end
+
+function resetAnswered()
+   for key,val in pairs(answered) do
+    answered[key] = false
   end
 end
 
@@ -380,7 +417,7 @@ function onKey(key, state)
   if state == 'down' then
   elseif state == 'repeat' then
   elseif state == 'up' then
-
+    print(key)
     --if side menu is up
     if(sideMenu) then
       
@@ -396,26 +433,28 @@ function onKey(key, state)
       elseif(key == 'blue') then
         sideMenu = false
         dofile('geographyGame.lua')
-      elseif(key == "M") then
+      elseif(key == "right") then
         sideMenu = false
          changeSrfc()
+      elseif(key == 'up') then
+      	dofile("login.lua")
       end
       
       -- In-game control when side menu is down, controls that a button can only be pressed once
     elseif(not sideMenu) then
       if(key == 'red' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[1], key)
+        handleAnswer(correctAnswer, answers[1], key)
        
       elseif(key == 'green' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[2], key)
+        handleAnswer(correctAnswer, answers[2], key)
        
       elseif(key == 'yellow' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[3], key)
+        handleAnswer(correctAnswer, answers[3], key)
       
       elseif(key == 'blue' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[4], key)
+        handleAnswer(correctAnswer, answers[4], key)
        
-      elseif(key == "M") then
+      elseif(key == "right") then
         sideMenu = true
         setMainSrfc()
         printSideMenu()
@@ -427,7 +466,6 @@ function onKey(key, state)
   end 
 end
 
-
 --- Sets the background of the screen
 function setBackground()
     background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
@@ -436,6 +474,25 @@ function setBackground()
   return 
 end
 
+--- Prints the players name in the top of the screen
+function printPlayerName()
+	
+	local playerName = profileHandler.getName(currentPlayer)
+	local playerUserLevel = profileHandler.getLevel(currentPlayer, "mathGame")
+
+	local fw_name = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
+	local fh_name = text.getFontHeight('lato', 'medium')
+	local position = 0.02
+
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw_name, fh_name)
+	
+	local fw_level = text.getStringLength('lato', 'medium', "User level: " .. playerUserLevel)
+	local fh_level = text.getFontHeight('lato', 'medium')
+	position = 0.02
+	
+	text.print(gfx.screen, 'lato', 'black', 'medium', "User level: " .. playerUserLevel, gfx.screen:get_width()*position, gfx.screen:get_height()*position+fh_name, fw_level, fh_level)
+
+end
 
 --- Pauses the system for a period of time
 -- @param #number time The amount of seconds (decimal) the system should sleep

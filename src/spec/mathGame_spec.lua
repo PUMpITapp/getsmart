@@ -1,7 +1,7 @@
 require "mathGame"
 
 
-describe('Boundry testing getOperator()', function ( ... )
+--[[describe('Boundry testing getOperator()', function ( ... )
 	
 	it('Boundry: 8, level = 9', function ( ... )
 		assert.are.same('/',getOperator(9))
@@ -46,7 +46,7 @@ describe('Boundry testing getOperator()', function ( ... )
 		assert.are.same('+', getOperator(0))
 	end)
 
-end)
+end)]]
 
 describe('Boundry testing getLowerBound()', function ( ... )
 	

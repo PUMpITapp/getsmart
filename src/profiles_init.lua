@@ -6,61 +6,97 @@ dofile('table.save.lua')
 
 profiles = {
 			['player1'] = {
-						name = 'Per',
-						isActive = true,
+						name = 'Julbin',
+						isActive = 1,
 						mathGame = {
-									userLevel = 1,
+									userLevel = 0,
 									additionPoints = 1,
 									subtractionPoints = 1,
 									multiplicationPoints = 1,
 									divisionPoints = 1
 									},
-						geographyGame = 1,
-						spellingGame = 1,
-						memoryGame = 1
+						geographyGame = {
+									userLevel = 1,
+									points = 0
+									},
+						spellingGame = {
+									userLevel = 1,
+									points = 0
+									},
+						memoryGame  = {
+									userLevel = 1,
+									points = 0
+									}
 						},
 			['player2'] = {
-						name = 'Frida',
-						isActive = true,
-						mathGame = {
-									userLevel = 1,
-									additionPoints = 1,
-									subtractionPoints = 1,
-									multiplicationPoints = 1,
-									divisionPoints = 1
-									},
-						geographyGame = 1,
-						spellingGame = 1,
-						memoryGame = 1
-						},						
-			['player3'] = {
 						name = '',
-						isActive = false,
+						isActive = 0,
 						mathGame = {
-									userLevel = 1,
+									userLevel = 0,
 									additionPoints = 1,
 									subtractionPoints = 1,
 									multiplicationPoints = 1,
 									divisionPoints = 1
 									},
-						geographyGame = 1,
-						spellingGame = 1,
-						memoryGame = 1
+						geographyGame = {
+									userLevel = 1,
+									points = 0
+									},
+						spellingGame = {
+									userLevel = 1,
+									points = 0
+									},
+						memoryGame  = {
+									userLevel = 1,
+									points = 0
+									}
+						},					
+			['player3'] = {
+						name = 'Artrik',
+						isActive = 1,
+						mathGame = {
+									userLevel = 0,
+									additionPoints = 1,
+									subtractionPoints = 1,
+									multiplicationPoints = 1,
+									divisionPoints = 1
+									},
+						geographyGame = {
+									userLevel = 1,
+									points = 0
+									},
+						spellingGame = {
+									userLevel = 1,
+									points = 0
+									},
+						memoryGame  = {
+									userLevel = 1,
+									points = 0
+									}
 						},
 			['player4'] = {
-						name = '',
-						isActive = false,
+						name = 'Jachael',
+						isActive = 1,
 						mathGame = {
-									userLevel = 1,
+									userLevel = 0,
 									additionPoints = 1,
 									subtractionPoints = 1,
 									multiplicationPoints = 1,
 									divisionPoints = 1
 									},
-						geographyGame = 1,
-						spellingGame = 1,
-						memoryGame = 1
-						}
+						geographyGame = {
+									userLevel = 1,
+									points = 0
+									},
+						spellingGame = {
+									userLevel = 1,
+									points = 0
+									},
+						memoryGame  = {
+									userLevel = 1,
+									points = 0
+									}
+						},
 			}
 
 	assert( table.save( profiles, "profiles.lua" ) == nil )	
