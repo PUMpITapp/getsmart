@@ -350,28 +350,62 @@ end
 -- @param #number correctAnswer The correct answer to the problem.
 -- @param #number userAnswer The answer given by the user.
 -- @param #string key The button pressed
-function checkAnswer(correctAnswer, userAnswer, key)
-  if (correctAnswer == userAnswer) then
-    answered[key] = true
-    answerIsCorrect = nil
-    -- Zoom out all the incorrect remaining answers
-    for key,val in pairs(answered) do
-      if (not val) then
-       answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
-      end
-        answered[key] = false
+function handleAnswer(correctAnswer, userAnswer, key)
+
+ local isCorrectAnswer = checkAnswer( correctAnswer, userAnswer, key )
+ local givePoints = checkGivePoints()
+ local points = 1
+
+ answered[key] = true
+ if isCorrectAnswer then
+    zoomOutIncorrectAnswers()
+    resetAnswered()
+    zoomAnswered(isCorrectAnswer, key)
+    if (givePoints) then
+      profileHandler.update(player, 'mathGame', gameType, points)
     end
-     -- Zoom in on correct answer
-    answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
-    -- Updates the players score 
-    profileHandler.update(player,'mathGame', gameType..'Points', 1)
-    sleep(1)
     main()
-  else 
-   answered[key]= true 
-   -- Zoom out incorrect answer
-  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.5)
-   sleep(1)
+  else
+    zoomAnswered(isCorrectAnswer, key)
+ end  
+
+end
+
+function checkAnswer( correctAnswer, userAnswer, key )
+  if (correctAnswer == userAnswer) then 
+    return true
+  else return false
+  end
+end
+
+function checkGivePoints ()
+  local giveAnswerPoints = false
+   for key,val in pairs(answered) do
+    giveAnswerPoints = giveAnswerPoints or answered[key]
+  end
+  return not giveAnswerPoints
+end
+
+function zoomOutIncorrectAnswers()
+  for key,val in pairs(answered) do
+    if (not val) then
+     answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
+    end
+  end
+end
+
+function zoomAnswered(isCorrectAnswer, key)
+  local zoom = 0.000001
+  if (isCorrectAnswer) then
+    zoom = 1.5
+  end
+  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, zoom, 0.5)
+  sleep(1)
+end
+
+function resetAnswered()
+   for key,val in pairs(answered) do
+    answered[key] = false
   end
 end
 
@@ -409,16 +443,16 @@ function onKey(key, state)
       -- In-game control when side menu is down, controls that a button can only be pressed once
     elseif(not sideMenu) then
       if(key == 'red' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[1], key)
+        handleAnswer(correctAnswer, answers[1], key)
        
       elseif(key == 'green' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[2], key)
+        handleAnswer(correctAnswer, answers[2], key)
        
       elseif(key == 'yellow' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[3], key)
+        handleAnswer(correctAnswer, answers[3], key)
       
       elseif(key == 'blue' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[4], key)
+        handleAnswer(correctAnswer, answers[4], key)
        
       elseif(key == "right") then
         sideMenu = true
