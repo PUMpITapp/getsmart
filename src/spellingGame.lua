@@ -286,7 +286,10 @@ end
 -- @param #table question a table with a word, its intervalls and spelling options
 -- @param #string key the choise made by the user
 function printQuestion(question, key)
-  key = key or "start"
+  if key == nil then
+    key = 'start'
+  end
+
 
   gfx.screen:clear({122,219,228})
   
@@ -337,6 +340,7 @@ end
 -- @return #boolean correct returns true if the answer is correct
 
 function checkAnswer(key,alternatives,rightanswer)
+  --print('Kalle mår skit')
   local userChoice = 0
   --local alternatives = alternatives
   if (key=='red') then
@@ -348,12 +352,18 @@ function checkAnswer(key,alternatives,rightanswer)
   elseif (key=='blue') then
     userChoice = 4
   end
+  --print(userChoice)
   --checks which 
   --has to check how many answers the question has and if which of them to check
   local choosenAlternative = alternatives[1][userChoice]
   local correctAnswer = rightanswer[1]
+  print(choosenAlternative)
+  print(correctAnswer)
+
   if (choosenAlternative==correctAnswer) then
+    print('Kalle mår skit correctAnswer')
     profileHandler.update(player,'spellingGame', nil, 1)
+    print('Kalle mår skit main')
     inFocus = nil
     main()
   else
@@ -390,13 +400,15 @@ function onKey(key, state)
       --give answer     
       if(key == 'red') then
         if(key==inFocus) then --if you have highlighted an answer and choose it as answer
+          print('Kalle mår skit red')
           checkAnswer(key,question[2],rightAlternatives)
         else
           inFocus = key
-         printQuestion(question,key)
+          printQuestion(question,key)
         end
       elseif(key == 'green') then
-        if(key==inFocus) then 
+        if(key==inFocus) then
+          print('Kalle mår skit green') 
           checkAnswer(key,question[2],rightAlternatives) 
         else
           inFocus = key
@@ -404,6 +416,7 @@ function onKey(key, state)
        end
       elseif(key == 'yellow') then
         if(key==inFocus) then
+          print('Kalle mår skit yellow')
           checkAnswer(key,question[2],rightAlternatives)
         else
           inFocus = key
@@ -411,6 +424,7 @@ function onKey(key, state)
         end
       elseif(key == 'blue') then
         if(key==inFocus) then
+          print('Kalle mår skit blue')
           checkAnswer(key,question[2],rightAlternatives)
         else
           inFocus = key
