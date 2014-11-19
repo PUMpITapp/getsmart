@@ -18,25 +18,35 @@ function animation.zoom(background, surface, x, y, zoom, speed)
 	partBackground = gfx.new_surface(surface:get_width(), surface:get_height())
 	partBackground:copyfrom(background, {x=x, y=y,w=surface:get_width(), h=surface:get_height()})
 	zoom = math.sqrt(zoom)
-	finalWidth = surface:get_width() * zoom
-	diffWidth = finalWidth - surface:get_width()
-	deltaWidth = diffWidth / 100
 
-	finalHeight = surface:get_height() * zoom
-	diffHeight = finalHeight -surface:get_height()
-	deltaHeight = diffHeight / 100
+	if zoom < 0.01 and speed == 0 then
+		finalHeight = 0
+		finalWidth = 0
+	else			
+		finalWidth = surface:get_width() * zoom
+		diffWidth = finalWidth - surface:get_width()
+		deltaWidth = diffWidth / 100
 
-	proportion = deltaWidth / deltaHeight
+		finalHeight = surface:get_height() * zoom
+		diffHeight = finalHeight -surface:get_height()
+		deltaHeight = diffHeight / 100
 
-	for i = deltaWidth, diffWidth, deltaWidth do
+		proportion = deltaWidth / deltaHeight
+	end
+
+	if speed == 0 then
 		gfx.screen:copyfrom(partBackground,nil,{x=x, y=y})
-		gfx.screen:copyfrom(surface, nil, {x=x -i/2,y=y -i/2, 
-			w=surface:get_width() + i, h=surface:get_height() + i/proportion}, true )
+		gfx.screen:copyfrom(surface,nil,{x=x - diffWidth/2, y=y - diffHeight/2, w=finalWidth, h= finalHeight}, true)		
+	else
+		for i = deltaWidth, diffWidth, deltaWidth do
+			gfx.screen:copyfrom(partBackground,nil,{x=x, y=y})
+			gfx.screen:copyfrom(surface, nil, {x=x - i/2,y=y - i/2, 
+				w=surface:get_width() + i, h=surface:get_height() + i/proportion}, true )
 
-		gfx.update()
+			gfx.update()
 
-		
-		sleep(speed*deltaWidth/ diffWidth)
+			sleep(speed*deltaWidth/ diffWidth)
+		end
 	end
 	partBackground:destroy()
 end
