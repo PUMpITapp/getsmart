@@ -36,9 +36,9 @@ function setRequire(underGoingTest)
   return underGoingTest
 end 
 
+--local underGoingTest = setRequire(checkTestMode())
 local underGoingTest = setRequire(checkTestMode())
 
---gfx.screen:clear({255,255,255}) --RGB
 local background = gfx.loadpng('./images/background.png')
 gfx.screen:copyfrom(background,nil)
 gfx.update()
@@ -46,6 +46,9 @@ gfx.update()
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 dofile('table.save.lua')
 profiles, err = table.load('profiles.lua')
+
+-- Init profileStatus, will be set to 0 or 1 later
+profileStatus = nil
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_profile_circle_width = 149
@@ -103,30 +106,6 @@ function printMenuCircles()
 		
 		gameCounter = gameCounter+1
 	end
-
-
-	--[[
-	-- Prints menu items
-	for i = 50, 1000, 250 do
-
-		-- Checks if the user is active
-		if(profiles['player'..gameCounter]['isActive'] == 1) then
-			status = 'active'
-		else
-			status = 'inactive'
-		end
-		
-		toScreen = gfx.loadpng(dir..png_profile_circles['profile'..gameCounter.."_"..status])
-		printCircle(toScreen, i, 450)
-		
-		if(status == 'active') then
-			local fw = text.getStringLength('lato', textSize, profiles['player'..gameCounter]['name'])
-			text.print(gfx.screen, 'lato', 'black', textSize, profiles['player'..gameCounter]['name'], i+35, 450+140, fw, fh)
-		end
-		
-		gameCounter = gameCounter+1
-	end
-	]]
 		
 	gfx.update()
 
@@ -146,36 +125,39 @@ end
 
 -- Gets input from user and executes chosen script
 function onKey(key,state)
+
   if state == 'up' then
       if (key == 'red') then
-        gamePath = 'mathGame.lua'
         chosenPlayer = 1
-        runGame(gamePath, underGoingTest, chosenPlayer)
+        runGame(underGoingTest, chosenPlayer)
       elseif (key == 'green') then
-        gamePath = 'memoryGame.lua'
         chosenPlayer = 2
-        runGame(gamePath, underGoingTest, chosenPlayer)
+        runGame(underGoingTest, chosenPlayer)
       elseif (key == 'yellow') then
-        gamePath = 'spellingGame.lua'
         chosenPlayer = 3
-        runGame(gamePath, underGoingTest, chosenPlayer)
+        runGame(underGoingTest, chosenPlayer)
       elseif (key == 'blue') then
-        gamePath = 'geographyGame.lua'
         chosenPlayer = 4
-        runGame(gamePath, underGoingTest, chosenPlayer)
+        runGame(underGoingTest, chosenPlayer)
       end
   end
 end
 
--- Table to be sent to newProfile or menu containing information about the user
---login_player = 0
-
 -- Runs chosen game (file) if testing mode is off 
-function runGame(path, testingModeOn, chosenPlayer)
-	if(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 1) then -- If player exists (is active) then go to game menu
-		assert(loadfile("menu.lua"))(chosenPlayer)
-	elseif(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 0) then -- If player does not exist (is not active) go and create new profile
-		assert(loadfile("newProfile.lua"))(chosenPlayer)
+function runGame(testingModeOn, chosenPlayer)
+
+	profileStatus = profiles['player'..chosenPlayer]['isActive'] -- Get the player status (active or not active/1 or 0)
+	
+	if(not testingModeOn and profileStatus == 1) then -- If player exists (is active) then go to game menu
+		path = "menu.lua"
+		assert(loadfile(path))(chosenPlayer)
+	elseif(not testingModeOn and profileStatus == 0) then -- If player does not exist (is not active) go and create new profile
+		path = "newProfile.lua"
+		assert(loadfile(path))(chosenPlayer)
+	elseif (testingModeOn and profileStatus == 1) then -- If player does not exist and testning mode on go and create new profile
+		path = "menu.lua"
+	elseif(testingModeOn and profileStatus == 0) then -- If player does not exist and testing mode on go and create new profile
+		path = "newProfile.lua"
 	end
 end
 
