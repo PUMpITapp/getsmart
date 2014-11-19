@@ -4,10 +4,7 @@
 --
 
 --- Checks if the file was called from a test file.
--- Returs true if it was, 
---   - which would mean that the file is being tested.
--- Returns false if it was not,
---   - which wold mean that the file was being used.  
+-- @return #boolean True or false depending on testing file
 function checkTestMode()
   runFile = debug.getinfo(2, "S").source:sub(2,3)
   if (runFile ~= './' ) then
@@ -19,7 +16,7 @@ function checkTestMode()
 end
 
 --- Chooses either the actual or the stubs depending on if a test file started the program.
--- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+-- @param #boolean underGoingTest Undergoing test is true if a test file started the program.
 function setRequire(underGoingTest)
   if not underGoingTest then
     gfx = require "gfx"
@@ -38,6 +35,7 @@ end
 
 local underGoingTest = setRequire(checkTestMode())
 
+-- Imports and sets background
 local background = gfx.loadpng('./images/background.png')
 gfx.screen:copyfrom(background,nil)
 gfx.update()
@@ -45,9 +43,6 @@ gfx.update()
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 dofile('table.save.lua')
 profiles, err = table.load('profiles.lua')
-
--- Init profileStatus, will be set to 0 or 1 later
-profileStatus = nil
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_profile_circle_width = 149
@@ -69,17 +64,20 @@ local png_logo = 'images/logo.png'
 -- Directory of images
 local dir = './'
 
--- Prints main menu
+--- Prints circle according to input
+-- @param surface img The surface to be printed on
+-- @param #number x The x-coordiante
+-- @param #number y The y-coordinate
+function printCircle(img, xIn, yIn)
+	local scale = 0.5
+	gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale})
+end
+
+--- Prints main menu circles and updates screen
 function printMenuCircles()
 
-	-- Prints circle according to img, x and y values
-	function printCircle(img, xIn, yIn)
-		local scale = 0.5
-		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale})
-	end
-
 	local toScreen = nil
-	local gameCounter = 1
+	local profileCounter = 1
 	local status = ''
 	local textSize = 'medium'
 	local fh = text.getFontHeight('lato', textSize)
@@ -89,40 +87,42 @@ function printMenuCircles()
 	for i = 1, 4, 1 do
 
 		-- Checks if the user is active
-		if(profiles['player'..gameCounter]['isActive'] == 1) then
+		if(profiles['player'..profileCounter]['isActive'] == 1) then
 			status = 'active'
 		else
 			status = 'inactive'
 		end
 		
-		toScreen = gfx.loadpng(dir..png_profile_circles['profile'..gameCounter.."_"..status])
+		toScreen = gfx.loadpng(dir..png_profile_circles['profile'..profileCounter.."_"..status])
 		printCircle(toScreen, verticalGrid*i-(png_profile_circle_width/2), gfx.screen:get_height()*0.6)
 		
 		if(status == 'active') then
-			local fw = text.getStringLength('lato', textSize, profiles['player'..gameCounter]['name'])
-			text.print(gfx.screen, 'lato', 'black', textSize, profiles['player'..gameCounter]['name'], verticalGrid*i-(fw/2), gfx.screen:get_height()*0.8, fw, fh)
+			local fw = text.getStringLength('lato', textSize, profiles['player'..profileCounter]['name'])
+			text.print(gfx.screen, 'lato', 'black', textSize, profiles['player'..profileCounter]['name'], verticalGrid*i-(fw/2), gfx.screen:get_height()*0.8, fw, fh)
 		end
 		
-		gameCounter = gameCounter+1
+		profileCounter = profileCounter+1
 	end
 		
 	gfx.update()
 
 end
 
--- Prints logotype in the middle of the screen
+--- Prints logotype in the middle of the screen
 function printLogotype()
 	
 	local toScreen = nil
 	
 	toScreen = gfx.loadpng(dir..png_logo)
-	scale = 0.5
+	local scale = 0.5
 	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2 *scale), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
 	gfx.update()
 
 end
 
--- Gets input from user and executes chosen script
+--- Gets input from user and re-directs according to input
+-- @param key The key that has been pressed
+-- @param state The state of the key-press
 function onKey(key,state)
 
   if state == 'up' then
@@ -142,7 +142,9 @@ function onKey(key,state)
   end
 end
 
--- Runs chosen game (file) if testing mode is off 
+--- Runs chosen game (file) if testing mode is off 
+-- @param #boolean testingModeOn If testing mode is on
+-- @param #number chosenPlayer The number of the chosen player (1-4)
 function runGame(testingModeOn, chosenPlayer)
 
 	profileStatus = profiles['player'..chosenPlayer]['isActive'] -- Get the player status (active or not active/1 or 0)
@@ -165,6 +167,4 @@ local function main()
   printLogotype()
 
 end
-
-
 main()
