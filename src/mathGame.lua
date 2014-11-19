@@ -363,7 +363,7 @@ function handleAnswer(correctAnswer, userAnswer, key)
     zoomAnswered(isCorrectAnswer, key)
     if (givePoints) then
       profileHandler.update(player, 'mathGame', gameType, points)
-    end
+   end
     main()
   else
     zoomAnswered(isCorrectAnswer, key)

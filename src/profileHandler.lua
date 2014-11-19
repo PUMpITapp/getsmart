@@ -7,7 +7,7 @@ function profileHandler.update(player, game, gameType, points)
 	player = "player" .. player
 
 	if game == 'mathGame' then
-		profiles[player][game][gameType] = profiles[player][game][gameType] + points
+		profiles[player][game][gameType..'Points'] = profiles[player][game][gameType..'Points'] + points
 		assert( table.save( profiles, "profiles.lua" ) == nil )
 	else
 		profiles[player][game]['points'] = profiles[player][game]['points']+ points
