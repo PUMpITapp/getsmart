@@ -41,7 +41,6 @@ function init()
     {'Artichoke',{{3,4}},{{'ti','tie','te','to'}}},
     {'Scrummaster',{{2,3},{5,6}},{{'cr','ckr','kr','crr'},{'mm','m','me','mm'}}},
     {'acquire',{{2,3}},{{'cq','cc','q','k'}}},
-    {'guarantee',{{8,9}},{{'ee','e','ue','ie'}}},
     {'rhythm',{{2,3}},{{'hy','y','yi','hu'}}},
     {'vacuum',{{3,4}},{{'cu','k','c','co'}}},
     {'questionnaire',{{2,3},{9,10}},{{'ue','oe','u','e'},{'na','a','no','n'}}},
