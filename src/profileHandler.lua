@@ -5,18 +5,14 @@ dofile('table.save.lua')
 function profileHandler.update(player, game, gameType, points)
 	profiles, err = table.load('profiles.lua')
 	player = "player" .. player
-	print(player)
 
 	if game == 'mathGame' then
 		profiles[player][game][gameType] = profiles[player][game][gameType] + points
 		assert( table.save( profiles, "profiles.lua" ) == nil )
 	else
-		print("not math game")
-		print(profiles[player][game]['points'])		
 		profiles[player][game]['points'] = profiles[player][game]['points']+ points
 		assert( table.save( profiles, "profiles.lua" ) == nil )
 	end
-	print('before update')
 	profileHandler.updateUserLevel(player, game)
 	
 	
