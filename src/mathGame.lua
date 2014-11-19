@@ -353,13 +353,13 @@ end
 function handleAnswer(correctAnswer, userAnswer, key)
 
  local isCorrectAnswer = checkAnswer( correctAnswer, userAnswer, key )
- local givePoints = checkGivePoints()
+ local givePoints = checkGivePoints(answered)
  local points = 1
 
  answered[key] = true
  if isCorrectAnswer then
     zoomOutIncorrectAnswers()
-    resetAnswered()
+    resetAnswered(answered)
     zoomAnswered(isCorrectAnswer, key)
     if (givePoints) then
       profileHandler.update(player, 'mathGame', gameType, points)
@@ -370,22 +370,29 @@ function handleAnswer(correctAnswer, userAnswer, key)
  end  
 
 end
-
+-- @param #number correctAnswer the correct answer to a question
+-- @param #number userAnswer The answe given by the user
+-- @param #string key The button pressed (red, blue, yellow or green)
+-- @return #boolean True if the user answered correctly False in user answered incorrectly
 function checkAnswer( correctAnswer, userAnswer, key )
   if (correctAnswer == userAnswer) then 
     return true
   else return false
   end
 end
-
-function checkGivePoints ()
+-- Decides if the user should get point for its answer or not
+-- Point is given if the user answers the question correctly on the first try
+-- @param #table answered The state (true/false) of the key entered
+-- @return #boolean True if the user answered the question correctly on the first try 
+-- @return #boolean False if the user did not answer the question on the first try
+function checkGivePoints (answered)
   local giveAnswerPoints = false
    for key,val in pairs(answered) do
     giveAnswerPoints = giveAnswerPoints or answered[key]
   end
   return not giveAnswerPoints
 end
-
+-- Zooms out the incorrect answers
 function zoomOutIncorrectAnswers()
   for key,val in pairs(answered) do
     if (not val) then
@@ -393,7 +400,9 @@ function zoomOutIncorrectAnswers()
     end
   end
 end
-
+-- Zooms in the correct answer
+-- @param #boolean isCorrectAnswer checks if the given answer is correct
+-- @param #string key The answered option
 function zoomAnswered(isCorrectAnswer, key)
   local zoom = 0.000001
   if (isCorrectAnswer) then
@@ -402,8 +411,9 @@ function zoomAnswered(isCorrectAnswer, key)
   answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, zoom, 0.5)
   sleep(1)
 end
-
-function resetAnswered()
+-- Sets the answered to false
+-- @param #table answered The state of the keys
+function resetAnswered(answered)
    for key,val in pairs(answered) do
     answered[key] = false
   end
