@@ -9,11 +9,11 @@ function profileHandler.update(player, game, gameType, points)
 	if game == 'mathGame' then
 		profiles[player][game][gameType] = profiles[player][game][gameType] + points
 		assert( table.save( profiles, "profiles.lua" ) == nil )
-		profileHandler.updateUserLevel(player, game)
 	else
-		profiles[player][game] = profiles[player][game]+ points
+		profiles[player][game]['points'] = profiles[player][game]['points']+ points
 		assert( table.save( profiles, "profiles.lua" ) == nil )
 	end
+	profileHandler.updateUserLevel(player, game)
 	
 	
 end
@@ -42,7 +42,7 @@ end
 function profileHandler.getName(player)
 	profiles, err = table.load('profiles.lua')
 	player = "player" .. tostring(player)
-	print("Profilehandler: " ..player)
+	--print("Profilehandler: " ..player)
 	return profiles[player]['name']
 end
 
@@ -50,11 +50,18 @@ end
 function profileHandler.setName(player, name)
 	profiles, err = table.load('profiles.lua')
 	player = "player" .. tostring(player)
-	print("Profilehandler: " ..player)
+	--print("Profilehandler: " ..player)
 	profiles[player]['name'] = name
 	profiles[player]['isActive'] = 1
 	assert( table.save( profiles, "profiles.lua" ) == nil )
 	--profileHandler.printToFile(profiles)
+end
+
+function profileHandler.getLevel(player, game)
+	profiles, err = table.load('profiles.lua')
+	player = "player" .. tostring(player)
+	
+	return profiles[player][game]['userLevel']
 end
 
 return profileHandler

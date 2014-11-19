@@ -22,15 +22,14 @@ function setRequire(underGoingTest)
   elseif underGoingTest then 
     gfx = require "gfx_stub"
     text = require "write_text_stub"
+    profileHandler = require "profileHandler_stub"
     --animation = require "animation_stub"
   end
 end 
 setRequire(checkTestMode())
 
-
-
 -- Set player
-player = 1
+player = ...
 
 
 gfx.screen:clear({122,219,228})
@@ -40,7 +39,14 @@ function init()
   answerTable = {
     {'Yesterday',{{2,3},{6,7}},{{'es','is','ez','oys'},{'rd','d','rp','ld'}}},
     {'Artichoke',{{3,4}},{{'ti','tie','te','to'}}},
-    {'Scrummaster',{{2,3},{5,6}},{{'cr','ckr','kr','crr'},{'mm','m','me','mme'}}}
+    {'Scrummaster',{{2,3},{5,6}},{{'cr','ckr','kr','crr'},{'mm','m','me','mm'}}},
+    {'acquire',{{2,3}},{{'cq','cc','q','k'}}},
+    {'guarantee',{{8,9}},{{'ee','e','ue','ie'}}},
+    {'rhythm',{{2,3}},{{'hy','y','yi','hu'}}},
+    {'vacuum',{{3,4}},{{'cu','k','c','co'}}},
+    {'questionnaire',{{2,3},{9,10}},{{'ue','oe','u','e'},{'na','a','no','n'}}},
+    {'playwright',{{5,6}},{{'wr','r','whr','ir'}}},
+    {'neighbor',{{3,5}},{{'igh','yh','ih','ygh'}}}
   }
   rightAlternatives = {} 
   images = {['colors'] = "images/color_choices.png"} 
@@ -56,8 +62,22 @@ function main()
   wordArray = selectRandomWord()
   question = generateQuestion(wordArray)
   printQuestion(question,key)
+  printPlayerName()
 end
 
+--- Prints the players name in the top of the screen
+function printPlayerName()
+	
+	local playerName = profileHandler.getName(currentPlayer)
+	
+
+	local fw = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
+	local fh = text.getFontHeight('lato', 'medium')
+	local scale = 0.02
+
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_height()*scale, gfx.screen:get_width()*scale, fw, fh)
+
+end
 
 --- Genrates a random number between 1 and the size of the table answer table and picks that word in the table
 -- @return #table question a table with a word, its intervalls and the different spelling options
@@ -172,7 +192,10 @@ function printAlternatives(alternatives, position, selected, diameter)
     selected = 2
   elseif selected == 'blue' then
     selected = 3
-  end
+  elseif selected == 'start' then
+    selected = 1.5
+  end 
+
 
   local d = diameter
   local sh = gfx.screen:get_height()
@@ -263,10 +286,10 @@ end
 -- @param #table question a table with a word, its intervalls and spelling options
 -- @param #string key the choise made by the user
 function printQuestion(question, key)
-
-  if key == nil then 
-    key ="yellow"
+  if key == nil then
+    key = 'start'
   end
+
 
   gfx.screen:clear({122,219,228})
   
@@ -328,10 +351,12 @@ function checkAnswer(key,alternatives,rightanswer)
   elseif (key=='blue') then
     userChoice = 4
   end
+  --print(userChoice)
   --checks which 
   --has to check how many answers the question has and if which of them to check
   local choosenAlternative = alternatives[1][userChoice]
   local correctAnswer = rightanswer[1]
+
   if (choosenAlternative==correctAnswer) then
     profileHandler.update(player,'spellingGame', nil, 1)
     inFocus = nil
@@ -361,6 +386,8 @@ function onKey(key, state)
         dofile('geographyGame.lua')
       elseif(key == "right") then
          changeSrfc()
+      elseif(key == 'up') then
+      	dofile("login.lua")
       end
 
       -- In-game control when side menu is down
@@ -371,10 +398,10 @@ function onKey(key, state)
           checkAnswer(key,question[2],rightAlternatives)
         else
           inFocus = key
-         printQuestion(question,key)
+          printQuestion(question,key)
         end
       elseif(key == 'green') then
-        if(key==inFocus) then 
+        if(key==inFocus) then
           checkAnswer(key,question[2],rightAlternatives) 
         else
           inFocus = key
