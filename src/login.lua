@@ -32,9 +32,11 @@ function setRequire(underGoingTest)
     animation = require "animation_stub"
     profileHandler = require "profileHandler_stub"
   end
+
+  return underGoingTest
 end 
 
-setRequire(checkTestMode())
+local underGoingTest = setRequire(checkTestMode())
 
 --gfx.screen:clear({255,255,255}) --RGB
 local background = gfx.loadpng('./images/background.png')
@@ -144,26 +146,24 @@ end
 
 -- Gets input from user and executes chosen script
 function onKey(key,state)
- if state == 'down' then
-
-  elseif state == 'up' then
-	  if(key == 'red') then
+  if state == 'up' then
+      if (key == 'red') then
         gamePath = 'mathGame.lua'
         chosenPlayer = 1
         runGame(gamePath, underGoingTest, chosenPlayer)
-      elseif(key == 'green') then
+      elseif (key == 'green') then
         gamePath = 'memoryGame.lua'
-		chosenPlayer = 2
+        chosenPlayer = 2
         runGame(gamePath, underGoingTest, chosenPlayer)
-      elseif(key == 'yellow') then
+      elseif (key == 'yellow') then
         gamePath = 'spellingGame.lua'
         chosenPlayer = 3
         runGame(gamePath, underGoingTest, chosenPlayer)
-      elseif(key == 'blue') then
+      elseif (key == 'blue') then
         gamePath = 'geographyGame.lua'
         chosenPlayer = 4
         runGame(gamePath, underGoingTest, chosenPlayer)
-	  end
+      end
   end
 end
 

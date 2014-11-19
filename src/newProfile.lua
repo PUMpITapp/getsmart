@@ -92,18 +92,25 @@ end
 -- Prints save- and back buttons in the corners of the image
 local function printNavigationButtons()
 
-	local backButton = gfx.loadpng(dir..'images/profile/profile-go-back.png')
-	local saveButton = gfx.loadpng(dir..'images/profile/profile-go-forward.png')
+	local backButton = gfx.loadpng(dir .. 'images/profile/profile-go-back.png')
+	local saveButton = gfx.loadpng(dir .. 'images/profile/profile-go-forward.png')
 	local toScreen = nil
-	local scale = 0.3
-	local positionY = 0.021
-	local positionX = 0.03
+	local scale = 0.4
+    local buttonMargin =  20
 	
-	gfx.screen:copyfrom(backButton, nil, {x=gfx.screen:get_height()*positionX, y=gfx.screen:get_width()*positionY, w=backButton:get_width()*scale, h=backButton:get_height()*scale})
-	
-	positionX = 1.2
-	
-	gfx.screen:copyfrom(saveButton, nil, {x=gfx.screen:get_height()*positionX, y=gfx.screen:get_width()*positionY, w=saveButton:get_width()*scale, h=saveButton:get_height()*scale})
+    gfx.screen:copyfrom(backButton, nil, {
+      x = buttonMargin,
+      y = buttonMargin,
+      w = backButton:get_width() * scale,
+      h = backButton:get_height() * scale
+    })
+
+    gfx.screen:copyfrom(saveButton, nil, {
+      x = gfx.screen:get_width() - saveButton:get_width() * scale - buttonMargin,
+      y = buttonMargin,
+      w = saveButton:get_width() * scale,
+      h = saveButton:get_height() * scale
+    })
 
 end
 
