@@ -368,10 +368,10 @@ function checkAnswer(correctAnswer, userAnswer, key)
     sleep(1)
     main()
   else 
-   answered[key]= true 
-   -- Zoom out incorrect answer
-  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.5)
-   sleep(1)
+    answered[key]= true 
+    -- Zoom out incorrect answer
+    answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.5)
+    sleep(1)
   end
 end
 

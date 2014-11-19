@@ -18,12 +18,12 @@ function setRequire(underGoingTest)
     gfx = require "gfx"
     text = require "write_text"
     profileHandler = require "profileHandler"
-    --animation = require "animation"
+    animation = require "animation"
   elseif underGoingTest then 
     gfx = require "gfx_stub"
     text = require "write_text_stub"
     profileHandler = require "profileHandler_stub"
-    --animation = require "animation_stub"
+    animation = require "animation_stub"
   end
 end 
 setRequire(checkTestMode())
@@ -32,21 +32,21 @@ setRequire(checkTestMode())
 player = ...
 
 
-gfx.screen:clear({122,219,228})
+--gfx.screen:clear({122,219,228})
 
 ---Initiating all global variables
 function init()
   answerTable = {
-    {'Yesterday',{{2,3},{6,7}},{{'es','is','ez','oys'},{'rd','d','rp','ld'}}},
-    {'Artichoke',{{3,4}},{{'ti','tie','te','to'}}},
+    --{'Yesterday',{{2,3},{6,7}},{{'es','is','ez','oys'},{'rd','d','rp','ld'}}},
+    --{'Artichoke',{{3,4}},{{'ti','tie','te','to'}}},
     {'Scrummaster',{{2,3},{5,6}},{{'cr','ckr','kr','crr'},{'mm','m','me','mm'}}},
-    {'acquire',{{2,3}},{{'cq','cc','q','k'}}},
-    {'guarantee',{{8,9}},{{'ee','e','ue','ie'}}},
-    {'rhythm',{{2,3}},{{'hy','y','yi','hu'}}},
-    {'vacuum',{{3,4}},{{'cu','k','c','co'}}},
-    {'questionnaire',{{2,3},{9,10}},{{'ue','oe','u','e'},{'na','a','no','n'}}},
-    {'playwright',{{5,6}},{{'wr','r','whr','ir'}}},
-    {'neighbor',{{3,5}},{{'igh','yh','ih','ygh'}}}
+    --{'acquire',{{2,3}},{{'cq','cc','q','k'}}},
+    --{'guarantee',{{8,9}},{{'ee','e','ue','ie'}}},
+    --{'rhythm',{{2,3}},{{'hy','y','yi','hu'}}},
+    --{'vacuum',{{3,4}},{{'cu','k','c','co'}}},
+    --{'questionnaire',{{2,3},{9,10}},{{'ue','oe','u','e'},{'na','a','no','n'}}},
+    --{'playwright',{{5,6}},{{'wr','r','whr','ir'}}},
+    --{'neighbor',{{3,5}},{{'igh','yh','ih','ygh'}}}
   }
   rightAlternatives = {} 
   images = {['colors'] = "images/color_choices.png"} 
@@ -58,6 +58,7 @@ end
 
 --- Main function that runs the program
 function main()
+  setBackground()
   init() 
   wordArray = selectRandomWord()
   question = generateQuestion(wordArray)
@@ -220,6 +221,7 @@ end
 function createAnswerBackground()
 
   colorsImg = gfx.loadpng(images.colors)
+  diameter = 140
 
   -- Positions in the circle sprite.
   local xs =40  -- x starting coordinate
@@ -231,11 +233,18 @@ function createAnswerBackground()
                    green  = {x= xs + d*3, y = y, w = d, h = d}}
 
 
-  circle = {
+  --[[circle = {
     red = gfx.new_surface(cutOut.red.w, cutOut.red.h),
     green = gfx.new_surface(cutOut.green.w, cutOut.green.h),
     yellow = gfx.new_surface(cutOut.yellow.w, cutOut.yellow.h),
     blue = gfx.new_surface(cutOut.blue.w, cutOut.blue.h)
+  }]]
+
+  circle = {
+    red = gfx.new_surface(diameter, diameter),
+    green = gfx.new_surface(diameter, diameter),
+    yellow = gfx.new_surface(diameter, diameter),
+    blue = gfx.new_surface(diameter, diameter)
   }
 
   circle.red:copyfrom(colorsImg, cutOut.red, true)
@@ -293,7 +302,7 @@ function printQuestion(question, key)
 
   gfx.screen:clear({122,219,228})
   
-  local diameter = 125
+  local diameter = 140
 
   local questionLength = questionLength(question, diameter)
 
@@ -362,8 +371,19 @@ function checkAnswer(key,alternatives,rightanswer)
     inFocus = nil
     main()
   else
+    -- Zoom out incorrect answer
+    answerIsCorrect= animation.zoom(background, circle[key], circlePositions[key].x, circlePositions[key].y, 0.000001, 0.5)
+    sleep(1)
     return false
   end
+end
+
+--- Sets the background of the screen
+function setBackground()
+    background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+    background:clear({122,219,228})
+    gfx.screen:copyfrom(background,nil)
+  return 
 end
 
 --- Gets input from user and checks answer
