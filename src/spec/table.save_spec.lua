@@ -42,4 +42,5 @@ describe('Saves and loads tables from external .lua files', function ( ... )
 end)
 
 -- Delete dummy file
+
 os.remove(fileStub)

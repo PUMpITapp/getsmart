@@ -1,5 +1,20 @@
 profileHandler = {}
-dofile('table.save.lua')
+
+function checkTestMode()
+  runFile = debug.getinfo(2, "S").source:sub(2,3)
+  if (runFile ~= './' ) then
+    underGoingTest = false
+  elseif (runFile == './') then
+    underGoingTest = true
+  end
+  return underGoingTest
+end
+
+if (checkTestMode()) then
+  dofile('table.save_stub.lua')
+else
+  dofile('table.save.lua')
+end
 
 --- All games
 function profileHandler.update(player, game, gameType, points)
@@ -14,8 +29,7 @@ function profileHandler.update(player, game, gameType, points)
 		assert( table.save( profiles, "profiles.lua" ) == nil )
 	end
 	profileHandler.updateUserLevel(player, game)
-	
-	
+
 end
 
 function profileHandler.getGameLevel(player, game, gameType)
