@@ -47,13 +47,11 @@ profiles, err = table.load('profiles.lua')
 flags = require 'flags'
 
 -- Variable containing the correct answer
-correctAnswer = 0
+--correctCountry = ""
+--answers = {}
 
 -- The user's chosen answer
 chosenAnswer = 0
-
--- The correct country's id
-correctCountryId = 0
 
 corrId = 0
 
@@ -139,7 +137,7 @@ function printAnswers(answers)
   }
 
   for i = 1, 4 do
-    text.print(gfx.screen, font.face, font.color, font.size, answers[i].country, textPosition.x, textPosition.y, textPosition.w, textPosition.h)
+    text.print(gfx.screen, font.face, font.color, font.size, answers[i], textPosition.x, textPosition.y, textPosition.w, textPosition.h)
     textPosition.y = textPosition.y + screen.height / 4
   end
 
@@ -206,33 +204,33 @@ function generateAnswers(correctCountryId)
 
   -- Initialize the answers array and populate it with the correct answer
   local answers = {
-    flags[correctCountryId]
+    flags[correctCountryId].country
   }
   
   -- Generate random incorrect answers
   while (table.maxn(answers) < 4) do
     local newCountryId = getRandomCountryId()
-    local newAnswer = flags[newCountryId]
+    local newAnswer = flags[newCountryId].country
 
     if (not table.contains(answers, newAnswer)) then
-        table.insert(answers, newAnswer)
+      table.insert(answers, newAnswer)
     end
   end
 
   return shuffle(answers)
 end
 
-function checkAnswer(userAnswer, countryId)
-	print("Correct id on flag: " .. correctCountryId)
-    print("Chosen id: " .. answers[userAnswer].id)
-    
-    if(answers[userAnswer].id == correctCountryId) then
-		print("correct")
-		printQuestionAndAnswers()
-	else
-		print("incorrect")
-		printQuestionAndAnswers()
-	end
+function checkAnswer(userAnswer)
+  if (answers[userAnswer] == correctCountry) then
+    print("correct")
+    --addScoreToUser()
+
+    printQuestionAndAnswers()
+  else
+    print("incorrect")
+    removeAnswer(userAnswer)
+
+  end
 end
 
 --- Generates a random country id
@@ -255,9 +253,21 @@ end
 
 --- Generates question with random country and random answers
 function generateQuestion()
-	correctCountryId = getRandomCountryId()
+	local correctCountryId = getRandomCountryId()
+
+    correctCountry = flags[correctCountryId].country
+    answers = generateAnswers(correctCountryId)
+
+    -- Print on screen
 	printFlag(correctCountryId)
-	printAnswers(generateAnswers(correctCountryId))
+	printAnswers(answers)
+end
+
+--- Remove an answer in a stylish way
+-- @param #integer answerToRemove The answer to remove (1,2,3,4)
+--
+function removeAnswer(answerToRemove)
+  
 end
 
 --- Gets input from user and re-directs according to input
@@ -267,16 +277,16 @@ function onKey(key,state)
   if state == 'up' then
       if (key == 'red') then
         userAnswer = 1
-        checkAnswer(correctAnswer, chosenAnswer)
+        checkAnswer(userAnswer)
       elseif (key == 'green') then
         userAnswer = 2
-		checkAnswer(correctAnswer, chosenAnswer)
+		checkAnswer(userAnswer)
       elseif (key == 'yellow') then
         userAnswer = 3
-		checkAnswer(correctAnswer, chosenAnswer)
+		checkAnswer(userAnswer)
       elseif (key == 'blue') then
         userAnswer = 4
-        checkAnswer(correctAnswer, chosenAnswer)
+        checkAnswer(userAnswer)
       end
   end
 end
@@ -284,4 +294,5 @@ end
 local function main()
 	printQuestionAndAnswers()
 end
+
 main()

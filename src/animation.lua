@@ -5,7 +5,6 @@ gfx = require "gfx"
 --gfx.screen:copyfrom(background,nil)
 circle = gfx.loadpng('./images/menu/main-menu_math.png')
 
-
 --- Zooms a part of the surface
 -- Creates a zoom effect
 -- @param background The background surface

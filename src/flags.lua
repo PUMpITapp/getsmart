@@ -1,6 +1,5 @@
 return {
   {
-  	id = 1,
     country = 'Sweden',
     difficulty = 'easy',
     dimensions = {
@@ -9,7 +8,6 @@ return {
     }
   },
   {
-  	id = 2,
     country = 'Denmark',
     difficulty = 'easy',
     dimensions = {
@@ -18,7 +16,6 @@ return {
     }
   },
   {
-  	id = 3,
     country = 'Germany',
     difficulty = 'intermediate',
     dimensions = {
@@ -27,7 +24,6 @@ return {
     }
   },
   {
-  	id = 4,
     country = 'Greece',
     difficulty = 'intermediate',
     dimensions = {
@@ -36,7 +32,6 @@ return {
     }
   },
   {
-  	id = 5,
     country = 'Argentina',
     difficulty = 'hard',
     dimensions = {
@@ -45,7 +40,6 @@ return {
     }
   },
   {
-  	id = 6,
     country = 'Mexico',
     difficulty = 'hard',
     dimensions = {
