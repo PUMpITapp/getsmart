@@ -249,6 +249,55 @@ describe('Testing resetAnswered()', function ( ... )
 	end)
 end)
 
+describe('testing getOperator()', function ( ... )
+	it('checks that level one gets operator "+"', function ( ... )
+		playerUserLevel = 1
+		local operator = getOperator(playerUserLevel)
+		assert.are.same('+',operator)
+	end)
+	it('checks that level one does not get "-"', function ( ... )
+		playerUserLevel = 1
+		local operator = getOperator(playerUserLevel)
+		assert.are_not.same('-',operator)
+	end)
+	it('checks that level 2 gets operator "+" or "-"', function ( ... )
+		playerUserLevel = 2
+		local operator = getOperator(playerUserLevel)
+		local checkOperator = {'-','*','/'}
+		local resultOperator = false
+		for i=1, table.maxn(checkOperator), 1 do
+			if(checkOperator[i]==operator) then
+				resultOperator = true
+			end
+		end
+		assert.are_not.same(true,resultOperator) 
+	end)
+		it('checks that level 5 gets operator "+","-" or "*"', function ( ... )
+		playerUserLevel = 5
+		local operator = getOperator(playerUserLevel)
+		local checkOperator = {'/'}
+		local resultOperator = false
+		for i=1, table.maxn(checkOperator), 1 do
+			if(checkOperator[i]==operator) then
+				resultOperator = true
+			end
+		end
+		assert.are_not.same(true,resultOperator) 
+	end)
+				it('checks that level 5 gets operator "+","-" or "*""/"', function ( ... )
+		playerUserLevel = 10
+		local operator = getOperator(playerUserLevel)
+		local checkOperator = {'+','-','*','/'}
+		local resultOperator = false
+		for i=1, table.maxn(checkOperator), 1 do
+			if(checkOperator[i]==operator) then
+				resultOperator = true
+			end
+		end
+		assert.are.same(true,resultOperator) 
+	end)
+end)
+
 --[[describe('Testing handleAnswer()',function ( ... )
 	it('checks if question is answered correctly and new question is generated', function ( ... )
 		assert.are.same(true, handleAnswer(1,1,'red')

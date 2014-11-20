@@ -63,6 +63,9 @@ answered = {red = false,
 
 
 
+
+
+
 -- Printing the numbers on the correct position on the screen
 local sw = gfx.screen:get_width()  -- screen width
 local sh = gfx.screen:get_height() -- screen height
@@ -90,7 +93,7 @@ images ={['colors'] = "images/color_choices.png"}
 
 -- Main function that runs the program
 local function main()
-
+  playerUserLevel = profileHandler.getLevel(currentPlayer, "mathGame")
   setBackground()
   printPlayerName()
 
@@ -116,7 +119,7 @@ end
 -- @param #int level The difficulty level of the problem
 function produceMathProblem(level)
  -- level not implemented yet
-  local operator = getOperator()
+  local operator = getOperator(playerUserLevel)
   gameType = getOperatorString(operator)
   --print("Game type: "..gameType)
   local gameLevel = getGameLevel(gameType)
@@ -180,13 +183,25 @@ end
 
 --- Get the operator for a math problem given its difficulty level.
 -- The mathematical operation of a given problem depends on its difficulty level.
+-- @param #number playerUserLevel the level of the user
 -- @return #string Returns the operator for a math problem.
-function getOperator()
-  local operator = {'+','-','*','/'} 
+function getOperator(playerUserLevel)
+  local operator = {'+'} 
+  if (playerUserLevel > 2) then
+    operator = {'+','-'} 
+  end
+  if (playerUserLevel > 4) then
+    operator = {'+','-','*'}  
+  end
+  if(playerUserLevel > 6) then
+    operator = {'+','-','*','/'} 
+  end
   operator = operator[math.random(#operator)]
   return operator
 end
-
+-- comverts the opperator into stringOperator
+-- @param #string operator The operator in form: +/-/*//
+-- @return #string stringOperator
 function getOperatorString(operator)
   stringOperator = nil
   if(operator == '+') then

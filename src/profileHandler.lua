@@ -35,7 +35,7 @@ function profileHandler.updateUserLevel(player, game)
 	end
 	
 	if (game == 'mathGame') then 
-		gameValue = math.sqrt(gameValue)
+		gameValue = math.floor(math.sqrt(gameValue))
 	end
 
 	gameValue = math.floor(math.log(gameValue))
