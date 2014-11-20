@@ -378,8 +378,9 @@ function handleAnswer(correctAnswer, userAnswer, key)
     zoomAnswered(isCorrectAnswer, key)
     if (givePoints) then
       profileHandler.update(player, 'mathGame', gameType, points)
-   end
+    end
     main()
+
   else
     zoomAnswered(isCorrectAnswer, key)
  end  
@@ -431,6 +432,7 @@ end
 function resetAnswered(answered)
    for key,val in pairs(answered) do
     answered[key] = false
+
   end
 end
 

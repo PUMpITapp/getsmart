@@ -4,10 +4,7 @@
 --
 
 --- Checks if the file was called from a test file.
--- Returs true if it was, 
---   - which would mean that the file is being tested.
--- Returns false if it was not,
---   - which wold mean that the file was being used.  
+-- @return #boolean True or false depending on testing file
 function checkTestMode()
   runFile = debug.getinfo(2, "S").source:sub(2,3)
   if (runFile ~= './' ) then
@@ -19,7 +16,7 @@ function checkTestMode()
 end
 
 --- Chooses either the actual or the stubs depending on if a test file started the program.
--- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+-- @param #boolean underGoingTest Undergoing test is true if a test file started the program.
 function setRequire(underGoingTest)
   if not underGoingTest then
     gfx = require "gfx"
@@ -32,11 +29,13 @@ function setRequire(underGoingTest)
     animation = require "animation_stub"
     profileHandler = require "profileHandler_stub"
   end
+
+  return underGoingTest
 end 
 
-setRequire(checkTestMode())
+local underGoingTest = setRequire(checkTestMode())
 
---gfx.screen:clear({255,255,255}) --RGB
+-- Imports and sets background
 local background = gfx.loadpng('./images/background.png')
 gfx.screen:copyfrom(background,nil)
 gfx.update()
@@ -65,17 +64,20 @@ local png_logo = 'images/logo.png'
 -- Directory of images
 local dir = './'
 
--- Prints main menu
+--- Prints circle according to input
+-- @param surface img The surface to be printed on
+-- @param #number x The x-coordiante
+-- @param #number y The y-coordinate
+function printCircle(img, xIn, yIn)
+	local scale = 0.5
+	gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale})
+end
+
+--- Prints main menu circles and updates screen
 function printMenuCircles()
 
-	-- Prints circle according to img, x and y values
-	function printCircle(img, xIn, yIn)
-		local scale = 0.5
-		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale})
-	end
-
 	local toScreen = nil
-	local gameCounter = 1
+	local profileCounter = 1
 	local status = ''
 	local textSize = 'medium'
 	local fh = text.getFontHeight('lato', textSize)
@@ -85,100 +87,78 @@ function printMenuCircles()
 	for i = 1, 4, 1 do
 
 		-- Checks if the user is active
-		if(profiles['player'..gameCounter]['isActive'] == 1) then
+		if(profiles['player'..profileCounter]['isActive'] == 1) then
 			status = 'active'
 		else
 			status = 'inactive'
 		end
 		
-		toScreen = gfx.loadpng(dir..png_profile_circles['profile'..gameCounter.."_"..status])
+		toScreen = gfx.loadpng(dir..png_profile_circles['profile'..profileCounter.."_"..status])
 		printCircle(toScreen, verticalGrid*i-(png_profile_circle_width/2), gfx.screen:get_height()*0.6)
 		
 		if(status == 'active') then
-			local fw = text.getStringLength('lato', textSize, profiles['player'..gameCounter]['name'])
-			text.print(gfx.screen, 'lato', 'black', textSize, profiles['player'..gameCounter]['name'], verticalGrid*i-(fw/2), gfx.screen:get_height()*0.8, fw, fh)
+			local fw = text.getStringLength('lato', textSize, profiles['player'..profileCounter]['name'])
+			text.print(gfx.screen, 'lato', 'black', textSize, profiles['player'..profileCounter]['name'], verticalGrid*i-(fw/2), gfx.screen:get_height()*0.8, fw, fh)
 		end
 		
-		gameCounter = gameCounter+1
+		profileCounter = profileCounter+1
 	end
-
-
-	--[[
-	-- Prints menu items
-	for i = 50, 1000, 250 do
-
-		-- Checks if the user is active
-		if(profiles['player'..gameCounter]['isActive'] == 1) then
-			status = 'active'
-		else
-			status = 'inactive'
-		end
-		
-		toScreen = gfx.loadpng(dir..png_profile_circles['profile'..gameCounter.."_"..status])
-		printCircle(toScreen, i, 450)
-		
-		if(status == 'active') then
-			local fw = text.getStringLength('lato', textSize, profiles['player'..gameCounter]['name'])
-			text.print(gfx.screen, 'lato', 'black', textSize, profiles['player'..gameCounter]['name'], i+35, 450+140, fw, fh)
-		end
-		
-		gameCounter = gameCounter+1
-	end
-	]]
 		
 	gfx.update()
 
 end
 
--- Prints logotype in the middle of the screen
+--- Prints logotype in the middle of the screen
 function printLogotype()
 	
 	local toScreen = nil
 	
 	toScreen = gfx.loadpng(dir..png_logo)
-	scale = 0.5
+	local scale = 0.5
 	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2 *scale), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
 	gfx.update()
 
 end
 
--- Gets input from user and executes chosen script
+--- Gets input from user and re-directs according to input
+-- @param key The key that has been pressed
+-- @param state The state of the key-press
 function onKey(key,state)
- if state == 'down' then
 
-  elseif state == 'up' then
-	  if(key == 'red') then
-        gamePath = 'mathGame.lua'
+  if state == 'up' then
+      if (key == 'red') then
         chosenPlayer = 1
-        runGame(gamePath, underGoingTest, chosenPlayer)
-      elseif(key == 'green') then
-        gamePath = 'memoryGame.lua'
-		chosenPlayer = 2
-        runGame(gamePath, underGoingTest, chosenPlayer)
-      elseif(key == 'yellow') then
-        gamePath = 'spellingGame.lua'
+        runGame(underGoingTest, chosenPlayer)
+      elseif (key == 'green') then
+        chosenPlayer = 2
+        runGame(underGoingTest, chosenPlayer)
+      elseif (key == 'yellow') then
         chosenPlayer = 3
-        runGame(gamePath, underGoingTest, chosenPlayer)
-      elseif(key == 'blue') then
-        gamePath = 'geographyGame.lua'
+        runGame(underGoingTest, chosenPlayer)
+      elseif (key == 'blue') then
         chosenPlayer = 4
-        runGame(gamePath, underGoingTest, chosenPlayer)
-	  end
+        runGame(underGoingTest, chosenPlayer)
+      end
   end
 end
 
--- Table to be sent to newProfile or menu containing information about the user
---login_player = 0
+--- Runs chosen game (file) if testing mode is off 
+-- @param #boolean testingModeOn If testing mode is on
+-- @param #number chosenPlayer The number of the chosen player (1-4)
+function runGame(testingModeOn, chosenPlayer)
 
--- Runs chosen game (file) if testing mode is off 
-function runGame(path, testingModeOn, chosenPlayer)
-	if(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 1) then -- If player exists (is active) then go to game menu
-		assert(loadfile("menu.lua"))(chosenPlayer)
-	elseif(not testingModeOn and profiles['player'..chosenPlayer]['isActive'] == 0) then -- If player does not exist (is not active) go and create new profile
-		assert(loadfile("newProfile.lua"))(chosenPlayer)
+	profileStatus = profiles['player'..chosenPlayer]['isActive'] -- Get the player status (active or not active/1 or 0)
+	
+	if(profileStatus == 1) then -- If player exists (is active) then go to game menu
+		path = "menu.lua"
+	elseif(profileStatus == 0) then -- If player does not exist (is not active) go and create new profile
+		path = "newProfile.lua"
 	end
-end
 
+    if(not testingModeOn) then
+      assert(loadfile(path))(chosenPlayer)
+    end
+end
 
 -- Main function that runs the program
 local function main()
@@ -187,6 +167,4 @@ local function main()
   printLogotype()
 
 end
-
-
 main()
