@@ -269,7 +269,7 @@ end
 -- @param #string selected a string with the answer selected by the user, options: red, green, yellow, blue
 function placeAlternativesOnScreen(alternatives, selected)
   for i=1, #allCircles do
-    placeAnswersOnCircles(alternatives[i], allCircles[i])
+    placeAnswersOnCircles(alternatives[i], allCircles[i],allCirclePositions[i])
     placeAnswerCircles(allCirclePositions[i], allCircles[i])
     adjustCircleSize(selected, allCircles[i], allCirclePositions[i])
   end
@@ -287,7 +287,7 @@ function createAnswerBackground()
   local xs =40  -- x starting coordinate
   local y = xs  -- y position
   local d = 160 -- diameter of circle
-  local cutOut ={  red    = {x= xs      , y = y, w = d, h = d},
+  cutOut ={  red    = {x= xs      , y = y, w = d, h = d},
                    yellow = {x= xs + d  , y = y, w = d, h = d},
                    blue   = {x= xs + d*2, y = y, w = d, h = d},
                    green  = {x= xs + d*3, y = y, w = d, h = d}}
@@ -319,31 +319,26 @@ function placeAnswerCircles(circlePosition, circle)
   gfx.screen:copyfrom(circle.green, nil, position.green, true)
   gfx.screen:copyfrom(circle.blue, nil, position.blue, true)
   gfx.screen:copyfrom(circle.yellow, nil, position.yellow, true)
-
 end
 
 --- place the answers to the right position in their circle
 -- @param #table answers a table with the answer alternatives
 -- @param #table circle a table of all the circles that the answers will be placed on
-function placeAnswersOnCircles(answers, circle)
+function placeAnswersOnCircles(answers, circle, circlePosition)
+
   local fh = text.getFontHeight('lato', 'large') -- font height
   local yOffset = fh /2 + 10
+  local xOffset = 0
+  local colorCircles = {'red','green','yellow','blue'}
 
-  local xOffset = text.getStringLength('lato', 'large', tostring(answers[1])) / 2
-
-  text.print(circle.red, 'lato', 'black', 'large', tostring(answers[1]), circle.red:get_width() /2 - xOffset, circle.red:get_height() /2 - yOffset, xOffset*2, fh)
- 
-  xOffset = text.getStringLength('lato', 'large', tostring(answers[2])) / 2
-
-  text.print(circle.green, 'lato', 'black', 'large', tostring(answers[2]), circle.green:get_width() /2 - xOffset, circle.green:get_height() /2 - yOffset, math.ceil(xOffset*2), fh)
-  
-  xOffset = text.getStringLength('lato', 'large', tostring(answers[3])) / 2
-
-  text.print(circle.yellow, 'lato', 'black', 'large', tostring(answers[3]), circle.yellow:get_width() /2 - xOffset, circle.yellow:get_height() /2 - yOffset, xOffset*2, fh)
-  
-  xOffset = text.getStringLength('lato', 'large', tostring(answers[4])) / 2
-
-  text.print(circle.blue, 'lato', 'black', 'large', tostring(answers[4]), circle.blue:get_width() /2 - xOffset, circle.blue:get_height() /2 - yOffset, xOffset*2, fh)
+  for i=1, #answers do
+    xOffset = text.getStringLength('lato', 'large', tostring(answers[i])) / 2
+    if xOffset == 0 then
+      circle[colorCircles[i]]:copyfrom(colorsImg, cutOut[colorCircles[i]], true)
+    else
+      text.print(circle[colorCircles[i]], 'lato', 'black', 'large', tostring(answers[i]), circle[colorCircles[i]]:get_width() /2 - xOffset, circle[colorCircles[i]]:get_height() /2 - yOffset, xOffset*2, fh)
+    end
+  end
 end
 
 --- Downsizes the cirlces that are not selected
@@ -351,25 +346,26 @@ end
 -- @param #table circle a table of all the circles that all can be downsized
 -- @param #table circlePositions a table of the positions of the circles 
 function adjustCircleSize(selected, circle, circlePositions)
+  scale = 0.7
   if selected == 'start' then
-    animation.zoom(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, 0.8, 0)
-    animation.zoom(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, 0.8, 0)
+    animation.zoom(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, scale, 0)
+    animation.zoom(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, scale, 0)
   elseif selected == 'red' then
-    animation.zoom(background, circle['green'], circlePositions['green'].x, circlePositions['green'].y, 0.8, 0)
-    animation.zoom(background, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y, 0.64, 0)
-    animation.zoom(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, 0.512, 0)
+    animation.changeSize(background, circle['green'], circlePositions['green'].x, circlePositions['green'].y, circlePositions['red'].x, circlePositions['red'].y, scale, 2, 'down')
+    animation.changeSize(background, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y, circlePositions['red'].x, circlePositions['red'].y, scale, 3, 'down')
+    animation.changeSize(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, circlePositions['red'].x, circlePositions['red'].y, scale, 4, 'down')
   elseif selected == 'green' then
-    animation.zoom(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, 0.8, 0)
-    animation.zoom(background, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y, 0.8, 0)
-    animation.zoom(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, 0.64, 0)
+    animation.changeSize(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, circlePositions['green'].x, circlePositions['green'].y, scale, 2, 'up')
+    animation.changeSize(background, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y, circlePositions['green'].x, circlePositions['green'].y, scale, 2, 'down')
+    animation.changeSize(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, circlePositions['green'].x, circlePositions['green'].y, scale, 3, 'down')
   elseif selected == 'yellow' then
-    animation.zoom(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, 0.64, 0)
-    animation.zoom(background, circle['green'], circlePositions['green'].x, circlePositions['green'].y, 0.8, 0)
-    animation.zoom(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, 0.8, 0)
+    animation.changeSize(background, circle['green'], circlePositions['green'].x, circlePositions['green'].y, circlePositions['yellow'].x, circlePositions['yellow'].y, scale, 2, 'up')
+    animation.changeSize(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, circlePositions['yellow'].x, circlePositions['yellow'].y, scale, 3, 'up')
+    animation.changeSize(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, circlePositions['yellow'].x, circlePositions['yellow'].y, scale, 2, 'down')
   elseif selected == 'blue' then
-    animation.zoom(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, 0.512, 0)
-    animation.zoom(background, circle['green'], circlePositions['green'].x, circlePositions['green'].y, 0.64, 0)
-    animation.zoom(background, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y, 0.8, 0)  
+    animation.changeSize(background, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y,circlePositions['blue'].x, circlePositions['blue'].y, scale, 2, 'up')  
+    animation.changeSize(background, circle['green'], circlePositions['green'].x, circlePositions['green'].y,circlePositions['blue'].x, circlePositions['blue'].y, scale, 3, 'up')
+    animation.changeSize(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y,circlePositions['blue'].x, circlePositions['blue'].y, scale, 4, 'up')
   end
 end
 
@@ -377,6 +373,7 @@ end
 -- @param #table question a table of ward parts and alternative sets
 -- @return #table questionPosition a table of coordinates indicating where the questions word parts and alternative sets should be printed form.
 function getQuestionPosition(question)
+  local fh = text.getFontHeight('lato', 'large')
   local wordPartPositions = {}
   local alternativePositions = {}
   local diameter = 140
@@ -384,7 +381,7 @@ function getQuestionPosition(question)
 
   local startPosition = {
     x = gfx.screen:get_width()/2 - questionLength/2 - diameter,
-    y = gfx.screen:get_height()/ 2 + 10
+    y = gfx.screen:get_height()/ 2 - fh/2
   }
   
   for i = 1, #question[1] do
@@ -411,7 +408,7 @@ end
 function printWord(wordParts, wordPartPosition)
   gfx.screen:clear({122,219,228})
   
-  for i=1, #question do
+  for i=1, #wordParts do
     text_testValue = text.print(gfx.screen, 'lato', 'black', 'large', wordParts[i], wordPartPosition[i].x ,  wordPartPosition[i].y)    
   end
 
@@ -433,7 +430,6 @@ function printQuestionAlternatives(alternatives, alternativePositions, key)
     end
     placeAlternativesOnScreen(alternatives, key) 
   end
-
 end
 
 --- Determines the length of the question
@@ -446,6 +442,13 @@ function questionLength(question, diameter)
     questionLength = questionLength + text.getStringLength('lato','large',question[1][i])
   end
   return questionLength
+end
+
+function removeAlternative(userChoice, key)
+  for i=1, #question[2] do
+    question[2][i][userChoice] = ''
+  end
+  printQuestionAlternatives(question[2],questionPosition[2],key)
 end
 
 ---Check if the answer is correct
@@ -476,10 +479,10 @@ function checkAnswer(key,alternatives,rightanswer)
     main()
   else
     -- Zoom out incorrect answer
-    for i=1, #allCircles do
-      answerIsCorrect = animation.zoom(background, allCircles[i][key], allCirclePositions[i][key].x, allCirclePositions[i][key].y, 0.000001, 0.5)
-    end
-    answered[key] = true
+    --for i=1, #allCircles do
+    --  answerIsCorrect = animation.zoom(background, allCircles[i][key], allCirclePositions[i][key].x, allCirclePositions[i][key].y, 0.000001, 0.5)
+    --end
+    removeAlternative(userChoice, key)
     return false
   end
 end
