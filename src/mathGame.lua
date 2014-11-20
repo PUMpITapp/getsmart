@@ -385,23 +385,26 @@ function onKey(key, state)
   elseif state == 'up' then
     print(key)
     --if side menu is up
-    if(sideMenu) then
-      
-      if(key == 'red') then
+    if(sideMenu) then 
+	  if(key == 'red') then
         sideMenu = false
-        dofile('mathGame.lua')
+        gamePath = 'mathGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'green') then
         sideMenu = false
-        dofile('memoryGame.lua')
+        gamePath = 'memoryGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'yellow') then
         sideMenu = false
-        dofile('spellingGame.lua')
+        gamePath = 'spellingGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'blue') then
         sideMenu = false
-        dofile('geographyGame.lua')
+        gamePath = 'geographyGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == "right") then
         sideMenu = false
-         changeSrfc()
+        changeSrfc()
       elseif(key == 'up') then
       	dofile("login.lua")
       end
@@ -430,6 +433,15 @@ function onKey(key, state)
          
   elseif (state == "repeat") then
   end 
+end
+
+--- Runs chosen game (file) if testing mode is off
+-- @param #string path The path to the game to be loaded
+-- @param #boolean testingModeOn If testing mode is on
+function runGame(path, testingModeOn)
+	if(not testingModeOn) then
+		assert(loadfile(path))(player)
+	end
 end
 
 --- Sets the background of the screen
