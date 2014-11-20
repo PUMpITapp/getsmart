@@ -17,6 +17,10 @@ else
 end
 
 --- All games
+-- @param player Player to update
+-- @param game Game to update
+-- @param gameType GameType (eg division, addition etc)
+-- @param points Number of points
 function profileHandler.update(player, game, gameType, points)
 	profiles, err = table.load('profiles.lua')
 	player = "player" .. player
@@ -32,11 +36,19 @@ function profileHandler.update(player, game, gameType, points)
 
 end
 
+--- Gets the players level for a game
+-- @param player Player
+-- @param game Game
+-- @param gameType GameType (eg division, addition etc)
+-- @return The profile's level in the given game
 function profileHandler.getGameLevel(player, game, gameType)
 	profiles, err = table.load('profiles.lua')
 	return profiles[player][game][gameType]
 end
 
+--- Updates the player's userLevel for a game
+-- @param player Player to update
+-- @param game Game to update
 function profileHandler.updateUserLevel(player, game)
 	local gameValue = 1
 	--print("update level")
@@ -58,6 +70,9 @@ function profileHandler.updateUserLevel(player, game)
 	assert( table.save( profiles, "profiles.lua" ) == nil )
 end
 
+--- Get name
+-- @param player The player to retrieve the name for
+-- @returm The player's name
 function profileHandler.getName(player)
 	profiles, err = table.load('profiles.lua')
 	player = "player" .. tostring(player)
@@ -66,6 +81,8 @@ function profileHandler.getName(player)
 end
 
 --- New profile
+-- @param player
+-- @param name
 function profileHandler.setName(player, name)
 	profiles, err = table.load('profiles.lua')
 	player = "player" .. tostring(player)
@@ -76,6 +93,10 @@ function profileHandler.setName(player, name)
 	--profileHandler.printToFile(profiles)
 end
 
+--- Get level
+-- @param player
+-- @param game
+-- @return The player's userLevel for a game
 function profileHandler.getLevel(player, game)
 	profiles, err = table.load('profiles.lua')
 	player = "player" .. tostring(player)

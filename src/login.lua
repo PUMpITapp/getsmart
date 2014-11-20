@@ -36,7 +36,6 @@ function setRequire(underGoingTest)
   return underGoingTest
 end 
 
---local underGoingTest = setRequire(checkTestMode())
 local underGoingTest = setRequire(checkTestMode())
 
 local background = gfx.loadpng('./images/background.png')
@@ -148,19 +147,16 @@ function runGame(testingModeOn, chosenPlayer)
 
 	profileStatus = profiles['player'..chosenPlayer]['isActive'] -- Get the player status (active or not active/1 or 0)
 	
-	if(not testingModeOn and profileStatus == 1) then -- If player exists (is active) then go to game menu
+	if(profileStatus == 1) then -- If player exists (is active) then go to game menu
 		path = "menu.lua"
-		assert(loadfile(path))(chosenPlayer)
-	elseif(not testingModeOn and profileStatus == 0) then -- If player does not exist (is not active) go and create new profile
-		path = "newProfile.lua"
-		assert(loadfile(path))(chosenPlayer)
-	elseif (testingModeOn and profileStatus == 1) then -- If player does not exist and testning mode on go and create new profile
-		path = "menu.lua"
-	elseif(testingModeOn and profileStatus == 0) then -- If player does not exist and testing mode on go and create new profile
+	elseif(profileStatus == 0) then -- If player does not exist (is not active) go and create new profile
 		path = "newProfile.lua"
 	end
-end
 
+    if(not testingModeOn) then
+      assert(loadfile(path))(chosenPlayer)
+    end
+end
 
 -- Main function that runs the program
 local function main()
