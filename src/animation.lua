@@ -51,6 +51,16 @@ function animation.zoom(background, surface, x, y, zoom, speed)
 	partBackground:destroy()
 end
 
+--- Change the size and position of the circles
+-- @param #surface background The background surface
+-- @paran #surface surface The surface with the circle
+-- @param #integer x current x-position of circle
+-- @param #integer y current y-position of circle
+-- @param #integer orginX x-position of circle with order 1
+-- @param #integer orginY y-position of circle with order 1
+-- @param #float scale how much the circle should be scaled
+-- @param #integer order the order of separation from order 1
+-- @param #string direction up or down, direction from circle with order 1
 function animation.changeSize(background, surface, x, y, originX, originY, scale, order, direction)
 	partBackground = gfx.new_surface(surface:get_width(), surface:get_height())
 	partBackground:copyfrom(background, {x=x, y=y,w=surface:get_width(), h=surface:get_height()})
@@ -65,7 +75,7 @@ function animation.changeSize(background, surface, x, y, originX, originY, scale
 	if direction == 'up' then
 		newY = originY - height*((scale^order - scale) / (scale - 1))
 	elseif direction == 'down' then
-		newY = originY + height*((scale^(order+1) - scale) / (scale - 1))
+		newY = originY + height *((scale^(order-1) - 1) / (scale - 1))
 	end
 	
 	zoom = scale^(order-1)
@@ -80,6 +90,8 @@ function animation.changeSize(background, surface, x, y, originX, originY, scale
 	partBackground:destroy()
 end
 
+--- dalay function
+--@param #float time how long the delay will be
 function sleep(time)
   local t0 = os.clock()
   while os.clock() < (t0 +time) do end
