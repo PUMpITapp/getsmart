@@ -46,6 +46,16 @@ profiles, err = table.load('profiles.lua')
 -- Require the table containing flags
 flags = require 'flags'
 
+-- Variable containing the correct answer
+correctAnswer = 0
+
+-- The user's chosen answer
+chosenAnswer = 0
+
+-- The correct country's id
+correctCountryId = 0
+
+corrId = 0
 
 local randomSeed = os.time()
 local circleDiameter = 80;
@@ -118,7 +128,7 @@ function printAnswers(answers)
     face = 'lato',
     color = 'black',
     size = 'large',
-    height = text.getFontheight('lato', 'large')
+    height = text.getFontHeight('lato', 'large')
   }
 
   local textPosition = {
@@ -129,7 +139,7 @@ function printAnswers(answers)
   }
 
   for i = 1, 4 do
-    text.print(gfx.screen, font.face, font.color, font.size, answers[i], textPosition.x, textPosition.y, textPosition.w, textPosition.h)
+    text.print(gfx.screen, font.face, font.color, font.size, answers[i].country, textPosition.x, textPosition.y, textPosition.w, textPosition.h)
     textPosition.y = textPosition.y + screen.height / 4
   end
 
@@ -193,15 +203,16 @@ end
 -- @param #number correctCountryId The ID of the country which is the correct alternative
 -- @return #table answers The table of answers shuffled
 function generateAnswers(correctCountryId)
+
   -- Initialize the answers array and populate it with the correct answer
   local answers = {
-    flags[correctCountryId].country
+    flags[correctCountryId]
   }
-
+  
   -- Generate random incorrect answers
   while (table.maxn(answers) < 4) do
     local newCountryId = getRandomCountryId()
-    local newAnswer = flags[newCountryId].country
+    local newAnswer = flags[newCountryId]
 
     if (not table.contains(answers, newAnswer)) then
         table.insert(answers, newAnswer)
@@ -211,7 +222,18 @@ function generateAnswers(correctCountryId)
   return shuffle(answers)
 end
 
-function checkAnswer(userAnswer, countryId) end
+function checkAnswer(userAnswer, countryId)
+	print("Correct id on flag: " .. correctCountryId)
+    print("Chosen id: " .. answers[userAnswer].id)
+    
+    if(answers[userAnswer].id == correctCountryId) then
+		print("correct")
+		printQuestionAndAnswers()
+	else
+		print("incorrect")
+		printQuestionAndAnswers()
+	end
+end
 
 --- Generates a random country id
 -- @return #number randomCountryId A random country id
@@ -222,28 +244,44 @@ function getRandomCountryId()
   return randomCountryId
 end
 
---- Initializes the file
-function init()
-  -- Set background
-  gfx.screen:clear({122,219,228})
-  gfx.update()
+--- Prints the questions and answers
+function printQuestionAndAnswers()
+	gfx.screen:clear({122,219,228})
+	gfx.update()
+	generateQuestion()
+	createColoredCircles()
+	placeAnswerCircles()
 end
 
+--- Generates question with random country and random answers
 function generateQuestion()
-  
-  --local randomId = math.random(
-  -- bestäm random land
+	correctCountryId = getRandomCountryId()
+	printFlag(correctCountryId)
+	printAnswers(generateAnswers(correctCountryId))
+end
 
+--- Gets input from user and re-directs according to input
+-- @param key The key that has been pressed
+-- @param state The state of the key-press
+function onKey(key,state)
+  if state == 'up' then
+      if (key == 'red') then
+        userAnswer = 1
+        checkAnswer(correctAnswer, chosenAnswer)
+      elseif (key == 'green') then
+        userAnswer = 2
+		checkAnswer(correctAnswer, chosenAnswer)
+      elseif (key == 'yellow') then
+        userAnswer = 3
+		checkAnswer(correctAnswer, chosenAnswer)
+      elseif (key == 'blue') then
+        userAnswer = 4
+        checkAnswer(correctAnswer, chosenAnswer)
+      end
+  end
 end
 
 local function main()
-	init()
-	
-	printFlag(5)
-	
-	printAnswers(generateAnswers(5))
-	
-	createColoredCircles()
-	placeAnswerCircles()
+	printQuestionAndAnswers()
 end
 main()
