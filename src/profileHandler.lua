@@ -24,7 +24,7 @@ else
   dofile('table.save.lua')
 end
 
---- All games
+--- Updates points for wanted player in wanted game and gametype
 -- @param #string player Player to update
 -- @param #string game Game to update
 -- @param #string gameType GameType (eg division, addition etc)
@@ -76,7 +76,7 @@ function profileHandler.updateUserLevel(player, game)
 	assert( table.save( profiles, "profiles.lua" ) == nil )
 end
 
---- Get name
+--- Gets the name of the player
 -- @param #string player The player to retrieve the name for
 -- @return #string The player's name
 function profileHandler.getName(player)
@@ -85,7 +85,7 @@ function profileHandler.getName(player)
 	return profiles[player]['name']
 end
 
---- New profile
+--- Sets name for new player
 -- @param #string player The number of the new player (1-4)
 -- @param #string name The name of the new player
 function profileHandler.setName(player, name)
@@ -96,7 +96,7 @@ function profileHandler.setName(player, name)
 	assert( table.save( profiles, "profiles.lua" ) == nil )
 end
 
---- Get level
+--- Gets level for wanted player
 -- @param #string player The players number
 -- @param #string game The game 
 -- @return #number The player's userLevel for a game
