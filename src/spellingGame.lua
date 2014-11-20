@@ -29,7 +29,7 @@ end
 setRequire(checkTestMode())
 
 -- Set player number
-player = ...
+player = tonumber(...)
 
 
 ---Initiating all global variables
@@ -521,8 +521,7 @@ function onKey(key, state)
         runGame(gamePath, underGoingTest)
       elseif(key == 'yellow') then
         sideMenu = false
-        gamePath = 'spellingGame.lua'
-        runGame(gamePath, underGoingTest)
+        changeSrfc()
       elseif(key == 'blue') then
         sideMenu = false
         gamePath = 'geographyGame.lua'

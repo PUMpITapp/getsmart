@@ -18,10 +18,6 @@
 -- will display if the answer is correct or not and take the user onwards
 -- to new questions. 
 
--- Import the number of the player
---player = "player" .. tonumber(...)
-
-
 --- Checks if the file was called from a test file.
 -- @return #boolean If called from test file return true (indicating file is being tested) else false  
 function checkTestMode()
@@ -53,7 +49,7 @@ end
 setRequire(checkTestMode())
 
 -- Set player
-player = ...
+player = tonumber(...)
 
 answers = {}
 answered = {red = false,
@@ -449,8 +445,7 @@ function onKey(key, state)
     if(sideMenu) then 
 	  if(key == 'red') then
         sideMenu = false
-        gamePath = 'mathGame.lua'
-        runGame(gamePath, underGoingTest)
+		changeSrfc()
       elseif(key == 'green') then
         sideMenu = false
         gamePath = 'memoryGame.lua'
