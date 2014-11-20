@@ -4,6 +4,7 @@
 -- Contains all functionality to interact with the database
 --
 
+-- The array which contains all functions
 profileHandler = {}
 
 --- Checks if the file was called from a test file.

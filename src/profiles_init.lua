@@ -1,6 +1,5 @@
 --- This file is only to set up the structure of the table for players.
 -- It should only be used once to set the structure for the profiles.lua file
--- Then never again!!
 
 dofile('table.save.lua')
 
