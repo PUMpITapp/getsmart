@@ -51,6 +51,35 @@ function animation.zoom(background, surface, x, y, zoom, speed)
 	partBackground:destroy()
 end
 
+function animation.changeSize(background, surface, x, y, originX, originY, scale, order, direction)
+	partBackground = gfx.new_surface(surface:get_width(), surface:get_height())
+	partBackground:copyfrom(background, {x=x, y=y,w=surface:get_width(), h=surface:get_height()})
+	
+	local scale = math.sqrt(scale)
+	local height = surface:get_height()
+	print(height)
+
+	local newX = originX + height*(0.5 - 0.5 * scale^(order-1))
+	
+	local newY = 0
+	if direction == 'up' then
+		newY = originY - height*((scale^order - scale) / (scale - 1))
+	elseif direction == 'down' then
+		newY = originY + height*((scale^(order+1) - scale) / (scale - 1))
+	end
+	
+	zoom = scale^(order-1)
+
+	finalWidth = surface:get_width() * zoom
+	
+	finalHeight = surface:get_height() * zoom
+	
+	gfx.screen:copyfrom(partBackground,nil,{x=x, y=y})
+	gfx.screen:copyfrom(surface,nil,{x= newX, y= newY, w=finalWidth, h= finalHeight}, true)		
+
+	partBackground:destroy()
+end
+
 function sleep(time)
   local t0 = os.clock()
   while os.clock() < (t0 +time) do end
