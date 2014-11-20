@@ -28,11 +28,9 @@ function setRequire(underGoingTest)
 end 
 setRequire(checkTestMode())
 
--- Set player
-player = ...
+-- Set player number
+player = tonumber(...)
 
-
---gfx.screen:clear({122,219,228})
 
 ---Initiating all global variables
 function init()
@@ -78,13 +76,20 @@ end
 --- Prints the players name in the top of the screen
 function printPlayerName()
 	
-	local playerName = profileHandler.getName(currentPlayer)	
+	local playerName = profileHandler.getName(currentPlayer)
+	local playerUserLevel = profileHandler.getLevel(currentPlayer, "spellingGame")
 
-	local fw = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
-	local fh = text.getFontHeight('lato', 'medium')
-	local scale = 0.02
+	local fw_name = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
+	local fh_name = text.getFontHeight('lato', 'medium')
+	local position = 0.02
 
-	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_height()*scale, gfx.screen:get_width()*scale, fw, fh)
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw_name, fh_name)
+	
+	local fw_level = text.getStringLength('lato', 'medium', "User level: " .. playerUserLevel)
+	local fh_level = text.getFontHeight('lato', 'medium')
+	position = 0.02
+	
+	text.print(gfx.screen, 'lato', 'black', 'medium', "User level: " .. playerUserLevel, gfx.screen:get_width()*position, gfx.screen:get_height()*position+fh_name, fw_level, fh_level)
 
 end
 
@@ -128,7 +133,7 @@ function reorderAlternatives(alternatives, order)
   return shuffleAlternatives
 end
 
----Slitting the word into parts so the system know which parts to give altenatives to
+--- Slitting the word into parts so the system know which parts to give altenatives to
 -- @param #string word the word that will be split
 -- @param #table Intervalls the intervalls the word will be split into
 -- @renurn #table wordParts a teble of the parts of the word
@@ -487,6 +492,15 @@ function setBackground()
   return 
 end
 
+--- Runs chosen game (file) if testing mode is off
+-- @param #string path The path to the game to be loaded
+-- @param #boolean testingModeOn If testing mode is on
+function runGame(path, testingModeOn)
+	if(not testingModeOn) then
+		assert(loadfile(path))(player)
+	end
+end
+
 --- Gets input from user and checks answer
 -- @param key The key that has been pressed
 -- @param state
@@ -497,16 +511,24 @@ function onKey(key, state)
     --if side menu is up
     if(sideMenu) then
       sideMenu = false
-      if(key == 'red') then
-        dofile('mathGame.lua')
+	  if(key == 'red') then
+        sideMenu = false
+        gamePath = 'mathGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'green') then
-        dofile('memoryGame.lua')
+        sideMenu = false
+        gamePath = 'memoryGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'yellow') then
-        dofile('spellingGame.lua')
+        sideMenu = false
+        changeSrfc()
       elseif(key == 'blue') then
-        dofile('geographyGame.lua')
+        sideMenu = false
+        gamePath = 'geographyGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == "right") then
-         changeSrfc()
+        sideMenu = false
+        changeSrfc()
       elseif(key == 'up') then
       	dofile("login.lua")
       end

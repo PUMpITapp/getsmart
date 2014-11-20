@@ -208,15 +208,102 @@ end)
 
 describe('Testing checkAnswer()',function ( ... )
 	it('Var = 1, Var = 1, expected = true', function ( ... )
-		checkAnswer(1,1,'red')
-		assert.are.same(true, answerIsCorrect)
+
+		assert.are.same(true, checkAnswer(1,1,'red'))
 	end)
 	it('Var = 1, Var = 2, expected = Worng', function ( ... )
-		checkAnswer(1,2,'red')
-		assert.are.same(false, answerIsCorrect)
+
+		assert.are.same(false, checkAnswer(1,2,'red'))
 	end)
 end)
 
+describe('Testing checkGivePoints()',function ( ... )
+	it('checks if question is answered correctly at first try', function ( ... )
+		assert.are.same(true, checkGivePoints({red = false, blue = false,yellow = false, green = false}))
+	end)
+	it('checks if question is answered correctly at not(first try)', function ( ... )
+		assert.are.same(false, checkGivePoints({red = true, blue = false,yellow = false, green = false}))
+	end)
+	it('checks if question is answered correctly at last try', function ( ... )
+		assert.are.same(false, checkGivePoints({red = true, blue = true,yellow = true, green = true}))
+	end)
+
+end)
+
+describe('Testing resetAnswered()', function ( ... )
+	it('checks if answered[red] is reset to false after answering question correctly',function ( ... )
+		resetAnswered({red = true, blue = false,yellow = false, green = false})
+		assert.are.same(false, answered['red'])
+	end)
+	it('checks if answered[blue] is reset to false after answering question correctly',function ( ... )
+		resetAnswered({red = false, blue = true,yellow = false, green = false})
+		assert.are.same(false, answered['blue'])
+	end)
+	it('checks if answered[yellow] is reset to false after answering question correctly',function ( ... )
+		resetAnswered({red = false, blue = true,yellow = true, green = false})
+		assert.are.same(false, answered['yellow'])
+	end)
+	it('checks if answered[green] is reset to false after answering question correctly',function ( ... )
+		resetAnswered({red = false, blue = true,yellow = false, green = true})
+		assert.are.same(false, answered['green'])
+	end)
+end)
+
+describe('testing getOperator()', function ( ... )
+	it('checks that level one gets operator "+"', function ( ... )
+		playerUserLevel = 1
+		local operator = getOperator(playerUserLevel)
+		assert.are.same('+',operator)
+	end)
+	it('checks that level one does not get "-"', function ( ... )
+		playerUserLevel = 1
+		local operator = getOperator(playerUserLevel)
+		assert.are_not.same('-',operator)
+	end)
+	it('checks that level 2 gets operator "+" or "-"', function ( ... )
+		playerUserLevel = 2
+		local operator = getOperator(playerUserLevel)
+		local checkOperator = {'-','*','/'}
+		local resultOperator = false
+		for i=1, table.maxn(checkOperator), 1 do
+			if(checkOperator[i]==operator) then
+				resultOperator = true
+			end
+		end
+		assert.are_not.same(true,resultOperator) 
+	end)
+		it('checks that level 5 gets operator "+","-" or "*"', function ( ... )
+		playerUserLevel = 5
+		local operator = getOperator(playerUserLevel)
+		local checkOperator = {'/'}
+		local resultOperator = false
+		for i=1, table.maxn(checkOperator), 1 do
+			if(checkOperator[i]==operator) then
+				resultOperator = true
+			end
+		end
+		assert.are_not.same(true,resultOperator) 
+	end)
+				it('checks that level 5 gets operator "+","-" or "*""/"', function ( ... )
+		playerUserLevel = 10
+		local operator = getOperator(playerUserLevel)
+		local checkOperator = {'+','-','*','/'}
+		local resultOperator = false
+		for i=1, table.maxn(checkOperator), 1 do
+			if(checkOperator[i]==operator) then
+				resultOperator = true
+			end
+		end
+		assert.are.same(true,resultOperator) 
+	end)
+end)
+
+--[[describe('Testing handleAnswer()',function ( ... )
+	it('checks if question is answered correctly and new question is generated', function ( ... )
+		assert.are.same(true, handleAnswer(1,1,'red')
+	end)
+end)
+--]]
 describe('Testing solveProblem()',function ( ... )
 	local testMathProblem = {}
 	testMathProblem["termOne"] = 2

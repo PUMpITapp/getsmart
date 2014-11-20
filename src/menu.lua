@@ -4,10 +4,7 @@
 --
 
 --- Checks if the file was called from a test file.
--- Returs true if it was, 
---   - which would mean that the file is being tested.
--- Returns false if it was not,
---   - which wold mean that the file was being used.  
+-- @return #boolean True or false depending on testing file  
 function checkTestMode()
   runFile = debug.getinfo(2, "S").source:sub(2,3)
   if (runFile ~= './' ) then
@@ -34,11 +31,12 @@ function setRequire(underGoingTest)
   end
 end 
 
-setRequire(checkTestMode())
+underGoingTest = checkTestMode()
+setRequire(underGoingTest)
 
+-- Imports and sets background
 local background = gfx.loadpng('./images/background.png')
 gfx.screen:copyfrom(background, nil)
-
 gfx.update()
 
 -- Boolean controlling if side menu is showing
@@ -83,6 +81,7 @@ local png_logo = 'images/logo.png'
 -- Directory of images
 local dir = './'
 
+--- Prints the current player name in the top left corner
 function printPlayerName()
 	
 	local playerName = profileHandler.getName(currentPlayer)
@@ -95,13 +94,8 @@ function printPlayerName()
 
 end
 
-
-
--- Prints the side menu
-function printSideMenu()
-
--- Prints the side menu
-local function printsideMenuSurface()
+--- Prints the side menu surface
+function printsideMenuSurface()
 
 	local toScreen = nil
 	local gameCounter = 1
@@ -121,14 +115,17 @@ local function printsideMenuSurface()
 
 end
 
--- Prints the transparent surface above the gfx.screen
-local function printTransparentSurface()
+--- Prints the transparent surface on top of gfx.screen
+function printTransparentSurface()
 
 	transparentSrfc:clear() -- Initializes transparentSrfc
 	transparentSrfc:fill({0, 0, 0, 127}) --RGBA -- should be 50% transparent
 	gfx.screen:copyfrom(transparentSrfc, nil, {x=0, y=0}) -- Prints transparentSrfc
 
 end
+
+--- Prints the side menu
+function printSideMenu()
 
 	printTransparentSurface()
 	printsideMenuSurface()
@@ -137,14 +134,17 @@ end
 	
 end
 
--- Prints main menu
-function printMenuCircles()
+--- Prints circle according to input
+-- @param surface img The surface to be printed on
+-- @param #number x The x-coordiante
+-- @param #number y The y-coordinate
+function printCircle(img, xIn, yIn)
+	local scale = 0.5
+	gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale})
+end
 
-	-- Prints circle according to img, x and y values
-	function printCircle(img, xIn, yIn)
-		local scale = 0.5
-		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale})
-	end
+--- Prints the circles for the main menu
+function printMenuCircles()
 
 	local toScreen = nil
 	local gameCounter = 1
@@ -161,7 +161,7 @@ function printMenuCircles()
 
 end
 
--- Prints logotype in the middle of the screen
+--- Prints the logotype in the middle of the screen
 function printLogotype()
 	
 	local toScreen = nil
@@ -173,7 +173,7 @@ function printLogotype()
 
 end
 
--- Copys graphics from main surface (in this case main menu) to the surface mainSrfc
+--- Copys graphics from main surface (in this case main menu) to the surface mainSrfc
 function setMainSrfc()
 
 	mainSrfc:clear()
@@ -181,15 +181,16 @@ function setMainSrfc()
 
 end
 
--- Changes from active surface to mainSrfc (which can be seen as the previous "state")
+--- Changes from active surface to mainSrfc (which can be seen as the previous "state")
 function changeSrfc()
 
 	gfx.screen:copyfrom(mainSrfc, nil, {x=0, y=0})
 	gfx.update()
 
 end
-
--- Gets input from user and executes chosen script
+--- Gets input from user and re-directs according to input
+-- @param key The key that has been pressed
+-- @param state The state of the key-press
 function onKey(key,state)
  if state == 'down' then
 
@@ -214,7 +215,9 @@ function onKey(key,state)
   end
 end
 
--- Runs chosen game (file) if testing mode is off
+--- Runs chosen game (file) if testing mode is off
+-- @param #string path The path to the game to be loaded
+-- @param #boolean testingModeOn If testing mode is on
 function runGame(path, testingModeOn)
 	if(not testingModeOn) then
 		assert(loadfile(path))(currentPlayer)
