@@ -31,7 +31,8 @@ function setRequire(underGoingTest)
   end
 end 
 
-local underGoingTest = setRequire(checkTestMode())
+underGoingTest = checkTestMode()
+setRequire(underGoingTest)
 
 -- Imports and sets background
 local background = gfx.loadpng('./images/background.png')
