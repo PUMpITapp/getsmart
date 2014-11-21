@@ -221,7 +221,7 @@ function generateAnswers(correctCountryId)
 end
 
 function checkAnswer(userAnswer)
-  answerState == nil
+  answerState = nil
   if (answers[userAnswer] == correctCountry) then
     print("correct")
     --addScoreToUser()
