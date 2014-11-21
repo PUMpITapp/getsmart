@@ -224,6 +224,8 @@ function checkAnswer(userAnswer)
   answerState = nil
   if (answers[userAnswer] == correctCountry) then
     print("correct")
+    print(correctCountry)
+    print(answers[userAnswer])
     --addScoreToUser()
 
     printQuestionAndAnswers()
