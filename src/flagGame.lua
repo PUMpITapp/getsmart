@@ -221,14 +221,17 @@ function generateAnswers(correctCountryId)
 end
 
 function checkAnswer(userAnswer)
+  answerState == nil
   if (answers[userAnswer] == correctCountry) then
     print("correct")
     --addScoreToUser()
 
     printQuestionAndAnswers()
+    answerState = true
   else
     print("incorrect")
     removeAnswer(userAnswer)
+    answerState = false
 
   end
 end
