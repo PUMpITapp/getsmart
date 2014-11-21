@@ -29,7 +29,8 @@ end
 setRequire(checkTestMode())
 
 -- Set player number
-player = tonumber(...)
+-- player = tonumber(...)
+player = ...
 
 
 ---Initiating all global variables

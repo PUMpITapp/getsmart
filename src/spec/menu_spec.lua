@@ -31,7 +31,7 @@ describe('Menu unit testing', function( ... )
 	end)
 	
 	it('should load geography game', function ( ... )
-		local expected = 'geographyGame.lua'
+		local expected = 'flagGame.lua'
 		onKey('blue','up')
 		local actual = gamePath
 		assert.is.same(expected, actual)

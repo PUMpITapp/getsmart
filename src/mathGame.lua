@@ -49,7 +49,8 @@ end
 setRequire(checkTestMode())
 
 -- Set player
-player = tonumber(...)
+-- changed form player = tonumber(...)
+player = ...
 
 answers = {}
 answered = {red = false,
