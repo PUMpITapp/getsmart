@@ -46,10 +46,6 @@ profiles, err = table.load('profiles.lua')
 -- Require the table containing flags
 flags = require 'flags'
 
--- Variable containing the correct answer
---correctCountry = ""
---answers = {}
-
 -- The user's chosen answer
 chosenAnswer = 0
 
@@ -175,14 +171,14 @@ end
 --- Places the answer circles in their correct positions
 function placeAnswerCircles()
 
-  local circlePosition = {
+  circlePosition = {
     x = screen.width / 2,
     y = screen.height / 8 - circleDiameter / 2,
     w = circleDiameter,
     h = circleDiameter
   }
 
-  local circleColors = {
+  circleColors = {
     'red',
     'green',
     'yellow',
@@ -267,7 +263,8 @@ end
 -- @param #integer answerToRemove The answer to remove (1,2,3,4)
 --
 function removeAnswer(answerToRemove)
-  
+  --local yOffset = answerToRemove * screen.height / 4;
+  --animation.zoom(gfx.screen, circle[circleColors[answerToRemove]], circlePosition.x, circlePosition.y + yOffset, 0.000001, 0.2)
 end
 
 --- Gets input from user and re-directs according to input
