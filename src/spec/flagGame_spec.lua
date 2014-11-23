@@ -2,8 +2,9 @@ require "flagGame"
 
 describe('testing checkAnswer(userAnswer) ', function ( ... )
 	it('comparing userAnswer to correctAnswer, correct', function ( ... )
-		correctCountry = 1
-		checkAnswer(1)
+		userAnswer == correctCountry
+		checkAnswer(userAnswer)
+		print('answerState')
 		assert.are.same(true, answerState)
 	end)
 	it('comparing userAnswer to correctAnswer, incorrect', function ( ... )

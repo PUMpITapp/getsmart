@@ -222,6 +222,8 @@ end
 
 function checkAnswer(userAnswer)
   answerState = nil
+  print(correctCountry)
+  --print(checkAnswer(1))
   if (answers[userAnswer] == correctCountry) then
     print("correct")
     print(correctCountry)
