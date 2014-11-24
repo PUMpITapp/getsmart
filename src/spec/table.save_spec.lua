@@ -43,4 +43,4 @@ end)
 
 -- Delete dummy file
 
-os.remove(fileStub)
+--os.remove(fileStub)
