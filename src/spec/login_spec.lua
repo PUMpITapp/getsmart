@@ -3,7 +3,7 @@ require "login"
 describe('Login unit testing', function()
 
 	it('should load first player (which is active)', function ( ... )
-		dofile("profiles_init.lua") -- Init profiles table
+		--dofile("profiles_init.lua") -- Init profiles table
 		-- Input variables
 		local chosenPlayer = 1
 		local testingMode = underGoingTest
@@ -18,11 +18,11 @@ describe('Login unit testing', function()
 		local actualProfileStatus = profileStatus
 
 		assert.is.same(expectedPath, actualPath)
-		--assert.is.same(expectedProfileStatus, actualProfileStatus)
+		assert.is.same(expectedProfileStatus, actualProfileStatus)
 	end)
 	
 	it('should load new profile', function ( ... )
-		dofile("profiles_init.lua") -- Init profiles table
+		--dofile("profiles_init.lua") -- Init profiles table
 		-- Input variables
 		local chosenPlayer = 2
 		local testingMode = underGoingTest
@@ -37,7 +37,7 @@ describe('Login unit testing', function()
 		local actualProfileStatus = profileStatus
 
 		assert.is.same(expectedPath, actualPath)
-		--assert.is.same(expectedProfileStatus, actualProfileStatus)
+		assert.is.same(expectedProfileStatus, actualProfileStatus)
 	end)
 
 end)
