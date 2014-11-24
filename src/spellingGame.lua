@@ -92,7 +92,7 @@ function printPlayerName()
 
 end
 
---- Genrates a random number between 1 and the size of the table answer table and picks that word in the table
+--- Genrates a random number between 1 and the size of the table answerTable and picks that word in the table
 -- @return #table question a table with a word, its intervalls and the different spelling options
 function selectRandomWord()
   math.randomseed(os.time())
@@ -168,6 +168,7 @@ function generateQuestion(wordArray)
   end
 
   wordParts = splitIntoWordParts(wordArray[1],wordArray[2])
+
   order = shuffleOrder()
   local scrambledAlternatives = {}
 
