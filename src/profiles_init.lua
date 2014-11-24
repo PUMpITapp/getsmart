@@ -14,7 +14,7 @@ profiles = {
 									multiplicationPoints = 1,
 									divisionPoints = 1
 									},
-						geographyGame = {
+						flagGame = {
 									userLevel = 1,
 									points = 0
 									},
@@ -37,7 +37,7 @@ profiles = {
 									multiplicationPoints = 1,
 									divisionPoints = 1
 									},
-						geographyGame = {
+						flagGame = {
 									userLevel = 1,
 									points = 0
 									},
@@ -60,7 +60,7 @@ profiles = {
 									multiplicationPoints = 1,
 									divisionPoints = 1
 									},
-						geographyGame = {
+						flagGame = {
 									userLevel = 1,
 									points = 0
 									},
@@ -83,7 +83,7 @@ profiles = {
 									multiplicationPoints = 1,
 									divisionPoints = 1
 									},
-						geographyGame = {
+						flagGame = {
 									userLevel = 1,
 									points = 0
 									},

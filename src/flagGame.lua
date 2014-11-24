@@ -43,12 +43,12 @@ profiles, err = table.load('profiles.lua')
 flags = require 'flags'
 
 -- The id for the correct country
-correctCountry = 0
+correctCountry = ''
 
 sideMenu = false
 
---
-player = 1
+-- Set player number
+player = ...
 
 local randomSeed = os.time()
 local circleDiameter = 80
@@ -222,25 +222,27 @@ function generateAnswers(correctCountryId)
   return shuffle(answers)
 end
 
-function checkAnswer(userAnswer)
+--- Checks if the user's guess is correct
+-- @param #string userAnswer The country guessed
+-- @param #table answersLocal The table containing all answers 
+-- @param #number correctCountryLocal The id of the correct answer
+function checkAnswer(userAnswer, answersLocal, correctCountryLocal)
   answerState = nil
-  print("Correct country: "..correctCountry)
-  if (answers[userAnswer] == correctCountry) then
-    print("correct")
-    print(correctCountry)
-    print(answers[userAnswer])
-    --addScoreToUser()
-    print(userAnswer)
+  if (answersLocal[userAnswer] == correctCountryLocal) then
+    addScoreToUser()
     zoomAnswer(userAnswer)
-
-    main()
     answerState = true
+    main()
   else
-    print("incorrect")
     removeAnswer(userAnswer)
     answerState = false
 
   end
+end
+
+--- Adds one point to the user's score
+function addScoreToUser()
+	profileHandler.update(player, 'flagGame', nil, 1)
 end
 
 --- Generates a random country id
@@ -271,7 +273,7 @@ function generateQuestion()
 	printAnswers(answers)
 end
 
---- Remove an answer in a stylish way
+--- Remove an answer in a stylish way (if user's guess is incorrect)
 -- @param #integer answerToRemove The answer to remove (1,2,3,4)
 function removeAnswer(answerToRemove)
   local zoom = 0.000001 
@@ -281,6 +283,8 @@ function removeAnswer(answerToRemove)
   sleep(1)
 end
 
+--- Zoom in on an answer if correct guess
+-- @param #integer answer The answer to remove (1,2,3,4)
 function zoomAnswer(answer)
  local zoom = 2.5
   tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
@@ -288,28 +292,6 @@ function zoomAnswer(answer)
   answerIsCorrect= animation.zoom(background, circle[key], positions[key].x, positions[key].y, zoom, 0.3)
   sleep(1)
 
-end
-
-
---- Gets input from user and re-directs according to input
--- @param key The key that has been pressed
--- @param state The state of the key-press
-function onKey(key,state)
-  if state == 'up' then
-      if (key == 'red') then
-        userAnswer = 1
-        checkAnswer(userAnswer)
-      elseif (key == 'green') then
-        userAnswer = 2
-		checkAnswer(userAnswer)
-      elseif (key == 'yellow') then
-        userAnswer = 3
-		checkAnswer(userAnswer)
-      elseif (key == 'blue') then
-        userAnswer = 4
-        checkAnswer(userAnswer)
-      end
-  end
 end
 
 --- Gets input from user and checks answer or controls side-menu
@@ -335,8 +317,7 @@ function onKey(key, state)
         runGame(gamePath, underGoingTest)
       elseif(key == 'blue') then
         sideMenu = false
-        gamePath = 'flagGame.lua'
-        runGame(gamePath, underGoingTest)
+        changeSrfc()
       elseif(key == "right") then
         sideMenu = false
         changeSrfc()
@@ -349,16 +330,16 @@ function onKey(key, state)
 	  if state == 'up' then
 	      if (key == 'red') then
 	        userAnswer = 1
-	        checkAnswer(userAnswer)
+	        checkAnswer(userAnswer, answers, correctCountry)
 	      elseif (key == 'green') then
 	        userAnswer = 2
-			checkAnswer(userAnswer)
+			checkAnswer(userAnswer, answers, correctCountry)
 	      elseif (key == 'yellow') then
 	        userAnswer = 3
-			checkAnswer(userAnswer)
+			checkAnswer(userAnswer, answers, correctCountry)
 	      elseif (key == 'blue') then
 	        userAnswer = 4
-	        checkAnswer(userAnswer)
+	        checkAnswer(userAnswer, answers, correctCountry)
 	      elseif(key == "right") then
 	        sideMenu = true
 	        setMainSrfc()
@@ -366,7 +347,7 @@ function onKey(key, state)
 	      end
 	  end
     end
-    end
+  end
 end
 
 --- Runs chosen game (file) if testing mode is off
@@ -378,10 +359,28 @@ function runGame(path, testingModeOn)
 	end
 end
 
+--- Prints the players name in the top of the screen
+function printPlayerName()
+	
+	local playerName = profileHandler.getName(player)
+	local playerUserLevel = profileHandler.getLevel(player, "flagGame")
+
+	local fw_name = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
+	local fh_name = text.getFontHeight('lato', 'medium')
+	local position = 0.02
+
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw_name, fh_name)
+	
+	local fw_level = text.getStringLength('lato', 'medium', "User level: " .. playerUserLevel)
+	local fh_level = text.getFontHeight('lato', 'medium')
+	position = 0.02
+	
+	text.print(gfx.screen, 'lato', 'black', 'medium', "User level: " .. playerUserLevel, gfx.screen:get_width()*position, gfx.screen:get_height()*position+fh_name, fw_level, fh_level)
+
+end
 
 --- Sets the background of the screen
 function setBackground()
-    print('setBackground')
     background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
     background:clear({122,219,228})
     gfx.screen:copyfrom(background,nil)
@@ -389,7 +388,7 @@ end
 
 function main()
   setBackground()
-  print('main')
+  printPlayerName()
   printQuestionAndAnswers()
 end
 

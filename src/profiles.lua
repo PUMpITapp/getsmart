@@ -8,6 +8,7 @@ return {
 },
 -- Table: {2}
 {
+<<<<<<< HEAD
    ["isActive"]=1,
    ["memoryGame"]={6},
    ["geographyGame"]={7},
@@ -41,60 +42,115 @@ return {
    ["mathGame"]={20},
    ["name"]="Artrik",
    ["spellingGame"]={21},
+=======
+   ["mathGame"]={6},
+   ["spellingGame"]={7},
+   ["memoryGame"]={8},
+   ["isActive"]=0,
+   ["name"]="",
+   ["flagGame"]={9},
+},
+-- Table: {3}
+{
+   ["mathGame"]={10},
+   ["spellingGame"]={11},
+   ["memoryGame"]={12},
+   ["isActive"]=1,
+   ["name"]="Jachael",
+   ["flagGame"]={13},
+},
+-- Table: {4}
+{
+   ["mathGame"]={14},
+   ["spellingGame"]={15},
+   ["memoryGame"]={16},
+   ["isActive"]=1,
+   ["name"]="Julbin",
+   ["flagGame"]={17},
+},
+-- Table: {5}
+{
+   ["mathGame"]={18},
+   ["spellingGame"]={19},
+   ["memoryGame"]={20},
+   ["isActive"]=1,
+   ["name"]="Artrik",
+   ["flagGame"]={21},
+>>>>>>> Flag game completed
 },
 -- Table: {6}
 {
-   ["points"]=0,
-   ["userLevel"]=1,
+   ["divisionPoints"]=1,
+   ["additionPoints"]=1,
+   ["subtractionPoints"]=1,
+   ["userLevel"]=0,
+   ["multiplicationPoints"]=1,
 },
 -- Table: {7}
 {
-   ["points"]=0,
    ["userLevel"]=1,
+   ["points"]=0,
 },
 -- Table: {8}
 {
+<<<<<<< HEAD
    ["additionPoints"]=1,
    ["divisionPoints"]=1,
    ["subtractionPoints"]=1,
    ["multiplicationPoints"]=1,
    ["userLevel"]=0,
+=======
+   ["userLevel"]=1,
+   ["points"]=0,
+>>>>>>> Flag game completed
 },
 -- Table: {9}
 {
-   ["points"]=0,
    ["userLevel"]=1,
+   ["points"]=0,
 },
 -- Table: {10}
 {
-   ["points"]=0,
-   ["userLevel"]=1,
+   ["divisionPoints"]=1,
+   ["additionPoints"]=1,
+   ["subtractionPoints"]=1,
+   ["userLevel"]=0,
+   ["multiplicationPoints"]=1,
 },
 -- Table: {11}
 {
-   ["points"]=0,
    ["userLevel"]=1,
+   ["points"]=0,
 },
 -- Table: {12}
 {
+<<<<<<< HEAD
    ["additionPoints"]=1,
    ["divisionPoints"]=1,
    ["subtractionPoints"]=1,
    ["multiplicationPoints"]=1,
    ["userLevel"]=0,
+=======
+   ["userLevel"]=1,
+   ["points"]=0,
+>>>>>>> Flag game completed
 },
 -- Table: {13}
 {
-   ["points"]=0,
    ["userLevel"]=1,
+   ["points"]=0,
 },
 -- Table: {14}
 {
-   ["points"]=0,
-   ["userLevel"]=1,
+   ["divisionPoints"]=1,
+   ["additionPoints"]=5,
+   ["subtractionPoints"]=1,
+   ["userLevel"]=0,
+   ["multiplicationPoints"]=1,
 },
 -- Table: {15}
 {
+<<<<<<< HEAD
    ["points"]=0,
    ["userLevel"]=1,
 },
@@ -105,33 +161,50 @@ return {
    ["subtractionPoints"]=1,
    ["multiplicationPoints"]=1,
    ["userLevel"]=0,
+=======
+   ["userLevel"]=1,
+   ["points"]=0,
+},
+-- Table: {16}
+{
+   ["userLevel"]=1,
+   ["points"]=0,
+>>>>>>> Flag game completed
 },
 -- Table: {17}
 {
-   ["points"]=0,
    ["userLevel"]=1,
+   ["points"]=0,
 },
 -- Table: {18}
 {
-   ["points"]=0,
-   ["userLevel"]=1,
+   ["divisionPoints"]=1,
+   ["additionPoints"]=1,
+   ["subtractionPoints"]=1,
+   ["userLevel"]=0,
+   ["multiplicationPoints"]=1,
 },
 -- Table: {19}
 {
-   ["points"]=0,
    ["userLevel"]=1,
+   ["points"]=0,
 },
 -- Table: {20}
 {
+<<<<<<< HEAD
    ["additionPoints"]=1,
    ["divisionPoints"]=1,
    ["subtractionPoints"]=1,
    ["multiplicationPoints"]=1,
    ["userLevel"]=0,
+=======
+   ["userLevel"]=1,
+   ["points"]=0,
+>>>>>>> Flag game completed
 },
 -- Table: {21}
 {
-   ["points"]=0,
-   ["userLevel"]=1,
+   ["userLevel"]=2,
+   ["points"]=20,
 },
 }

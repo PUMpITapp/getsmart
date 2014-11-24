@@ -488,7 +488,7 @@ function onKey(key, state)
         setMainSrfc()
         printSideMenu()
       end
-
+	  end
     end
   end
 end
