@@ -59,10 +59,6 @@ answered = {red = false,
             green = false}
 
 
-
-
-
-
 -- Printing the numbers on the correct position on the screen
 local sw = gfx.screen:get_width()  -- screen width
 local sh = gfx.screen:get_height() -- screen height
@@ -460,7 +456,7 @@ function onKey(key, state)
         runGame(gamePath, underGoingTest)
       elseif(key == 'blue') then
         sideMenu = false
-        gamePath = 'geographyGame.lua'
+        gamePath = 'flagGame.lua'
         runGame(gamePath, underGoingTest)
       elseif(key == "right") then
         sideMenu = false
@@ -488,7 +484,6 @@ function onKey(key, state)
         setMainSrfc()
         printSideMenu()
       end
-	  end
     end
   end
 end
@@ -532,11 +527,14 @@ end
 
 --- Pauses the system for a period of time
 -- @param #number time The amount of seconds (decimal) the system should sleep
-function
+--[[
+function 
   sleep(time)
   local t0 = os.clock()
   while os.clock() < (t0 +time) do end
 end
+]]
+
 
 main()
 return math

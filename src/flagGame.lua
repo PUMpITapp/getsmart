@@ -306,7 +306,8 @@ function onKey(key, state)
     if(sideMenu) then 
 	  if(key == 'red') then
         sideMenu = false
-		changeSrfc()
+        gamePath = 'mathGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'green') then
         sideMenu = false
         gamePath = 'memoryGame.lua'

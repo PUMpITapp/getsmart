@@ -77,8 +77,8 @@ end
 --- Prints the players name in the top of the screen
 function printPlayerName()
 	
-	local playerName = profileHandler.getName(currentPlayer)
-	local playerUserLevel = profileHandler.getLevel(currentPlayer, "spellingGame")
+	local playerName = profileHandler.getName(player)
+	local playerUserLevel = profileHandler.getLevel(player, "spellingGame")
 
 	local fw_name = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
 	local fh_name = text.getFontHeight('lato', 'medium')
@@ -92,6 +92,7 @@ function printPlayerName()
 	
 	text.print(gfx.screen, 'lato', 'black', 'medium', "User level: " .. playerUserLevel, gfx.screen:get_width()*position, gfx.screen:get_height()*position+fh_name, fw_level, fh_level)
 
+	gfx.update()
 end
 
 --- Genrates a random number between 1 and the size of the table answer table and picks that word in the table

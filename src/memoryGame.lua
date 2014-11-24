@@ -3,7 +3,7 @@ gfx = require "gfx"
 
 gfx.screen:clear({122,219,228})
 
-text.print(gfx.screen, 'lato', 'black', 'medium', "Memory Game coming soon!", 250 , 300 )
+text.print(gfx.screen, 'lato', 'black', 'medium', "Memory game will not be implemented!", 250 , 300 )
 
 
 --- Gets input from user and checks answer
