@@ -209,7 +209,7 @@ function onKey(key,state)
         runGame(gamePath, underGoingTest)
       elseif(key == 'blue') then
         sideMenu = false
-        gamePath = 'geographyGame.lua'
+        gamePath = 'flagGame.lua'
         runGame(gamePath, underGoingTest)
 		end	  
   end

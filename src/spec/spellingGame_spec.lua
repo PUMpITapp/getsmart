@@ -137,13 +137,13 @@ describe('Testing checkAnswer: ', function ()
 
 end)
 
-describe('Testing printQuestion: ', function ()
-	it('Running printQuestion expecting the string printed in return', function ()
+describe('Testing printWord: ', function ()
+	it('Running printWord expecting the string printed in return', function ()
 		local testWord = {'question',{{1,2},{4,5},{7,8}},{{'qu','qw','er','ty'},{'st','qw','er','ty'},{'on','qw','er','ty'}}}
 		local testQuestion = generateQuestion(testWord)
 
 		local expected = 'printed' 
-		local got = printQuestion(testQuestion, 'yellow')
+		local got = printWord(testQuestion[1], getQuestionPosition(testQuestion)[1])
 		assert.are.equals(expected, got)
 	end)	
 end)
