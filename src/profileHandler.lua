@@ -59,20 +59,20 @@ end
 -- @param #string player Player to update
 -- @param #number game Game to update
 function profileHandler.updateUserLevel(player, game)
-	local gameValue = 1
+	local gameValue = 0
+	local gameConstant = 1.4
 
 	for key,value in pairs(profiles[player][game]) do
 		if key ~= 'userLevel' then
-			gameValue = gameValue*value
+			gameValue = gameValue+value
 			
 		end
 	end
-	
+	print('Game Value= ' ..gameValue)
 	if (game == 'mathGame') then 
-		gameValue = math.floor(math.sqrt(gameValue))
+		gameValue = math.floor(math.sqrt(gameValue)*gameConstant)
 	end
 
-	gameValue = math.floor(math.log(gameValue))
 	profiles[player][game]['userLevel']=gameValue
 	assert( table.save( profiles, "profiles.lua" ) == nil )
 end
