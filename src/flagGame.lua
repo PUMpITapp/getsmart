@@ -35,10 +35,6 @@ end
 
 local underGoingTest = setRequire(checkTestMode())
 
---background = gfx.loadpng('./images/background.png')
---gfx.screen:copyfrom(background,nil)
---gfx.update()
-
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 dofile('table.save.lua')
 profiles, err = table.load('profiles.lua')
@@ -46,17 +42,16 @@ profiles, err = table.load('profiles.lua')
 -- Require the table containing flags
 flags = require 'flags'
 
--- Variable containing the correct answer
---correctCountry = ""
---answers = {}
+-- The id for the correct country
+correctCountry = 0
 
--- The user's chosen answer
-chosenAnswer = 0
+sideMenu = false
 
-corrId = 0
+--
+player = 1
 
 local randomSeed = os.time()
-local circleDiameter = 80;
+local circleDiameter = 80
 
 local screen = {
   width = gfx.screen:get_width(),
@@ -229,7 +224,7 @@ end
 
 function checkAnswer(userAnswer)
   answerState = nil
-  print(correctCountry)
+  print("Correct country: "..correctCountry)
   if (answers[userAnswer] == correctCountry) then
     print("correct")
     print(correctCountry)
@@ -259,8 +254,6 @@ end
 
 --- Prints the questions and answers
 function printQuestionAndAnswers()
-	--gfx.screen:clear({122,219,228})
---	gfx.update()
 	generateQuestion()
 	createColoredCircles()
 	placeAnswerCircles()
@@ -280,7 +273,6 @@ end
 
 --- Remove an answer in a stylish way
 -- @param #integer answerToRemove The answer to remove (1,2,3,4)
---
 function removeAnswer(answerToRemove)
   local zoom = 0.000001 
   tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
@@ -320,6 +312,72 @@ function onKey(key,state)
   end
 end
 
+--- Gets input from user and checks answer or controls side-menu
+-- @param key The key that has been pressed
+-- @param state The state of thed key-press
+function onKey(key, state)
+  if state == 'down' then return
+  elseif state == 'repeat' then return
+  elseif state == 'up' then
+  
+    --if side menu is up
+    if(sideMenu) then 
+	  if(key == 'red') then
+        sideMenu = false
+		changeSrfc()
+      elseif(key == 'green') then
+        sideMenu = false
+        gamePath = 'memoryGame.lua'
+        runGame(gamePath, underGoingTest)
+      elseif(key == 'yellow') then
+        sideMenu = false
+        gamePath = 'spellingGame.lua'
+        runGame(gamePath, underGoingTest)
+      elseif(key == 'blue') then
+        sideMenu = false
+        gamePath = 'flagGame.lua'
+        runGame(gamePath, underGoingTest)
+      elseif(key == "right") then
+        sideMenu = false
+        changeSrfc()
+      elseif(key == 'up') then
+      	dofile("login.lua")
+      end
+      
+      -- In-game control when side menu is down, controls that a button can only be pressed once
+    elseif(not sideMenu) then
+	  if state == 'up' then
+	      if (key == 'red') then
+	        userAnswer = 1
+	        checkAnswer(userAnswer)
+	      elseif (key == 'green') then
+	        userAnswer = 2
+			checkAnswer(userAnswer)
+	      elseif (key == 'yellow') then
+	        userAnswer = 3
+			checkAnswer(userAnswer)
+	      elseif (key == 'blue') then
+	        userAnswer = 4
+	        checkAnswer(userAnswer)
+	      elseif(key == "right") then
+	        sideMenu = true
+	        setMainSrfc()
+	        printSideMenu()
+	      end
+	  end
+    end
+    end
+end
+
+--- Runs chosen game (file) if testing mode is off
+-- @param #string path The path to the game to be loaded
+-- @param #boolean testingModeOn If testing mode is on
+function runGame(path, testingModeOn)
+	if(not testingModeOn) then
+		assert(loadfile(path))(player)
+	end
+end
+
 
 --- Sets the background of the screen
 function setBackground()
@@ -327,13 +385,12 @@ function setBackground()
     background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
     background:clear({122,219,228})
     gfx.screen:copyfrom(background,nil)
-  return 
 end
 
 function main()
   setBackground()
   print('main')
-	printQuestionAndAnswers()
+  printQuestionAndAnswers()
 end
 
 main()
