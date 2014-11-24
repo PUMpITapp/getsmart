@@ -22,6 +22,18 @@ function animation.zoom(background, surface, x, y, zoom, speed)
 	end
 end
 
+function animation.changeSize(background, surface, x, y, originX, originY, scale, order, direction)
+	local scale = math.sqrt(scale)
+	local height = 140
+	local newY = 0
+	if direction == 'up' then
+		newY = originY - height*((scale^order - scale) / (scale - 1))
+	elseif direction == 'down' then
+		newY = originY + height *((scale^(order-1) - 1) / (scale - 1))
+	end
+	return newY
+end
+
 function sleep(time)
   local t0 = os.clock()
   while os.clock() < (t0 +time) do end

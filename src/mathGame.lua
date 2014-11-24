@@ -18,10 +18,6 @@
 -- will display if the answer is correct or not and take the user onwards
 -- to new questions. 
 
--- Import the number of the player
---player = "player" .. tonumber(...)
-
-
 --- Checks if the file was called from a test file.
 -- @return #boolean If called from test file return true (indicating file is being tested) else false  
 function checkTestMode()
@@ -53,6 +49,7 @@ end
 setRequire(checkTestMode())
 
 -- Set player
+-- changed form player = tonumber(...)
 player = ...
 
 answers = {}
@@ -60,6 +57,9 @@ answered = {red = false,
             blue = false,
             yellow = false,
             green = false}
+
+
+
 
 
 
@@ -90,7 +90,7 @@ images ={['colors'] = "images/color_choices.png"}
 
 -- Main function that runs the program
 local function main()
-
+  playerUserLevel = profileHandler.getLevel(currentPlayer, "mathGame")
   setBackground()
   printPlayerName()
 
@@ -116,7 +116,7 @@ end
 -- @param #int level The difficulty level of the problem
 function produceMathProblem(level)
  -- level not implemented yet
-  local operator = getOperator()
+  local operator = getOperator(playerUserLevel)
   gameType = getOperatorString(operator)
   --print("Game type: "..gameType)
   local gameLevel = getGameLevel(gameType)
@@ -180,13 +180,25 @@ end
 
 --- Get the operator for a math problem given its difficulty level.
 -- The mathematical operation of a given problem depends on its difficulty level.
+-- @param #number playerUserLevel the level of the user
 -- @return #string Returns the operator for a math problem.
-function getOperator()
-  local operator = {'+','-','*','/'} 
+function getOperator(playerUserLevel)
+  local operator = {'+'} 
+  if (playerUserLevel > 2) then
+    operator = {'+','-'} 
+  end
+  if (playerUserLevel > 4) then
+    operator = {'+','-','*'}  
+  end
+  if(playerUserLevel > 6) then
+    operator = {'+','-','*','/'} 
+  end
   operator = operator[math.random(#operator)]
   return operator
 end
-
+-- comverts the opperator into stringOperator
+-- @param #string operator The operator in form: +/-/*//
+-- @return #string stringOperator
 function getOperatorString(operator)
   stringOperator = nil
   if(operator == '+') then
@@ -350,28 +362,74 @@ end
 -- @param #number correctAnswer The correct answer to the problem.
 -- @param #number userAnswer The answer given by the user.
 -- @param #string key The button pressed
-function checkAnswer(correctAnswer, userAnswer, key)
-  if (correctAnswer == userAnswer) then
-    answered[key] = true
-    answerIsCorrect = nil
-    -- Zoom out all the incorrect remaining answers
-    for key,val in pairs(answered) do
-      if (not val) then
-       answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
-      end
-        answered[key] = false
+function handleAnswer(correctAnswer, userAnswer, key)
+
+ local isCorrectAnswer = checkAnswer( correctAnswer, userAnswer, key )
+ local givePoints = checkGivePoints(answered)
+ local points = 1
+
+ answered[key] = true
+ if isCorrectAnswer then
+    zoomOutIncorrectAnswers()
+    resetAnswered(answered)
+    zoomAnswered(isCorrectAnswer, key)
+    if (givePoints) then
+      profileHandler.update(player, 'mathGame', gameType, points)
     end
-     -- Zoom in on correct answer
-    answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 1.5, 0.5)
-    -- Updates the players score 
-    profileHandler.update(player,'mathGame', gameType..'Points', 1)
-    sleep(1)
     main()
-  else 
-    answered[key]= true 
-    -- Zoom out incorrect answer
-    answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.5)
-    sleep(1)
+
+  else
+    zoomAnswered(isCorrectAnswer, key)
+ end  
+
+end
+-- @param #number correctAnswer the correct answer to a question
+-- @param #number userAnswer The answe given by the user
+-- @param #string key The button pressed (red, blue, yellow or green)
+-- @return #boolean True if the user answered correctly False in user answered incorrectly
+function checkAnswer( correctAnswer, userAnswer, key )
+  if (correctAnswer == userAnswer) then 
+    return true
+  else return false
+  end
+end
+-- Decides if the user should get point for its answer or not
+-- Point is given if the user answers the question correctly on the first try
+-- @param #table answered The state (true/false) of the key entered
+-- @return #boolean True if the user answered the question correctly on the first try 
+-- @return #boolean False if the user did not answer the question on the first try
+function checkGivePoints (answered)
+  local giveAnswerPoints = false
+   for key,val in pairs(answered) do
+    giveAnswerPoints = giveAnswerPoints or answered[key]
+  end
+  return not giveAnswerPoints
+end
+-- Zooms out the incorrect answers
+function zoomOutIncorrectAnswers()
+  for key,val in pairs(answered) do
+    if (not val) then
+     answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
+    end
+  end
+end
+-- Zooms in the correct answer
+-- @param #boolean isCorrectAnswer checks if the given answer is correct
+-- @param #string key The answered option
+function zoomAnswered(isCorrectAnswer, key)
+  local zoom = 0.000001
+  if (isCorrectAnswer) then
+    zoom = 1.5
+  end
+  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, zoom, 0.5)
+  sleep(1)
+end
+-- Sets the answered to false
+-- @param #table answered The state of the keys
+function resetAnswered(answered)
+   for key,val in pairs(answered) do
+    answered[key] = false
+
   end
 end
 
@@ -385,23 +443,25 @@ function onKey(key, state)
   elseif state == 'up' then
     print(key)
     --if side menu is up
-    if(sideMenu) then
-      
-      if(key == 'red') then
+    if(sideMenu) then 
+	  if(key == 'red') then
         sideMenu = false
-        dofile('mathGame.lua')
+		changeSrfc()
       elseif(key == 'green') then
         sideMenu = false
-        dofile('memoryGame.lua')
+        gamePath = 'memoryGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'yellow') then
         sideMenu = false
-        dofile('spellingGame.lua')
+        gamePath = 'spellingGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'blue') then
         sideMenu = false
-        dofile('geographyGame.lua')
+        gamePath = 'geographyGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == "right") then
         sideMenu = false
-         changeSrfc()
+        changeSrfc()
       elseif(key == 'up') then
       	dofile("login.lua")
       end
@@ -409,16 +469,16 @@ function onKey(key, state)
       -- In-game control when side menu is down, controls that a button can only be pressed once
     elseif(not sideMenu) then
       if(key == 'red' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[1], key)
+        handleAnswer(correctAnswer, answers[1], key)
        
       elseif(key == 'green' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[2], key)
+        handleAnswer(correctAnswer, answers[2], key)
        
       elseif(key == 'yellow' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[3], key)
+        handleAnswer(correctAnswer, answers[3], key)
       
       elseif(key == 'blue' and not answered[key]) then
-        checkAnswer(correctAnswer, answers[4], key)
+        handleAnswer(correctAnswer, answers[4], key)
        
       elseif(key == "right") then
         sideMenu = true
@@ -430,6 +490,15 @@ function onKey(key, state)
          
   elseif (state == "repeat") then
   end 
+end
+
+--- Runs chosen game (file) if testing mode is off
+-- @param #string path The path to the game to be loaded
+-- @param #boolean testingModeOn If testing mode is on
+function runGame(path, testingModeOn)
+	if(not testingModeOn) then
+		assert(loadfile(path))(player)
+	end
 end
 
 --- Sets the background of the screen

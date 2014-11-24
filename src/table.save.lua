@@ -32,7 +32,9 @@ do
       return string.format("%q", s)
    end
 
-   --// The Save Function
+   --- The Save Function
+   -- @param tbl Table to save
+   -- @param filename File to save to
    function table.save(  tbl,filename )
       local charS,charE = "   ","\n"
       local file,err = io.open( filename, "wb" )
@@ -106,7 +108,8 @@ do
       file:close()
    end
    
-   --// The Load Function
+   --- The Load Function
+   -- @sfile File to load
    function table.load( sfile )
       local ftables,err = loadfile( sfile )
       if err then return _,err end

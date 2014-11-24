@@ -5,7 +5,6 @@ gfx = require "gfx"
 --gfx.screen:copyfrom(background,nil)
 circle = gfx.loadpng('./images/menu/main-menu_math.png')
 
-
 --- Zooms a part of the surface
 -- Creates a zoom effect
 -- @param background The background surface
@@ -67,7 +66,6 @@ function animation.changeSize(background, surface, x, y, originX, originY, scale
 	
 	local scale = math.sqrt(scale)
 	local height = surface:get_height()
-	print(height)
 
 	local newX = originX + height*(0.5 - 0.5 * scale^(order-1))
 	
