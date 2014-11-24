@@ -405,6 +405,7 @@ function checkGivePoints (answered)
   end
   return not giveAnswerPoints
 end
+
 -- Zooms out the incorrect answers
 function zoomOutIncorrectAnswers()
   for key,val in pairs(answered) do
@@ -413,6 +414,7 @@ function zoomOutIncorrectAnswers()
     end
   end
 end
+
 -- Zooms in the correct answer
 -- @param #boolean isCorrectAnswer checks if the given answer is correct
 -- @param #string key The answered option
@@ -424,6 +426,7 @@ function zoomAnswered(isCorrectAnswer, key)
   answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, zoom, 0.5)
   sleep(1)
 end
+
 -- Sets the answered to false
 -- @param #table answered The state of the keys
 function resetAnswered(answered)
@@ -438,8 +441,8 @@ end
 -- @param key The key that has been pressed
 -- @param state The state of thed key-press
 function onKey(key, state)
-  if state == 'down' then
-  elseif state == 'repeat' then
+  if state == 'down' then return
+  elseif state == 'repeat' then return
   elseif state == 'up' then
     print(key)
     --if side menu is up
@@ -487,9 +490,6 @@ function onKey(key, state)
       end
 
     end
-         
-  elseif (state == "repeat") then
-  end 
 end
 
 --- Runs chosen game (file) if testing mode is off

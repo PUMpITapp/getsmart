@@ -35,9 +35,9 @@ end
 
 local underGoingTest = setRequire(checkTestMode())
 
-local background = gfx.loadpng('./images/background.png')
-gfx.screen:copyfrom(background,nil)
-gfx.update()
+--background = gfx.loadpng('./images/background.png')
+--gfx.screen:copyfrom(background,nil)
+--gfx.update()
 
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 dofile('table.save.lua')
@@ -45,6 +45,10 @@ profiles, err = table.load('profiles.lua')
 
 -- Require the table containing flags
 flags = require 'flags'
+
+-- Variable containing the correct answer
+--correctCountry = ""
+--answers = {}
 
 -- The user's chosen answer
 chosenAnswer = 0
@@ -155,10 +159,10 @@ function createColoredCircles()
   }
 
   circle = {
-    red    = gfx.new_surface(cutOut.red.w, cutOut.red.h),
-    green  = gfx.new_surface(cutOut.green.w, cutOut.green.h),
-    yellow = gfx.new_surface(cutOut.yellow.w, cutOut.yellow.h),
-    blue   = gfx.new_surface(cutOut.blue.w, cutOut.blue.h)
+    red    = gfx.new_surface(circleDiameter, circleDiameter),
+    green  = gfx.new_surface(circleDiameter, circleDiameter),
+    yellow = gfx.new_surface(circleDiameter, circleDiameter),
+    blue   = gfx.new_surface(circleDiameter, circleDiameter)
   }
 
   circle.red:copyfrom(images.Colors, cutOut.red, true)
@@ -171,19 +175,26 @@ end
 --- Places the answer circles in their correct positions
 function placeAnswerCircles()
 
-  circlePosition = {
+  local circlePosition = {
     x = screen.width / 2,
     y = screen.height / 8 - circleDiameter / 2,
     w = circleDiameter,
     h = circleDiameter
   }
 
-  circleColors = {
+  local circleColors = {
     'red',
     'green',
     'yellow',
     'blue'
   }
+
+  positions = {
+    ['red']     = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2},
+    ['green']   = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2 +  screen.height / 4},
+    ['yellow']  = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2 +2*screen.height / 4},
+    ['blue']    = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2 +3*screen.height / 4}
+}
 
   for i = 1,4 do
     gfx.screen:copyfrom(circle[circleColors[i]], nil, circlePosition, true)
@@ -219,14 +230,15 @@ end
 function checkAnswer(userAnswer)
   answerState = nil
   print(correctCountry)
-  --print(checkAnswer(1))
   if (answers[userAnswer] == correctCountry) then
     print("correct")
     print(correctCountry)
     print(answers[userAnswer])
     --addScoreToUser()
+    print(userAnswer)
+    zoomAnswer(userAnswer)
 
-    printQuestionAndAnswers()
+    main()
     answerState = true
   else
     print("incorrect")
@@ -247,8 +259,8 @@ end
 
 --- Prints the questions and answers
 function printQuestionAndAnswers()
-	gfx.screen:clear({122,219,228})
-	gfx.update()
+	--gfx.screen:clear({122,219,228})
+--	gfx.update()
 	generateQuestion()
 	createColoredCircles()
 	placeAnswerCircles()
@@ -270,9 +282,22 @@ end
 -- @param #integer answerToRemove The answer to remove (1,2,3,4)
 --
 function removeAnswer(answerToRemove)
-  --local yOffset = answerToRemove * screen.height / 4;
-  --animation.zoom(gfx.screen, circle[circleColors[answerToRemove]], circlePosition.x, circlePosition.y + yOffset, 0.000001, 0.2)
+  local zoom = 0.000001 
+  tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
+  key = tempColor[answerToRemove]
+  answerIsCorrect= animation.zoom(background, circle[key], positions[key].x, positions[key].y, zoom, 0.5)
+  sleep(1)
 end
+
+function zoomAnswer(answer)
+ local zoom = 2.5
+  tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
+  key = tempColor[answer]
+  answerIsCorrect= animation.zoom(background, circle[key], positions[key].x, positions[key].y, zoom, 0.3)
+  sleep(1)
+
+end
+
 
 --- Gets input from user and re-directs according to input
 -- @param key The key that has been pressed
@@ -295,7 +320,19 @@ function onKey(key,state)
   end
 end
 
-local function main()
+
+--- Sets the background of the screen
+function setBackground()
+    print('setBackground')
+    background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+    background:clear({122,219,228})
+    gfx.screen:copyfrom(background,nil)
+  return 
+end
+
+function main()
+  setBackground()
+  print('main')
 	printQuestionAndAnswers()
 end
 
