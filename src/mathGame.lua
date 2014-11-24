@@ -490,6 +490,7 @@ function onKey(key, state)
       end
 
     end
+  end
 end
 
 --- Runs chosen game (file) if testing mode is off
