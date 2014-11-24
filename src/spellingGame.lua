@@ -529,7 +529,7 @@ function onKey(key, state)
         changeSrfc()
       elseif(key == 'blue') then
         sideMenu = false
-        gamePath = 'geographyGame.lua'
+        gamePath = 'flagGame.lua'
         runGame(gamePath, underGoingTest)
       elseif(key == "right") then
         sideMenu = false

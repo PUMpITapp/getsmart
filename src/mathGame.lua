@@ -49,7 +49,6 @@ end
 setRequire(checkTestMode())
 
 -- Set player
--- changed form player = tonumber(...)
 player = ...
 
 answers = {}
@@ -82,7 +81,6 @@ dir = './'
 
 -- All images in the game are placed in this table
 images ={['colors'] = "images/color_choices.png"}
- 
 
 -- Main function that runs the program
 local function main()
@@ -105,7 +103,7 @@ local function main()
   placeAnswerCircles()
   printProblem(mathProblem)
 
-
+  gfx.update()
 end
 
 --- produces a math problem based on the level of the user.
