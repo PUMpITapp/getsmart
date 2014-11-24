@@ -32,8 +32,6 @@ setRequire(checkTestMode())
 player = ...
 
 
---gfx.screen:clear({122,219,228})
-
 ---Initiating all global variables
 function init()
   answerTable = {
@@ -42,7 +40,7 @@ function init()
     {'Scrummaster',{{2,3},{5,6}},{{'cr','ckr','kr','crr'},{'mm','m','me','mm'}}},
     {'acquire',{{2,3}},{{'cq','cc','q','k'}}},
     {'rhythm',{{2,3}},{{'hy','y','yi','hu'}}},
-    {'vacuum',{{3,4}},{{'cu','k','c','co'}}},
+    {'vacuum',{{3,4}},{{'cu','k','c','cc'}}},
     {'questionnaire',{{2,3},{9,10}},{{'ue','oe','u','e'},{'na','a','no','n'}}},
     {'playwright',{{5,6}},{{'wr','r','whr','ir'}}},
     {'neighbor',{{3,5}},{{'igh','yh','ih','ygh'}}}
@@ -50,8 +48,6 @@ function init()
   rightAlternatives = {} 
   images = {['colors'] = "images/color_choices.png"} 
   inFocus = nil
-  --key = 'yellow'
-  --keyState = nil
   alternatives = {}
   allCircles = {}
   allCirclePositions = {}
@@ -216,10 +212,6 @@ function printAlternatives(alternatives, position, selected, diameter)
   allCirclePositions[#allCirclePositions + 1] = circlePositions
 
   createAnswerBackground()
-  --[[placeAnswersOnCircles(alternatives)
-  placeAnswerCircles(circlePositions)
-  gfx.update()
-  adjustCircleSize(selected)]]
 end
 
 --- Moves already printed alterantives vertcally based on which key was pressed
@@ -305,6 +297,7 @@ end
 
 --- Places the colored answer circles on their positions
 -- @param #table circlePosition a table with the positions of the positions of the four circles
+-- @param #table circle A table with four surfaces with circles
 function placeAnswerCircles(circlePosition, circle)
   local fh = text.getFontHeight('lato', 'large') -- font height
 
@@ -319,6 +312,7 @@ end
 --- place the answers to the right position in their circle
 -- @param #table answers a table with the answer alternatives
 -- @param #table circle a table of all the circles that the answers will be placed on
+-- @param #circlePosition a table with the positions of the positions of the four circles
 function placeAnswersOnCircles(answers, circle, circlePosition)
 
   local fh = text.getFontHeight('lato', 'large') -- font height
