@@ -7,7 +7,7 @@ describe('Testing init: ', function ()
 	-- It loops through answer table
 	init() -- Accuires answerTable
 	for i=1, #answerTable do
-		local message = 'Comparing number of intervalls and alternative sets in the word '..answerTable[i][1]
+		local message = 'Comparing number of intervalls and alternative sets in the word '.. answerTable[i][1]
 		it(message, function ()
 			numberOfIntervals = #answerTable[i][2]
 			numberOfAlternativeSets = #answerTable[i][3]
