@@ -3,41 +3,48 @@ require "login"
 describe('Login unit testing', function()
 
 	it('should load first player (which is active)', function ( ... )
-		--dofile("profiles_init.lua") -- Init profiles table
+		dofile("profiles_init.lua") -- Init profiles table
 		-- Input variables
 		local chosenPlayer = 1
 		local testingMode = underGoingTest
 		-- Expected variables
-		local expectedPath = "menu.lua"
-		local expectedProfileStatus = 1
-		
+		local expectedValues = {
+								"menu.lua",
+								1
+								}
+								
+		-- Setting the actual variables
 		runGame(testingMode, chosenPlayer)
 		
 		-- Actual variables
-		local actualPath = path
-		local actualProfileStatus = profileStatus
+		local actualValues = {
+								path,
+								profileStatus
+								}
 
-		assert.is.same(expectedPath, actualPath)
-		assert.is.same(expectedProfileStatus, actualProfileStatus)
+		assert.is.same(expectedValues, actualValues)
 	end)
 	
 	it('should load new profile', function ( ... )
-		--dofile("profiles_init.lua") -- Init profiles table
+		dofile("profiles_init.lua") -- Init profiles table
 		-- Input variables
 		local chosenPlayer = 2
 		local testingMode = underGoingTest
 		-- Expected variables
-		local expectedPath = "newProfile.lua"
-		local expectedProfileStatus = 0
+		local expectedValues = {
+								"newProfile.lua",
+								0
+								}
 		
 		runGame(testingMode, chosenPlayer)
 		
 		-- Actual variables
-		local actualPath = path
-		local actualProfileStatus = profileStatus
+		local actualValues = {
+								path,
+								profileStatus
+								}
 
-		assert.is.same(expectedPath, actualPath)
-		assert.is.same(expectedProfileStatus, actualProfileStatus)
+		assert.is.same(expectedValues, actualValues)
 	end)
 
 end)
