@@ -56,6 +56,8 @@ answered = {red = false,
             blue = false,
             yellow = false,
             green = false}
+            
+local mascotText = "Hey look at me!"
 
 
 -- Printing the numbers on the correct position on the screen
@@ -82,11 +84,13 @@ dir = './'
 -- All images in the game are placed in this table
 images ={['colors'] = "images/color_choices.png"}
 
+
 -- Main function that runs the program
 local function main()
   playerUserLevel = profileHandler.getLevel(currentPlayer, "mathGame")
   setBackground()
   printPlayerName()
+  printSpeechBubbleText()
 
   ------------------------------------------------------------------------
   --  INCOMPLETE! 
@@ -496,10 +500,20 @@ end
 
 --- Sets the background of the screen
 function setBackground()
-    background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
-    background:clear({122,219,228})
+	background = gfx.loadpng('./images/background-game.png')
+    --background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+    --background:clear({122,219,228})
     gfx.screen:copyfrom(background,nil)
   return 
+end
+
+-- Prints the text in the mascot's speech bubble
+function printSpeechBubbleText()
+
+	local fh = text.getFontHeight('lato', 'small')
+	local fw = text.getStringLength('lato', 'small', mascotText)
+	text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/6, gfx.screen:get_height()-(gfx.screen:get_height()/5.5), fw, fh)
+	gfx.update()
 end
 
 --- Prints the players name in the top of the screen

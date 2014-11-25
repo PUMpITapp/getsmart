@@ -392,9 +392,11 @@ end
 
 --- Sets the background of the screen
 function setBackground()
-    background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
-    background:clear({122,219,228})
+	background = gfx.loadpng('./images/background-game.png')
+    --background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+    --background:clear({122,219,228})
     gfx.screen:copyfrom(background,nil)
+  return 
 end
 
 function main()
