@@ -91,6 +91,9 @@ function selectRandomWord()
   math.random()
   math.random()
   local playerUserLevel = profileHandler.getLevel(player, "spellingGame")
+  if(playerUserLevel == 0) then
+  	playerUserLevel = 1
+  end
   local questionPosition = tonumber(math.random(#answerTable[playerUserLevel]))
   local question = answerTable[playerUserLevel][questionPosition]  
   return question

@@ -15,6 +15,8 @@ function checkTestMode()
   return underGoingTest
 end
 
+local png_company_logo = 'images/pumpitapp.png'
+
 --- Chooses either the actual or the stubs depending on if a test file started the program.
 -- @param #boolean underGoingTest Undergoing test is true if a test file started the program.
 function setRequire(underGoingTest)
@@ -160,11 +162,23 @@ function runGame(testingModeOn, chosenPlayer)
     end
 end
 
+function printCompanyLogo()
+
+	local toScreen = nil
+	toScreen = gfx.loadpng(dir..png_company_logo)
+	scale = 0.2
+	gfx.screen:copyfrom(toScreen, nil, {x = gfx.screen:get_width() - toScreen:get_width() * scale - 20  , y=gfx.screen:get_height() - toScreen:get_height() * scale - 20  ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
+	gfx.update()
+	
+
+end
+
 -- Main function that runs the program
 local function main()
 
   printMenuCircles()  
   printLogotype()
+  printCompanyLogo()
 
 end
 main()

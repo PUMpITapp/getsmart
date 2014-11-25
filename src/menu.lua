@@ -48,6 +48,7 @@ gamePath = ''
 -- The number of the playing user
 currentPlayer = ...
 
+
 -- Create a new surface with 33% width and 100% height of the screen
 local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width() / 3, gfx.screen:get_height())
 local transparentSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
@@ -77,6 +78,9 @@ local png_side_menu_circles = {
 -- Logotype as .png pictuere with transparent background with width variable
 local png_logo_width = 447
 local png_logo = 'images/logo.png'
+
+-- The school logo as .png , transparent background
+local png_school_logo = 'images/liu.png'
 
 -- Directory of images
 local dir = './'
@@ -165,10 +169,19 @@ end
 function printLogotype()
 	
 	local toScreen = nil
-	
 	toScreen = gfx.loadpng(dir..png_logo)
 	scale = 0.5
 	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2 *scale), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
+	gfx.update()
+
+end
+
+function printSchoolLogo()
+
+	local toScreen = nil
+	toScreen = gfx.loadpng(dir..png_school_logo)
+	scale = 0.1
+	gfx.screen:copyfrom(toScreen, nil, {x = gfx.screen:get_width() - toScreen:get_width() * scale - 20 , y=20 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
 	gfx.update()
 
 end
@@ -230,6 +243,7 @@ local function main()
 	printPlayerName()
  	printMenuCircles()  
  	printLogotype()
+ 	printSchoolLogo()
 end
 
 

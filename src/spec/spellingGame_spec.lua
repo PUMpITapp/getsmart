@@ -7,10 +7,10 @@ describe('Testing init: ', function ()
 	-- It loops through answer table
 	init() -- Accuires answerTable
 	for i=1, #answerTable do
-		local message = 'Comparing number of intervalls and alternative sets in the word '..answerTable[i][1]
+		local message = 'Comparing number of intervalls and alternative sets in the word '..answerTable[1][i][1]
 		it(message, function ()
-			numberOfIntervals = #answerTable[i][2]
-			numberOfAlternativeSets = #answerTable[i][3]
+			numberOfIntervals = #answerTable[1][i][2]
+			numberOfAlternativeSets = #answerTable[1][i][3]
 			assert.are.same(numberOfIntervals, numberOfAlternativeSets)
 		end)
 	end
@@ -19,11 +19,11 @@ describe('Testing init: ', function ()
 	-- alterantive sets is the right one.
 	-- It loops through answer table.
 	for i=1, #answerTable do
-		for j=1, #answerTable[i][2] do
-			local message = 'Testing the word '..answerTable[i][1]..'. Comparing '..i..'st alternative of the '..i..'st intervall. Expecting correct.'	
+		for j=1, #answerTable[1][i][2] do
+			local message = 'Testing the word '..answerTable[1][i][1]..'. Comparing '..i..'st alternative of the '..i..'st intervall. Expecting correct.'	
 			it(message, function ()
-				expected = answerTable[i][1]:sub(answerTable[i][2][j][1],answerTable[i][2][j][2])
-				got = answerTable[i][3][j][1]
+				expected = answerTable[1][i][1]:sub(answerTable[1][i][2][j][1],answerTable[1][i][2][j][2])
+				got = answerTable[1][i][3][j][1]
 				assert.are.same(expected,got)
 			end)
 		end			
@@ -173,5 +173,37 @@ describe('Testing questionLength: ', function()
 		local expected = 456
 		local got = questionLength(testQuestion, testDiameter)
 		assert.are.equals(expected,got)
+	end)
+end)
+
+describe('Testing if user is correct on the first guess', function()
+	it("Should be the user's first try", function()
+		local alts = {
+						{'ig'}
+						}
+		
+		local correctAnswer = {
+								'ig'
+								}
+		
+		checkAnswer('red',alts,correctAnswer)
+		
+		assert.truthy(isFirstTry)		
+	end)
+	
+	it("Should not be the user's first try", function()
+		local alts = {
+						{'ig'},
+						{'rg'}
+						}
+		
+		local correctAnswer = {
+								'ig'
+								}
+		
+		checkAnswer('blue',alts,correctAnswer)
+		checkAnswer('green',alts,correctAnswer)
+		
+		assert.is_not_true(isFirstTry)
 	end)
 end)

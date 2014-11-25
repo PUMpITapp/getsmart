@@ -404,7 +404,7 @@ end
 function zoomOutIncorrectAnswers()
   for key,val in pairs(answered) do
     if (not val) then
-     answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.2)
+     answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.005)
     end
   end
 end
@@ -417,7 +417,7 @@ function zoomAnswered(isCorrectAnswer, key)
   if (isCorrectAnswer) then
     zoom = 1.5
   end
-  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, zoom, 0.5)
+  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, zoom, 0.005)
   sleep(1)
 end
 
