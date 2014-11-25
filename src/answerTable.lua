@@ -31,4 +31,10 @@ return {
 		            {'Playwright',{{5,6}},{{'wr','r','whr','ir'}}},
 		            {'Meighbor',{{3,5}},{{'igh','yh','ih','ygh'}}}
 			},
+			
+			{
+		            {'Questionnaire',{{2,3},{9,10}},{{'ue','oe','u','e'},{'na','a','no','n'}}},
+		            {'Playwright',{{5,6}},{{'wr','r','whr','ir'}}},
+		            {'Meighbor',{{3,5}},{{'igh','yh','ih','ygh'}}}
+			}
   }

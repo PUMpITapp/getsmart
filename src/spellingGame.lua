@@ -31,10 +31,8 @@ setRequire(checkTestMode())
 -- Set player number
 player = ...
 
+-- Imports the table with all data
 answerTable = require 'answerTable'
-
-isFirstTry = true
-
 
 ---Initiating all global variables
 function init()
