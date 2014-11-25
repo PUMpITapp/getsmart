@@ -471,10 +471,6 @@ function checkAnswer(key,alternatives,rightanswer)
     inFocus = nil
     main()
   else
-    -- Zoom out incorrect answer
-    --for i=1, #allCircles do
-    --  answerIsCorrect = animation.zoom(background, allCircles[i][key], allCirclePositions[i][key].x, allCirclePositions[i][key].y, 0.000001, 0.5)
-    --end
     removeAlternative(userChoice, key)
     isFirstTry = false
     return false
