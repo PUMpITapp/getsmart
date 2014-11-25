@@ -29,23 +29,13 @@ end
 setRequire(checkTestMode())
 
 -- Set player number
--- player = tonumber(...)
 player = ...
 
+-- Imports the table with all data
+answerTable = require 'answerTable'
 
 ---Initiating all global variables
 function init()
-  answerTable = {
-    {'Yesterday',{{2,3},{6,7}},{{'es','is','ez','oys'},{'rd','d','rp','ld'}}},
-    {'Artichoke',{{3,4}},{{'ti','tie','te','to'}}},
-    {'Scrummaster',{{2,3},{5,6}},{{'cr','ckr','kr','crr'},{'mm','m','me','mm'}}},
-    {'acquire',{{2,3}},{{'cq','cc','q','k'}}},
-    {'rhythm',{{2,3}},{{'hy','y','yi','hu'}}},
-    {'vacuum',{{3,4}},{{'cu','k','c','cc'}}},
-    {'questionnaire',{{2,3},{9,10}},{{'ue','oe','u','e'},{'na','a','no','n'}}},
-    {'playwright',{{5,6}},{{'wr','r','whr','ir'}}},
-    {'neighbor',{{3,5}},{{'igh','yh','ih','ygh'}}}
-  }
   rightAlternatives = {} 
   images = {['colors'] = "images/color_choices.png"} 
   inFocus = nil
@@ -58,6 +48,7 @@ function init()
     yellow = false,
     green = false
   }
+  isFirstTry = true
 end
 
 --- Main function that runs the program
@@ -99,8 +90,9 @@ function selectRandomWord()
   math.randomseed(os.time())
   math.random()
   math.random()
-  local questionPosition = tonumber(math.random(#answerTable))
-  local question = answerTable[questionPosition]
+  local playerUserLevel = profileHandler.getLevel(player, "spellingGame")
+  local questionPosition = tonumber(math.random(#answerTable[playerUserLevel]))
+  local question = answerTable[playerUserLevel][questionPosition]  
   return question
 end
 
@@ -473,15 +465,14 @@ function checkAnswer(key,alternatives,rightanswer)
   local correctAnswer = rightanswer[1]
 
   if (choosenAlternative==correctAnswer) then
-    profileHandler.update(player,'spellingGame', nil, 1)
+  	if(isFirstTry) then
+	    profileHandler.update(player,'spellingGame', nil, 1)
+    end
     inFocus = nil
     main()
   else
-    -- Zoom out incorrect answer
-    --for i=1, #allCircles do
-    --  answerIsCorrect = animation.zoom(background, allCircles[i][key], allCirclePositions[i][key].x, allCirclePositions[i][key].y, 0.000001, 0.5)
-    --end
     removeAlternative(userChoice, key)
+    isFirstTry = false
     return false
   end
 end
