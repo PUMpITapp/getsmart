@@ -1,52 +1,6 @@
 require "mathGame"
 
 
---[[describe('Boundry testing getOperator()', function ( ... )
-	
-	it('Boundry: 8, level = 9', function ( ... )
-		assert.are.same('/',getOperator(9))
-	end)
-
-	it('Boundry: 8, level = 8', function ( ... )
-		assert.are_not.same('/', getOperator(8))
-	end)
-
-	it('Boundry: 8, level = 7', function ( ... )
-		assert.are.same('*', getOperator(7))
-	end)
-
-
-	it('Boundry: 4, level = 5', function ( ... )
-		assert.are.same('*',getOperator(5))
-	end)
-
-	it('Boundry: 4, level = 4', function ( ... )
-		assert.are_not.same('*', getOperator(4))
-	end)
-
-	it('Boundry: 4, level = 3', function ( ... )
-		assert.are.same('-', getOperator(3))
-	end)
-
-
-	it('Boundry: 2, level = 3', function ( ... )
-		assert.are.same('-',getOperator(3))
-	end)
-
-	it('Boundry: 2, level = 2', function ( ... )
-		assert.are_not.same('-', getOperator(2))
-	end)
-
-	it('Boundry: 2, level = 1', function ( ... )
-		assert.are.same('+', getOperator(1))
-	end)
-
-
-	it('Boundry: 2, level = 0', function ( ... )
-		assert.are.same('+', getOperator(0))
-	end)
-
-end)]]
 
 describe('Boundry testing getLowerBound()', function ( ... )
 	
@@ -298,12 +252,6 @@ describe('testing getOperator()', function ( ... )
 	end)
 end)
 
---[[describe('Testing handleAnswer()',function ( ... )
-	it('checks if question is answered correctly and new question is generated', function ( ... )
-		assert.are.same(true, handleAnswer(1,1,'red')
-	end)
-end)
---]]
 describe('Testing solveProblem()',function ( ... )
 	local testMathProblem = {}
 	testMathProblem["termOne"] = 2

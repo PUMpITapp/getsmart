@@ -35,10 +35,6 @@ end
 
 local underGoingTest = setRequire(checkTestMode())
 
-local background = gfx.loadpng('./images/background.png')
-gfx.screen:copyfrom(background,nil)
-gfx.update()
-
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 dofile('table.save.lua')
 profiles, err = table.load('profiles.lua')
@@ -46,13 +42,16 @@ profiles, err = table.load('profiles.lua')
 -- Require the table containing flags
 flags = require 'flags'
 
--- The user's chosen answer
-chosenAnswer = 0
+-- The id for the correct country
+correctCountry = ''
 
-corrId = 0
+sideMenu = false
+
+-- Set player number
+player = ...
 
 local randomSeed = os.time()
-local circleDiameter = 80;
+local circleDiameter = 80
 
 local screen = {
   width = gfx.screen:get_width(),
@@ -155,10 +154,10 @@ function createColoredCircles()
   }
 
   circle = {
-    red    = gfx.new_surface(cutOut.red.w, cutOut.red.h),
-    green  = gfx.new_surface(cutOut.green.w, cutOut.green.h),
-    yellow = gfx.new_surface(cutOut.yellow.w, cutOut.yellow.h),
-    blue   = gfx.new_surface(cutOut.blue.w, cutOut.blue.h)
+    red    = gfx.new_surface(circleDiameter, circleDiameter),
+    green  = gfx.new_surface(circleDiameter, circleDiameter),
+    yellow = gfx.new_surface(circleDiameter, circleDiameter),
+    blue   = gfx.new_surface(circleDiameter, circleDiameter)
   }
 
   circle.red:copyfrom(images.Colors, cutOut.red, true)
@@ -171,19 +170,26 @@ end
 --- Places the answer circles in their correct positions
 function placeAnswerCircles()
 
-  circlePosition = {
+  local circlePosition = {
     x = screen.width / 2,
     y = screen.height / 8 - circleDiameter / 2,
     w = circleDiameter,
     h = circleDiameter
   }
 
-  circleColors = {
+  local circleColors = {
     'red',
     'green',
     'yellow',
     'blue'
   }
+
+  positions = {
+    ['red']     = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2},
+    ['green']   = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2 +  screen.height / 4},
+    ['yellow']  = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2 +2*screen.height / 4},
+    ['blue']    = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2 +3*screen.height / 4}
+}
 
   for i = 1,4 do
     gfx.screen:copyfrom(circle[circleColors[i]], nil, circlePosition, true)
@@ -216,17 +222,27 @@ function generateAnswers(correctCountryId)
   return shuffle(answers)
 end
 
-function checkAnswer(userAnswer)
-  if (answers[userAnswer] == correctCountry) then
-    print("correct")
-    --addScoreToUser()
-
-    printQuestionAndAnswers()
+--- Checks if the user's guess is correct
+-- @param #string userAnswer The country guessed
+-- @param #table answersLocal The table containing all answers 
+-- @param #number correctCountryLocal The id of the correct answer
+function checkAnswer(userAnswer, answersLocal, correctCountryLocal)
+  answerState = nil
+  if (answersLocal[userAnswer] == correctCountryLocal) then
+    addScoreToUser()
+    zoomAnswer(userAnswer)
+    answerState = true
+    main()
   else
-    print("incorrect")
     removeAnswer(userAnswer)
+    answerState = false
 
   end
+end
+
+--- Adds one point to the user's score
+function addScoreToUser()
+	profileHandler.update(player, 'flagGame', nil, 1)
 end
 
 --- Generates a random country id
@@ -240,8 +256,6 @@ end
 
 --- Prints the questions and answers
 function printQuestionAndAnswers()
-	gfx.screen:clear({122,219,228})
-	gfx.update()
 	generateQuestion()
 	createColoredCircles()
 	placeAnswerCircles()
@@ -259,37 +273,124 @@ function generateQuestion()
 	printAnswers(answers)
 end
 
---- Remove an answer in a stylish way
+--- Remove an answer in a stylish way (if user's guess is incorrect)
 -- @param #integer answerToRemove The answer to remove (1,2,3,4)
---
 function removeAnswer(answerToRemove)
-  --local yOffset = answerToRemove * screen.height / 4;
-  --animation.zoom(gfx.screen, circle[circleColors[answerToRemove]], circlePosition.x, circlePosition.y + yOffset, 0.000001, 0.2)
+  local zoom = 0.000001 
+  tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
+  key = tempColor[answerToRemove]
+  answerIsCorrect= animation.zoom(background, circle[key], positions[key].x, positions[key].y, zoom, 0.5)
+  sleep(1)
 end
 
---- Gets input from user and re-directs according to input
+--- Zoom in on an answer if correct guess
+-- @param #integer answer The answer to remove (1,2,3,4)
+function zoomAnswer(answer)
+ local zoom = 2.5
+  tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
+  key = tempColor[answer]
+  answerIsCorrect= animation.zoom(background, circle[key], positions[key].x, positions[key].y, zoom, 0.3)
+  sleep(1)
+
+end
+
+--- Gets input from user and checks answer or controls side-menu
 -- @param key The key that has been pressed
--- @param state The state of the key-press
-function onKey(key,state)
-  if state == 'up' then
-      if (key == 'red') then
-        userAnswer = 1
-        checkAnswer(userAnswer)
-      elseif (key == 'green') then
-        userAnswer = 2
-		checkAnswer(userAnswer)
-      elseif (key == 'yellow') then
-        userAnswer = 3
-		checkAnswer(userAnswer)
-      elseif (key == 'blue') then
-        userAnswer = 4
-        checkAnswer(userAnswer)
+-- @param state The state of thed key-press
+function onKey(key, state)
+  if state == 'down' then return
+  elseif state == 'repeat' then return
+  elseif state == 'up' then
+  
+    --if side menu is up
+    if(sideMenu) then 
+	  if(key == 'red') then
+        sideMenu = false
+        gamePath = 'mathGame.lua'
+        runGame(gamePath, underGoingTest)
+      elseif(key == 'green') then
+        sideMenu = false
+        gamePath = 'memoryGame.lua'
+        runGame(gamePath, underGoingTest)
+      elseif(key == 'yellow') then
+        sideMenu = false
+        gamePath = 'spellingGame.lua'
+        runGame(gamePath, underGoingTest)
+      elseif(key == 'blue') then
+        sideMenu = false
+        changeSrfc()
+      elseif(key == "right") then
+        sideMenu = false
+        changeSrfc()
+      elseif(key == 'up') then
+      	dofile("login.lua")
       end
+      
+      -- In-game control when side menu is down, controls that a button can only be pressed once
+    elseif(not sideMenu) then
+	  if state == 'up' then
+	      if (key == 'red') then
+	        userAnswer = 1
+	        checkAnswer(userAnswer, answers, correctCountry)
+	      elseif (key == 'green') then
+	        userAnswer = 2
+			checkAnswer(userAnswer, answers, correctCountry)
+	      elseif (key == 'yellow') then
+	        userAnswer = 3
+			checkAnswer(userAnswer, answers, correctCountry)
+	      elseif (key == 'blue') then
+	        userAnswer = 4
+	        checkAnswer(userAnswer, answers, correctCountry)
+	      elseif(key == "right") then
+	        sideMenu = true
+	        setMainSrfc()
+	        printSideMenu()
+	      end
+	  end
+    end
   end
 end
 
-local function main()
-	printQuestionAndAnswers()
+--- Runs chosen game (file) if testing mode is off
+-- @param #string path The path to the game to be loaded
+-- @param #boolean testingModeOn If testing mode is on
+function runGame(path, testingModeOn)
+	if(not testingModeOn) then
+		assert(loadfile(path))(player)
+	end
+end
+
+--- Prints the players name in the top of the screen
+function printPlayerName()
+	
+	local playerName = profileHandler.getName(player)
+	local playerUserLevel = profileHandler.getLevel(player, "flagGame")
+
+	local fw_name = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
+	local fh_name = text.getFontHeight('lato', 'medium')
+	local position = 0.02
+
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw_name, fh_name)
+	
+	local fw_level = text.getStringLength('lato', 'medium', "User level: " .. playerUserLevel)
+	local fh_level = text.getFontHeight('lato', 'medium')
+	position = 0.02
+	
+	text.print(gfx.screen, 'lato', 'black', 'medium', "User level: " .. playerUserLevel, gfx.screen:get_width()*position, gfx.screen:get_height()*position+fh_name, fw_level, fh_level)
+
+end
+
+--- Sets the background of the screen
+function setBackground()
+    background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+    background:clear({122,219,228})
+    gfx.screen:copyfrom(background,nil)
+end
+
+function main()
+  setBackground()
+  printPlayerName()
+  printQuestionAndAnswers()
 end
 
 main()

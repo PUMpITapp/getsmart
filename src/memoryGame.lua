@@ -3,48 +3,76 @@ gfx = require "gfx"
 
 gfx.screen:clear({122,219,228})
 
-text.print(gfx.screen, 'lato', 'black', 'medium', "Memory Game coming soon!", 250 , 300 )
+player = ...
 
+sideMenu = false
 
---- Gets input from user and checks answer
+text.print(gfx.screen, 'lato', 'black', 'medium', "Memory game will not be implemented!", 250 , 300 )
+
+gfx.update()
+
+--- Runs chosen game (file) if testing mode is off
+-- @param #string path The path to the game to be loaded
+-- @param #boolean testingModeOn If testing mode is on
+function runGame(path, testingModeOn)
+	if(not testingModeOn) then
+		assert(loadfile(path))(player)
+	end
+end
+
+--- Gets input from user and checks answer or controls side-menu
 -- @param key The key that has been pressed
--- @param state
+-- @param state The state of thed key-press
 function onKey(key, state)
-  if state == 'down' then
-
+  if state == 'down' then return
+  elseif state == 'repeat' then return
   elseif state == 'up' then
+  
     --if side menu is up
-    if(sideMenu) then
-      sideMenu = false
-      if(key == 'red') then
-        dofile('mathGame.lua')
+    if(sideMenu) then 
+	  if(key == 'red') then
+        sideMenu = false
+        gamePath = 'mathGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'green') then
-        dofile('memoryGame.lua')
+        sideMenu = false
+        changeSrfc()
       elseif(key == 'yellow') then
-        dofile('spellingGame.lua')
+        sideMenu = false
+        gamePath = 'spellingGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'blue') then
-        dofile('geographyGame.lua')
+        sideMenu = false
+        gamePath = 'flagGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == "right") then
-         changeSrfc()
+        sideMenu = false
+        changeSrfc()
+      elseif(key == 'up') then
+      	dofile("login.lua")
       end
-
-      -- In-game control when side menu is down
+      
+      -- In-game control when side menu is down, controls that a button can only be pressed once
     elseif(not sideMenu) then
-      if(key == 'red') then
-     --   checkAnswer(correctAnswer, answers[1])
-      elseif(key == 'green') then
-     --   checkAnswer(correctAnswer, answers[2])
-      elseif(key == 'yellow') then
-      --  checkAnswer(correctAnswer, answers[3])
-      elseif(key == 'blue') then
-      --  checkAnswer(correctAnswer, answers[4])
-      elseif(key == "right") then
-        sideMenu = true
-        setMainSrfc()
-        printSideMenu()
-      end
+	  if state == 'up' then
+	      if (key == 'red') then
+	        userAnswer = 1
+	        checkAnswer(userAnswer, answers, correctCountry)
+	      elseif (key == 'green') then
+	        userAnswer = 2
+			checkAnswer(userAnswer, answers, correctCountry)
+	      elseif (key == 'yellow') then
+	        userAnswer = 3
+			checkAnswer(userAnswer, answers, correctCountry)
+	      elseif (key == 'blue') then
+	        userAnswer = 4
+	        checkAnswer(userAnswer, answers, correctCountry)
+	      elseif(key == "right") then
+	        sideMenu = true
+	        setMainSrfc()
+	        printSideMenu()
+	      end
+	  end
     end
-         
-  elseif (state == "repeat") then
-  end 
+  end
 end

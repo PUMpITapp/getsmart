@@ -36,14 +36,6 @@ describe('Testing init: ', function ()
 	end)
 end)
 
---[[
-	it('', function ()
-		expected = 
-		got = 
-		assert.are.equals(expected, got)
-	end)
-]]
-
 describe('Testing generateQuestion: ', function ()
 	init() 
   	wordArray = selectRandomWord()
