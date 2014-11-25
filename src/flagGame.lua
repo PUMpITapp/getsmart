@@ -240,16 +240,18 @@ function checkAnswer(userAnswer, answersLocal, correctCountryLocal)
   end
 end
 
---- Adds one point to the user's score
+--- Add one score to the user
+--
 function addScoreToUser()
-	profileHandler.update(player, 'flagGame', nil, 1)
+  profileHandler.update(player, 'flagGame', nil, 1)
 end
 
 --- Generates a random country id
 -- @return #number randomCountryId A random country id
 function getRandomCountryId()
   math.randomseed(randomSeed)
-  randomSeed = randomSeed + 1
+  randomSeed = randomSeed + math.random(os.time())
+
   local randomCountryId = math.random(1, table.maxn(flags))
   return randomCountryId
 end
@@ -263,14 +265,22 @@ end
 
 --- Generates question with random country and random answers
 function generateQuestion()
-	local correctCountryId = getRandomCountryId()
+
+    local userLevel = profileHandler.getLevel(player, 'flagGame')
+    local correctCountryId = {}
+    local countryDifficulty = {}
+
+    repeat
+      correctCountryId = getRandomCountryId()
+      countryDifficulty = flags[correctCountryId].difficulty
+    until countryDifficulty == userLevel
 
     correctCountry = flags[correctCountryId].country
     answers = generateAnswers(correctCountryId)
 
     -- Print on screen
-	printFlag(correctCountryId)
-	printAnswers(answers)
+    printFlag(correctCountryId)
+    printAnswers(answers)
 end
 
 --- Remove an answer in a stylish way (if user's guess is incorrect)

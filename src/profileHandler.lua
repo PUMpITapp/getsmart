@@ -40,7 +40,8 @@ function profileHandler.update(player, game, gameType, points)
 	else
 		profiles[player][game]['points'] = profiles[player][game]['points']+ points
 		assert( table.save( profiles, "profiles.lua" ) == nil )
-	end
+    end
+
 	profileHandler.updateUserLevel(player, game)
 
 end
@@ -72,11 +73,16 @@ function profileHandler.updateUserLevel(player, game)
 	if (game == 'mathGame') then 
 		gameValue = math.floor(math.sqrt(gameValue)*gameConstant)
 		profiles[player][game]['userLevel'] = gameValue
-	elseif( game == 'spellingGame') then
-		if(gameValue % 5 == 0 and gameValue < 25) then
+	elseif (game == 'spellingGame') then
+		if (gameValue % 5 == 0 and gameValue <= 25) then
 			userLevelToAdd = 1
-			profiles[player][game]['userLevel']=profiles[player][game]['userLevel'] + userLevelToAdd
-		end
+			profiles[player][game]['userLevel'] = profiles[player][game]['userLevel'] + userLevelToAdd
+        end
+    elseif (game == 'flagGame') then
+        if (gameValue % 5 == 0 and gameValue <= 10) then
+            userLevelToAdd = 1
+            profiles[player][game]['userLevel'] = profiles[player][game]['userLevel'] + userLevelToAdd
+        end
 	end
 
 	assert( table.save( profiles, "profiles.lua" ) == nil )
