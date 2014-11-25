@@ -69,7 +69,6 @@ function profileHandler.updateUserLevel(player, game)
 		end
 	end
 	
-	print('Game Value= ' ..gameValue)
 	if (game == 'mathGame') then 
 		gameValue = math.floor(math.sqrt(gameValue)*gameConstant)
 		profiles[player][game]['userLevel'] = gameValue
