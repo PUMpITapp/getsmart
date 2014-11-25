@@ -33,6 +33,8 @@ player = ...
 
 answerTable = require 'answerTable'
 
+isFirstTry = true
+
 
 ---Initiating all global variables
 function init()
@@ -48,6 +50,7 @@ function init()
     yellow = false,
     green = false
   }
+  isFirstTry = true
 end
 
 --- Main function that runs the program
@@ -57,7 +60,6 @@ function main()
   wordArray = selectRandomWord()
   question = generateQuestion(wordArray)
   questionPosition = getQuestionPosition(question)
-  print("yes")
   printWord(question[1], questionPosition[1])
   printQuestionAlternatives(question[2],questionPosition[2])
   printPlayerName()
@@ -465,7 +467,9 @@ function checkAnswer(key,alternatives,rightanswer)
   local correctAnswer = rightanswer[1]
 
   if (choosenAlternative==correctAnswer) then
-    profileHandler.update(player,'spellingGame', nil, 1)
+  	if(isFirstTry) then
+	    profileHandler.update(player,'spellingGame', nil, 1)
+    end
     inFocus = nil
     main()
   else
@@ -474,6 +478,7 @@ function checkAnswer(key,alternatives,rightanswer)
     --  answerIsCorrect = animation.zoom(background, allCircles[i][key], allCirclePositions[i][key].x, allCirclePositions[i][key].y, 0.000001, 0.5)
     --end
     removeAlternative(userChoice, key)
+    isFirstTry = false
     return false
   end
 end
