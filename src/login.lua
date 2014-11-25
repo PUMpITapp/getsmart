@@ -38,13 +38,17 @@ end
 local underGoingTest = setRequire(checkTestMode())
 
 -- Imports and sets background
-local background = gfx.loadpng('./images/background.png')
+--local background = gfx.loadpng('./images/background.png')
+local background = gfx.loadpng('./images/background-mascot.png')
 gfx.screen:copyfrom(background,nil)
 gfx.update()
 
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 dofile('table.save.lua')
 profiles, err = table.load('profiles.lua')
+
+-- The text in the mascot's bubble
+local mascotText = "Hey look at me"
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_profile_circle_width = 149
@@ -169,8 +173,14 @@ function printCompanyLogo()
 	scale = 0.2
 	gfx.screen:copyfrom(toScreen, nil, {x = gfx.screen:get_width() - toScreen:get_width() * scale - 20  , y=gfx.screen:get_height() - toScreen:get_height() * scale - 20  ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
 	gfx.update()
-	
+end
+-- Prints the text in the mascot's speech bubble
+function printSpeechBubbleText()
 
+	local fh = text.getFontHeight('lato', 'medium')
+	local fw = text.getStringLength('lato', 'medium', mascotText)
+	text.print(gfx.screen, 'lato', 'black', 'medium', mascotText, 100, 500, fw, fh)
+	gfx.update()
 end
 
 -- Main function that runs the program
@@ -179,6 +189,7 @@ local function main()
   printMenuCircles()  
   printLogotype()
   printCompanyLogo()
+  printSpeechBubbleText()
 
 end
 main()
