@@ -15,15 +15,15 @@ profiles = {
 									divisionPoints = 0
 									},
 						flagGame = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									},
 						spellingGame = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									},
 						memoryGame  = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									}
 						},
@@ -38,15 +38,15 @@ profiles = {
 									divisionPoints = 0
 									},
 						flagGame = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									},
 						spellingGame = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									},
 						memoryGame  = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									}
 						},					
@@ -61,15 +61,15 @@ profiles = {
 									divisionPoints = 0
 									},
 						flagGame = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									},
 						spellingGame = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									},
 						memoryGame  = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									}
 						},
@@ -84,15 +84,15 @@ profiles = {
 									divisionPoints = 0
 									},
 						flagGame = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									},
 						spellingGame = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									},
 						memoryGame  = {
-									userLevel = 1,
+									userLevel = 0,
 									points = 0
 									}
 						},
