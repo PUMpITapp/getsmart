@@ -438,7 +438,6 @@ function onKey(key, state)
   if state == 'down' then return
   elseif state == 'repeat' then return
   elseif state == 'up' then
-    print(key)
     --if side menu is up
     if(sideMenu) then 
 	  if(key == 'red') then

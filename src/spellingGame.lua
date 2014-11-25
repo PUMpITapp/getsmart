@@ -434,7 +434,9 @@ function questionLength(question, diameter)
   end
   return questionLength
 end
-
+-- Remover the selcted option
+-- @param #number userChoice the number labled to the selcted buttom
+-- @param #string key the button the user choose, options: red, green, yellow, blue
 function removeAlternative(userChoice, key)
   for i=1, #question[2] do
     question[2][i][userChoice] = ''
