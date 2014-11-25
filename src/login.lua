@@ -167,7 +167,7 @@ function printCompanyLogo()
 	local toScreen = nil
 	toScreen = gfx.loadpng(dir..png_company_logo)
 	scale = 0.2
-	gfx.screen:copyfrom(toScreen, nil, {x = 10 , y=gfx.screen:get_height() - toScreen:get_height() * scale - 20  ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
+	gfx.screen:copyfrom(toScreen, nil, {x = gfx.screen:get_width() - toScreen:get_width() * scale - 20  , y=gfx.screen:get_height() - toScreen:get_height() * scale - 20  ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
 	gfx.update()
 	
 
