@@ -9,12 +9,12 @@ profiles = {
 						isActive = 1,
 						mathGame = {
 									userLevel = 0,
-									additionPoints = 1,
-									subtractionPoints = 1,
-									multiplicationPoints = 1,
-									divisionPoints = 1
+									additionPoints = 0,
+									subtractionPoints = 0,
+									multiplicationPoints = 0,
+									divisionPoints = 0
 									},
-						geographyGame = {
+						flagGame = {
 									userLevel = 1,
 									points = 0
 									},
@@ -32,12 +32,12 @@ profiles = {
 						isActive = 0,
 						mathGame = {
 									userLevel = 0,
-									additionPoints = 1,
-									subtractionPoints = 1,
-									multiplicationPoints = 1,
-									divisionPoints = 1
+									additionPoints = 0,
+									subtractionPoints = 0,
+									multiplicationPoints = 0,
+									divisionPoints = 0
 									},
-						geographyGame = {
+						flagGame = {
 									userLevel = 1,
 									points = 0
 									},
@@ -55,12 +55,12 @@ profiles = {
 						isActive = 1,
 						mathGame = {
 									userLevel = 0,
-									additionPoints = 1,
-									subtractionPoints = 1,
-									multiplicationPoints = 1,
-									divisionPoints = 1
+									additionPoints = 0,
+									subtractionPoints = 0,
+									multiplicationPoints = 0,
+									divisionPoints = 0
 									},
-						geographyGame = {
+						flagGame = {
 									userLevel = 1,
 									points = 0
 									},
@@ -78,12 +78,12 @@ profiles = {
 						isActive = 1,
 						mathGame = {
 									userLevel = 0,
-									additionPoints = 1,
-									subtractionPoints = 1,
-									multiplicationPoints = 1,
-									divisionPoints = 1
+									additionPoints = 0,
+									subtractionPoints = 0,
+									multiplicationPoints = 0,
+									divisionPoints = 0
 									},
-						geographyGame = {
+						flagGame = {
 									userLevel = 1,
 									points = 0
 									},

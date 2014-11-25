@@ -49,7 +49,6 @@ end
 setRequire(checkTestMode())
 
 -- Set player
--- changed form player = tonumber(...)
 player = ...
 
 answers = {}
@@ -57,10 +56,6 @@ answered = {red = false,
             blue = false,
             yellow = false,
             green = false}
-
-
-
-
 
 
 -- Printing the numbers on the correct position on the screen
@@ -86,7 +81,6 @@ dir = './'
 
 -- All images in the game are placed in this table
 images ={['colors'] = "images/color_choices.png"}
- 
 
 -- Main function that runs the program
 local function main()
@@ -109,7 +103,7 @@ local function main()
   placeAnswerCircles()
   printProblem(mathProblem)
 
-
+  gfx.update()
 end
 
 --- produces a math problem based on the level of the user.
@@ -405,6 +399,7 @@ function checkGivePoints (answered)
   end
   return not giveAnswerPoints
 end
+
 -- Zooms out the incorrect answers
 function zoomOutIncorrectAnswers()
   for key,val in pairs(answered) do
@@ -413,6 +408,7 @@ function zoomOutIncorrectAnswers()
     end
   end
 end
+
 -- Zooms in the correct answer
 -- @param #boolean isCorrectAnswer checks if the given answer is correct
 -- @param #string key The answered option
@@ -424,6 +420,7 @@ function zoomAnswered(isCorrectAnswer, key)
   answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, zoom, 0.5)
   sleep(1)
 end
+
 -- Sets the answered to false
 -- @param #table answered The state of the keys
 function resetAnswered(answered)
@@ -438,8 +435,8 @@ end
 -- @param key The key that has been pressed
 -- @param state The state of thed key-press
 function onKey(key, state)
-  if state == 'down' then
-  elseif state == 'repeat' then
+  if state == 'down' then return
+  elseif state == 'repeat' then return
   elseif state == 'up' then
     print(key)
     --if side menu is up
@@ -457,7 +454,7 @@ function onKey(key, state)
         runGame(gamePath, underGoingTest)
       elseif(key == 'blue') then
         sideMenu = false
-        gamePath = 'geographyGame.lua'
+        gamePath = 'flagGame.lua'
         runGame(gamePath, underGoingTest)
       elseif(key == "right") then
         sideMenu = false
@@ -485,11 +482,8 @@ function onKey(key, state)
         setMainSrfc()
         printSideMenu()
       end
-
     end
-         
-  elseif (state == "repeat") then
-  end 
+  end
 end
 
 --- Runs chosen game (file) if testing mode is off
@@ -531,11 +525,14 @@ end
 
 --- Pauses the system for a period of time
 -- @param #number time The amount of seconds (decimal) the system should sleep
-function
+--[[
+function 
   sleep(time)
   local t0 = os.clock()
   while os.clock() < (t0 +time) do end
 end
+]]
+
 
 main()
 return math

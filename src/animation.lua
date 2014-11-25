@@ -14,6 +14,7 @@ circle = gfx.loadpng('./images/menu/main-menu_math.png')
 -- @param zoom The scale to where the zoom should end, 1 = 100%, 2 = 200%
 -- @param speed The amount of seconds from start of animation to end.
 function animation.zoom(background, surface, x, y, zoom, speed)
+	print('x = '..x..' y = '..y)
 	partBackground = gfx.new_surface(surface:get_width(), surface:get_height())
 	partBackground:copyfrom(background, {x=x, y=y,w=surface:get_width(), h=surface:get_height()})
 	zoom = math.sqrt(zoom)

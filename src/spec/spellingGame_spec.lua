@@ -139,3 +139,39 @@ describe('Testing printWord: ', function ()
 		assert.are.equals(expected, got)
 	end)	
 end)
+
+describe('Testing selectRandomWord: ', function()
+	it('Testing that questionPosition is a position in answerTable', function()
+		local unexpected = nil
+		local got = selectRandomWord()
+		assert.are_not.same(unexpected, got)
+	end)
+end)
+
+describe('Testing reorderAlternatives: ', function()
+	it('Testing that reorderAlternativs returns the alternatives in the order defined by order', function()
+		local orderTest = {2,3,4,1}
+		local alternativesTest = {'a','b','c','d'}
+		local shuffleAlternatives = reorderAlternatives(alternativesTest, orderTest)
+		for i=1, #orderTest do
+			if i == 4 then
+				k = 1
+			else
+				k = i + 1	
+			end
+			local expected = alternativesTest[i]
+			local got = shuffleAlternatives[k]
+			assert.are.same(expected, got)
+		end
+	end)
+end)
+
+describe('Testing questionLength: ', function()
+	it('Testing if questionLength returns the length of the question', function()
+		local testQuestion = {{'Ar', 'choke'}, {'ti'}}
+		local testDiameter = 140
+		local expected = 456
+		local got = questionLength(testQuestion, testDiameter)
+		assert.are.equals(expected,got)
+	end)
+end)

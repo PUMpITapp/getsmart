@@ -63,9 +63,6 @@ function text.print(surface, fontFace, fontColor, fontSize, text, x, y, w, h)
       end
   end
 
-  gfx.update()
-
-
 end
 
 --- Returns the width of the string in pixels
