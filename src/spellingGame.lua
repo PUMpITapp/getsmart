@@ -29,13 +29,13 @@ end
 setRequire(checkTestMode())
 
 -- Set player number
--- player = tonumber(...)
 player = ...
+
+answerTable = require 'answerTable'
 
 
 ---Initiating all global variables
 function init()
-  answerTable = require 'answerTable'
   rightAlternatives = {} 
   images = {['colors'] = "images/color_choices.png"} 
   inFocus = nil
@@ -57,6 +57,7 @@ function main()
   wordArray = selectRandomWord()
   question = generateQuestion(wordArray)
   questionPosition = getQuestionPosition(question)
+  print("yes")
   printWord(question[1], questionPosition[1])
   printQuestionAlternatives(question[2],questionPosition[2])
   printPlayerName()
@@ -89,8 +90,9 @@ function selectRandomWord()
   math.randomseed(os.time())
   math.random()
   math.random()
-  local questionPosition = tonumber(math.random(#answerTable))
-  local question = answerTable[questionPosition]
+  local playerUserLevel = profileHandler.getLevel(player, "spellingGame")
+  local questionPosition = tonumber(math.random(#answerTable[playerUserLevel]))
+  local question = answerTable[playerUserLevel][questionPosition]  
   return question
 end
 
