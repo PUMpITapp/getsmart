@@ -39,7 +39,7 @@ local underGoingTest = setRequire(checkTestMode())
 
 -- Imports and sets background
 local background = gfx.loadpng('./images/background.png')
-gfx.screen:copyfrom(background,nil)
+gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
 gfx.update()
 
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
