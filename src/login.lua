@@ -72,7 +72,7 @@ local dir = './'
 -- @param #number y The y-coordinate
 function printCircle(img, xIn, yIn)
 	local scale = 0.5
-	gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale})
+	gfx.screen:copyfrom(img, nil, {x = xIn, y = yIn, w = img:get_width() * scale, h = img:get_height() * scale})
 end
 
 --- Prints main menu circles and updates screen
