@@ -169,8 +169,6 @@ function printCompanyLogo()
 	scale = 0.2
 	gfx.screen:copyfrom(toScreen, nil, {x = gfx.screen:get_width() - toScreen:get_width() * scale - 20  , y=gfx.screen:get_height() - toScreen:get_height() * scale - 20  ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
 	gfx.update()
-	
-
 end
 
 -- Main function that runs the program
