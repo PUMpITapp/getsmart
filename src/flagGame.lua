@@ -265,11 +265,11 @@ end
 
 --- Generates question with random country and random answers
 function generateQuestion()
-
     local userLevel = profileHandler.getLevel(player, 'flagGame')
-    local correctCountryId = {}
-    local countryDifficulty = {}
 
+    correctCountryId = {}
+    local countryDifficulty = {}
+    
     repeat
       correctCountryId = getRandomCountryId()
       countryDifficulty = flags[correctCountryId].difficulty
