@@ -42,13 +42,20 @@ profiles, err = table.load('profiles.lua')
 -- Require the table containing flags
 flags = require 'flags'
 
+-- Require the table containing all the mascot texts
+mascot_text = require 'mascot_text'
+
 -- The id for the correct country
 correctCountry = ''
 
+-- Variable which is true if side menu is visible
 sideMenu = false
 
 -- Set player number
 player = ...
+
+-- The table which holds the alternatives which has been removed
+removedAlternatives = {}
 
 local randomSeed = os.time()
 local circleDiameter = 80
@@ -233,15 +240,14 @@ function checkAnswer(userAnswer, answersLocal, correctCountryLocal)
     zoomAnswer(userAnswer)
     answerState = true
     main()
+    removedAlternatives = {}
   else
     removeAnswer(userAnswer)
     answerState = false
-
   end
 end
 
 --- Add one score to the user
---
 function addScoreToUser()
   profileHandler.update(player, 'flagGame', nil, 1)
 end
@@ -287,10 +293,19 @@ end
 -- @param #integer answerToRemove The answer to remove (1,2,3,4)
 function removeAnswer(answerToRemove)
   local zoom = 0.000001 
+  local isRemoved = false
   tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
   key = tempColor[answerToRemove]
-  answerIsCorrect= animation.zoom(background, circle[key], positions[key].x, positions[key].y, zoom, 0.5)
-  sleep(1)
+  for i=1, #removedAlternatives, 1 do
+  	if(removedAlternatives[i] == key) then
+  		isRemoved = true
+  	end
+  end
+  if(not isRemoved) then
+	  answerIsCorrect= animation.zoom(background, circle[key], positions[key].x, positions[key].y, zoom, 0.5)
+	  sleep(1)
+  end
+  table.insert(removedAlternatives, key)
 end
 
 --- Zoom in on an answer if correct guess
@@ -376,18 +391,15 @@ function printPlayerName()
 	local playerName = profileHandler.getName(player)
 	local playerUserLevel = profileHandler.getLevel(player, "flagGame")
 
-	local fw_name = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
-	local fh_name = text.getFontHeight('lato', 'medium')
-	local position = 0.02
+	local fw_name = text.getStringLength('lato', 'medium', playerName)
+    local fw_level = text.getStringLength('lato', 'medium', "Level " .. playerUserLevel)
+	local fh = text.getFontHeight('lato', 'medium')
 
-	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw_name, fh_name)
+	text.print(gfx.screen, 'lato', 'black', 'medium', playerName, 20, 70, fw_name, fh)
 	
-	local fw_level = text.getStringLength('lato', 'medium', "User level: " .. playerUserLevel)
-	local fh_level = text.getFontHeight('lato', 'medium')
-	position = 0.02
-	
-	text.print(gfx.screen, 'lato', 'black', 'medium', "User level: " .. playerUserLevel, gfx.screen:get_width()*position, gfx.screen:get_height()*position+fh_name, fw_level, fh_level)
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Level " .. playerUserLevel, 20, 90 + fh, fw_level, fh)
 
+    gfx.update()
 end
 
 --- Sets the background of the screen
@@ -395,7 +407,7 @@ function setBackground()
 	background = gfx.loadpng('./images/background-game.png')
     --background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
     --background:clear({122,219,228})
-    gfx.screen:copyfrom(background,nil)
+    gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
   return 
 end
 
