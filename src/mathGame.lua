@@ -56,9 +56,9 @@ answered = {red = false,
             blue = false,
             yellow = false,
             green = false}
-            
-local mascotText = "Hey look at me!"
 
+-- Require the table containing all the mascot texts
+mascot_text = require 'mascot_text'
 
 -- Printing the numbers on the correct position on the screen
 local sw = gfx.screen:get_width()  -- screen width
@@ -500,19 +500,31 @@ end
 
 --- Sets the background of the screen
 function setBackground()
-	background = gfx.loadpng('./images/background-game.png')
+    background = gfx.loadpng('./images/background-game.png')
     --background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
     --background:clear({122,219,228})
-    gfx.screen:copyfrom(background,nil)
+    gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
   return 
 end
 
 -- Prints the text in the mascot's speech bubble
 function printSpeechBubbleText()
+	
+	local mascotText = nil
+	local randomInt = nil
+	math.randomseed(os.time())
+	math.random()
+	randomInt = tonumber(math.random(#mascot_text['mathGame']))
+	
+	mascotText = mascot_text['mathGame'][randomInt]
+	
+	local boxWidth = gfx.screen:get_width()/7.1
+	local boxHeight = gfx.screen:get_height()/4.5176
 
 	local fh = text.getFontHeight('lato', 'small')
 	local fw = text.getStringLength('lato', 'small', mascotText)
-	text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/6, gfx.screen:get_height()-(gfx.screen:get_height()/5.5), fw, fh)
+	text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/6, (gfx.screen:get_height()/1.42), boxWidth, boxWidth)
+	
 	gfx.update()
 end
 
@@ -522,18 +534,15 @@ function printPlayerName()
 	local playerName = profileHandler.getName(currentPlayer)
 	local playerUserLevel = profileHandler.getLevel(currentPlayer, "mathGame")
 
-	local fw_name = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
-	local fh_name = text.getFontHeight('lato', 'medium')
-	local position = 0.02
+    local fw_name = text.getStringLength('lato', 'medium', playerName)
+    local fw_level = text.getStringLength('lato', 'medium', "Level " .. playerUserLevel)
+    local fh = text.getFontHeight('lato', 'medium')
 
-	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw_name, fh_name)
-	
-	local fw_level = text.getStringLength('lato', 'medium', "User level: " .. playerUserLevel)
-	local fh_level = text.getFontHeight('lato', 'medium')
-	position = 0.02
-	
-	text.print(gfx.screen, 'lato', 'black', 'medium', "User level: " .. playerUserLevel, gfx.screen:get_width()*position, gfx.screen:get_height()*position+fh_name, fw_level, fh_level)
+    text.print(gfx.screen, 'lato', 'black', 'medium', playerName, 20, 70, fw_name, fh)
 
+    text.print(gfx.screen, 'lato', 'black', 'medium', "Level " .. playerUserLevel, 20, 90 + fh, fw_level, fh)
+
+    gfx.update()
 end
 
 --- Pauses the system for a period of time

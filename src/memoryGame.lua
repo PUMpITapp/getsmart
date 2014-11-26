@@ -7,9 +7,19 @@ player = ...
 
 sideMenu = false
 
-text.print(gfx.screen, 'lato', 'black', 'medium', "Memory game will not be implemented!", 250 , 300 )
+function main()
+	printInformationText()
+	gfx.update()
+end
 
-gfx.update()
+--- Prints the information text in the center of the screen
+function printInformationText()
+	if(not tonumber(profilePlayer == nil)) then
+		local fh = text.getFontHeight('lato', 'medium')
+		local fw = text.getStringLength('lato', 'medium', "Memory game will not be implemented!")
+		text.print(gfx.screen, 'lato', 'black', 'medium', "Memory game will not be implemented!", (gfx.screen:get_width()/2 - (fw/2)), (gfx.screen:get_height()/2 - (fh/2)), fw, fh)
+	end
+end
 
 --- Runs chosen game (file) if testing mode is off
 -- @param #string path The path to the game to be loaded
@@ -76,3 +86,5 @@ function onKey(key, state)
     end
   end
 end
+
+main()
