@@ -36,7 +36,7 @@ setRequire(underGoingTest)
 
 -- Imports and sets background
 local background = gfx.loadpng('./images/background.png')
-gfx.screen:copyfrom(background, nil)
+gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
 gfx.update()
 
 -- Boolean controlling if side menu is showing
