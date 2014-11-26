@@ -13,6 +13,7 @@ describe('testing checkAnswer(userAnswer) ', function ( ... )
 		checkAnswer(userAnswer, answers, correctCountry)
 		assert.truthy(answerState)
 	end)
+
 	it('comparing userAnswer to correctAnswer, incorrect', function ( ... )
 		local userAnswer = 2
 		local correctCountry = 'Sweden'
@@ -59,4 +60,9 @@ describe('testing checkAnswer(userAnswer) ', function ( ... )
 
 		assert.truthy(isDuplicate)
 	end)
+
+  it('The questions\'s difficulty should equal the userLevel', function ( ... )
+    generateQuestion()
+    assert.truthy(correctCountryId, 1)
+  end)
 end)
