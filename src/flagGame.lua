@@ -50,6 +50,9 @@ sideMenu = false
 -- Set player number
 player = ...
 
+-- The table which holds the alternatives which has been removed
+removedAlternatives = {}
+
 local randomSeed = os.time()
 local circleDiameter = 80
 
@@ -233,10 +236,10 @@ function checkAnswer(userAnswer, answersLocal, correctCountryLocal)
     zoomAnswer(userAnswer)
     answerState = true
     main()
+    removedAlternatives = {}
   else
     removeAnswer(userAnswer)
     answerState = false
-
   end
 end
 
@@ -287,10 +290,19 @@ end
 -- @param #integer answerToRemove The answer to remove (1,2,3,4)
 function removeAnswer(answerToRemove)
   local zoom = 0.000001 
+  local isRemoved = false
   tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
   key = tempColor[answerToRemove]
-  answerIsCorrect= animation.zoom(background, circle[key], positions[key].x, positions[key].y, zoom, 0.5)
-  sleep(1)
+  for i=1, #removedAlternatives, 1 do
+  	if(removedAlternatives[i] == key) then
+  		isRemoved = true
+  	end
+  end
+  if(not isRemoved) then
+	  answerIsCorrect= animation.zoom(background, circle[key], positions[key].x, positions[key].y, zoom, 0.5)
+	  sleep(1)
+  end
+  table.insert(removedAlternatives, key)
 end
 
 --- Zoom in on an answer if correct guess
