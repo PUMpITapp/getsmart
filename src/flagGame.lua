@@ -42,9 +42,13 @@ profiles, err = table.load('profiles.lua')
 -- Require the table containing flags
 flags = require 'flags'
 
+-- Require the table containing all the mascot texts
+mascot_text = require 'mascot_text'
+
 -- The id for the correct country
 correctCountry = ''
 
+-- Variable which is true if side menu is visible
 sideMenu = false
 
 -- Set player number
@@ -244,7 +248,6 @@ function checkAnswer(userAnswer, answersLocal, correctCountryLocal)
 end
 
 --- Add one score to the user
---
 function addScoreToUser()
   profileHandler.update(player, 'flagGame', nil, 1)
 end

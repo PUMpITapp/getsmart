@@ -56,9 +56,9 @@ answered = {red = false,
             blue = false,
             yellow = false,
             green = false}
-            
-local mascotText = "Hey look at me!"
 
+-- Require the table containing all the mascot texts
+mascot_text = require 'mascot_text'
 
 -- Printing the numbers on the correct position on the screen
 local sw = gfx.screen:get_width()  -- screen width
@@ -509,10 +509,22 @@ end
 
 -- Prints the text in the mascot's speech bubble
 function printSpeechBubbleText()
+	
+	local mascotText = nil
+	local randomInt = nil
+	math.randomseed(os.time())
+	math.random()
+	randomInt = tonumber(math.random(#mascot_text['mathGame']))
+	
+	mascotText = mascot_text['mathGame'][randomInt]
+	
+	local boxWidth = gfx.screen:get_width()/7.1
+	local boxHeight = gfx.screen:get_height()/4.5176
 
 	local fh = text.getFontHeight('lato', 'small')
 	local fw = text.getStringLength('lato', 'small', mascotText)
-	text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/6, gfx.screen:get_height()-(gfx.screen:get_height()/5.5), fw, fh)
+	text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/6, (gfx.screen:get_height()/1.42), boxWidth, boxWidth)
+	
 	gfx.update()
 end
 
