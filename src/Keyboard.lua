@@ -253,7 +253,7 @@ function displayHighlightSurface()
 	local height = yUnit
 	local highlighter = nil
 	local currentKey = getKeyboardChar(highlightPosX, highlightPosY)
-	print(currentKey)
+	--print(currentKey)
 
 	if string.upper(currentKey) == "SHIFT" then
 		highlighter = shiftPressedPNG

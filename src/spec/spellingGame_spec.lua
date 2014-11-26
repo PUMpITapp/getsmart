@@ -179,3 +179,35 @@ describe('Testing questionLength: ', function()
 		assert.are.equals(expected,got)
 	end)
 end)
+
+describe('Testing if user is correct on the first guess', function()
+	it("Should be the user's first try", function()
+		local alts = {
+						{'ig'}
+						}
+		
+		local correctAnswer = {
+								'ig'
+								}
+		
+		checkAnswer('red',alts,correctAnswer)
+		
+		assert.truthy(isFirstTry)		
+	end)
+	
+	it("Should not be the user's first try", function()
+		local alts = {
+						{'ig'},
+						{'rg'}
+						}
+		
+		local correctAnswer = {
+								'ig'
+								}
+		
+		checkAnswer('blue',alts,correctAnswer)
+		checkAnswer('green',alts,correctAnswer)
+		
+		assert.is_not_true(isFirstTry)
+	end)
+end)

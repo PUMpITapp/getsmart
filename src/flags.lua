@@ -1,7 +1,7 @@
 return {
   {
     country = 'Sweden',
-    difficulty = 'easy',
+    difficulty = 0,
     dimensions = {
       positionY = 0,
       height = 249
@@ -9,7 +9,7 @@ return {
   },
   {
     country = 'Denmark',
-    difficulty = 'easy',
+    difficulty = 0,
     dimensions = {
       positionY = 249,
       height = 303
@@ -17,7 +17,7 @@ return {
   },
   {
     country = 'Germany',
-    difficulty = 'intermediate',
+    difficulty = 1,
     dimensions = {
       positionY = 552,
       height = 240
@@ -25,7 +25,7 @@ return {
   },
   {
     country = 'Greece',
-    difficulty = 'intermediate',
+    difficulty = 1,
     dimensions = {
       positionY = 792,
       height = 265
@@ -33,7 +33,7 @@ return {
   },
   {
     country = 'Argentina',
-    difficulty = 'hard',
+    difficulty = 2,
     dimensions = {
       positionY = 1057,
       height = 250
@@ -41,7 +41,7 @@ return {
   },
   {
     country = 'Mexico',
-    difficulty = 'hard',
+    difficulty = 2,
     dimensions = {
       positionY = 1307,
       height = 229

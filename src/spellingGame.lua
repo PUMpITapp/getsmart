@@ -53,8 +53,9 @@ end
 
 --- Main function that runs the program
 function main()
-  setBackground()
+
   init() 
+  setBackground()
   wordArray = selectRandomWord()
   question = generateQuestion(wordArray)
   questionPosition = getQuestionPosition(question)
@@ -91,6 +92,9 @@ function selectRandomWord()
   math.random()
   math.random()
   local playerUserLevel = profileHandler.getLevel(player, "spellingGame")
+  if(playerUserLevel == 0) then
+  	playerUserLevel = 1
+  end
   local questionPosition = tonumber(math.random(#answerTable[playerUserLevel]))
   local question = answerTable[playerUserLevel][questionPosition]  
   return question
@@ -397,7 +401,7 @@ end
 -- @param #table wordParts a table containgin the current questions word parts 
 -- @param #table wordPartsPosition a table containing the coordinated at which the word parts will be placed 
 function printWord(wordParts, wordPartPosition)
-  gfx.screen:clear({122,219,228})
+  --gfx.screen:clear({122,219,228})
   
   for i=1, #wordParts do
     text_testValue = text.print(gfx.screen, 'lato', 'black', 'large', wordParts[i], wordPartPosition[i].x ,  wordPartPosition[i].y)    
@@ -481,8 +485,9 @@ end
 
 --- Sets the background of the screen
 function setBackground()
-    background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
-    background:clear({122,219,228})
+	background = gfx.loadpng('./images/background-game.png')
+    --background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+    --background:clear({122,219,228})
     gfx.screen:copyfrom(background,nil)
   return 
 end
