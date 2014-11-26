@@ -70,19 +70,16 @@ function printPlayerName()
 	local playerName = profileHandler.getName(player)
 	local playerUserLevel = profileHandler.getLevel(player, "spellingGame")
 
-	local fw_name = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
-	local fh_name = text.getFontHeight('lato', 'medium')
-	local position = 0.02
+    local fw_name = text.getStringLength('lato', 'medium', playerName)
+    local fw_level = text.getStringLength('lato', 'medium', "Level " .. playerUserLevel)
+    local fh = text.getFontHeight('lato', 'medium')
 
-	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw_name, fh_name)
-	
-	local fw_level = text.getStringLength('lato', 'medium', "User level: " .. playerUserLevel)
-	local fh_level = text.getFontHeight('lato', 'medium')
-	position = 0.02
-	
-	text.print(gfx.screen, 'lato', 'black', 'medium', "User level: " .. playerUserLevel, gfx.screen:get_width()*position, gfx.screen:get_height()*position+fh_name, fw_level, fh_level)
+    text.print(gfx.screen, 'lato', 'black', 'medium', playerName, 20, 70, fw_name, fh)
 
-	gfx.update()
+    text.print(gfx.screen, 'lato', 'black', 'medium', "Level " .. playerUserLevel, 20, 90 + fh, fw_level, fh)
+
+    gfx.update()
+
 end
 
 --- Genrates a random number between 1 and the size of the table answerTable and picks that word in the table
@@ -485,10 +482,10 @@ end
 
 --- Sets the background of the screen
 function setBackground()
-	background = gfx.loadpng('./images/background-game.png')
+    background = gfx.loadpng('./images/background-game.png')
     --background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
     --background:clear({122,219,228})
-    gfx.screen:copyfrom(background,nil)
+    gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
   return 
 end
 
