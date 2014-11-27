@@ -333,12 +333,18 @@ function placeAnswersOnCircles(answers, circle, circlePosition)
   end
 end
 
+function setScale(diameter)
+  height = gfx.screen:get_height()
+  local scale = (height - diameter) / (7.5 * diameter)
+  return scale
+end
+
 --- Downsizes the cirlces that are not selected
 -- @param #string selected a string representing the selected circle. possible alternatives: 'start', 'red', 'green', 'yellow', 'blue'
 -- @param #table circle a table of all the circles that all can be downsized
 -- @param #table circlePositions a table of the positions of the circles 
 function adjustCircleSize(selected, circle, circlePositions)
-  scale = 0.7
+  scale = setScale(140)
   if selected == 'start' then
     animation.zoom(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, scale, 0)
     animation.zoom(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, scale, 0)

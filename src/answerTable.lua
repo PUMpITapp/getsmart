@@ -32,19 +32,23 @@ return {
 			{
 		            {'Guitar',{{2,3}},{{'ui','uu','u','i'}}},
 		            {'Question',{{2,3}},{{'ue','oe','u','e'}}},
-		            {'Difficult',{{3,4},{7,7}},{{'ff','f','fu','if'},{'u','o','uu','oo'}}},
-		            {'Acceptable',{{2,3},{7,7}},{{'cc','c','ce','e'},{'a','ae','e','ea'}}},
-		            {'Committed',{{3,4},{6,7}},{{'mm','om','m','o'},{'tt','t','it','i'}}},
-		            {'Intelligence',{{5,6},{9,9}},{{'ll','l','el','li'},{'e','ee','a','ie'}}},
-		            {'Yesterday',{{2,3},{6,7}},{{'es','is','ez','oys'},{'rd','d','rp','ld'}}},
-					{'Requirement',{{3,4},{7,8}},{{'qu','q','eq','qa'},{'em','m','emm','im'}}},
-					{'Millennium',{{3,4},{6,7}},{{'ll','l','il','le'},{'nn','ni','n','m'}}},
+		            {'Difficult',{{7,7}},{{'u','o','uu','oo'}}},
+		            {'Difficult',{{3,4}},{{'ff','f','fu','if'}}},
+		            {'Acceptable',{{7,7}},{{'a','ae','e','ea'}}},
+		            {'Acceptable',{{2,3}},{{'cc','c','ce','e'}}},
+		            {'Committed',{{3,4}},{{'mm','om','m','o'}}},
+		            {'Intelligence',{{9,9}},{{'e','ee','a','ie'}}},
+		            {'Intelligence',{{5,6}},{{'ll','l','el','li'}}},
+		            {'Yesterday',{{6,7}},{{'rd','d','rp','ld'}}},
+					{'Requirement',{{3,4}},{{'qu','q','eq','qa'}}},
+					{'Millennium',{{3,4}},{{'ll','l','il','le'}}},
 					{'Miniature',{{7,7}},{{'u','e','i','ue'}}}
 			},
 --- Level 4			
 			{
 		           	{'Artichoke',{{3,4}},{{'ti','tie','te','to'}}},
-		            {'Scrummaster',{{2,3},{5,6}},{{'cr','ckr','kr','crr'},{'mm','m','me','mm'}}},
+		            {'Scrummaster',{{2,3}},{{'cr','ckr','kr','crr'}}},
+		            {'Scrummaster',{{5,6}},{{'mm','m','me','mm'}}},
 		            {'Acquire',{{2,3}},{{'cq','cc','q','k'}}},
 		            {'Rhythm',{{2,3}},{{'hy','y','yi','hu'}}},
 		            {'Vacuum',{{3,4}},{{'cu','k','c','cc'}}},
@@ -58,24 +62,28 @@ return {
 			},
 --- Level 5			
 			{
-		          	{'Questionnaire',{{2,3},{9,10}},{{'ue','oe','u','e'},{'na','a','no','n'}}},
+		          	{'Questionnaire',{{2,3}},{{'ue','oe','u','e'}}},
 		            {'Playwright',{{5,6}},{{'wr','r','whr','ir'}}},
-		            {'Hierarchy',{{2,3},{7,8}},{{'ie','i','e','ee'},{'ch','c','k','ck'}}},
-		            {'Accommodate',{{2,3},{5,6}},{{'cc','c','cq','ck'},{'mm','m','em','am'}}},
-		            {'Conscientious',{{4,5},{9,10}},{{'sc','ti','sh','c'},{'ti','sc','sh','ta'}}},
-		            {'Pronunciation',{{5,6},{10,11}},{{'un','an','en','in'},{'ti','ch','sh','te'}}},
-		            {'Misspelled',{{3,4},{7,8}},{{'ss','s','es','se'},{'ll','l','el','le'}}},
+		            {'Hierarchy',{{2,3}},{{'ie','i','e','ee'}}},
+		            {'Accommodate',{{2,3}},{{'cc','c','cq','ck'}}},
+		            {'Conscientious',{{9,10}},{{'ti','sc','sh','ta'}}},
+		            {'Conscientious',{{4,5}},{{'sc','ti','sh','c'}}},
+		            {'Pronunciation',{{5,6}},{{'un','an','en','in'}}},
+		            {'Misspelled',{{7,8}},{{'ll','l','el','le'}}},
+		            {'Misspelled',{{3,4}},{{'ss','s','es','se'}}},
 		            {'Presbyterian',{{4,6}},{{'sby','sbe','sbi','cby'}}},
-		            {'Occurrence',{{3,3},{6,7}},{{'c','u','cu','k'},{'re','e','ra','a'}}},
-		            {'Noticeable',{{2,2},{6,7}},{{'o','oo','u','ou'},{'ea','e','a','ae'}}},
+		            {'Occurrence',{{3,3}},{{'c','u','cu','k'}}},
+		            {'Noticeable',{{2,2}},{{'o','oo','u','ou'}}},
 		            {'Threshold',{{4,4}},{{'e','ae','a','ee'}}}
 			},
 --- Level 6			
 			{
-		            {'Accommodate',{{2,3},{5,6}},{{'cc','c','cq','ck'},{'mm','m','em','am'}}},
-		            {'Conscientious',{{4,5},{9,10}},{{'sc','ti','sh','c'},{'ti','sc','sh','ta'}}},
-		            {'Pronunciation',{{5,6},{10,11}},{{'un','an','en','in'},{'ti','ch','sh','te'}}},
-		            {'Misspelled',{{3,4},{7,8}},{{'ss','s','es','se'},{'ll','l','el','le'}}},
+		            {'Accommodate',{{2,3}},{{'cc','c','cq','ck'}}},
+		            {'Accommodate',{{5,6}},{{'mm','m','em','am'}}},
+		            {'Conscientious',{{9,10}},{{'ti','sc','sh','ta'}}},
+		            {'Conscientious',{{4,5}},{{'sc','ti','sh','c'}}},
+		            {'Pronunciation',{{10,11}},{{'ti','ch','sh','te'}}},
+		            {'Pronunciation',{{5,6}},{{'un','an','en','in'}}},
 		            {'Presbyterian',{{4,6}},{{'sby','sbe','sbi','cby'}}}
 			}
   }
