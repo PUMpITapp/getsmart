@@ -519,11 +519,23 @@ function printSpeechBubbleText()
 	mascotText = mascot_text['mathGame'][randomInt]
 	
 	local boxWidth = gfx.screen:get_width()/7.1
-	local boxHeight = gfx.screen:get_height()/4.5176
+	local boxHeight = gfx.screen:get_height()/4.388
+    local boxHeightOffset = gfx.screen:get_height()/34
 
 	local fh = text.getFontHeight('lato', 'small')
 	local fw = text.getStringLength('lato', 'small', mascotText)
-	text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/6, (gfx.screen:get_height()/1.42), boxWidth, boxWidth)
+    local actualFh = fh
+    
+    local j = 1
+    for i = 1, fw, 1 do
+        j = j+1
+       if j > boxWidth then
+           actualFh = actualFh + fh
+           j=1
+       end
+    end
+
+	text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/5.85, (gfx.screen:get_height()-boxHeightOffset-boxHeight/2-actualFh/2), boxWidth, boxWidth)
 	
 	gfx.update()
 end
