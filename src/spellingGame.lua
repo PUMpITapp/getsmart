@@ -34,6 +34,9 @@ player = ...
 -- Imports the table with all data
 answerTable = require 'answerTable'
 
+-- Require the table containing all the mascot texts
+mascot_text = require 'mascot_text'
+
 ---Initiating all global variables
 function init()
   rightAlternatives = {} 
@@ -62,6 +65,7 @@ function main()
   printWord(question[1], questionPosition[1])
   printQuestionAlternatives(question[2],questionPosition[2])
   printPlayerName()
+  printSpeechBubbleText()
 end
 
 --- Prints the players name in the top of the screen
@@ -80,6 +84,39 @@ function printPlayerName()
 
     gfx.update()
 
+end
+
+-- Prints the text in the mascot's speech bubble
+function printSpeechBubbleText()
+
+  local mascotText = nil
+  local randomInt = nil
+  math.randomseed(os.time())
+  math.random()
+  randomInt = tonumber(math.random(#mascot_text['spellingGame']))
+
+  mascotText = mascot_text['spellingGame'][randomInt]
+
+  local boxWidth = gfx.screen:get_width()/7.1
+  local boxHeight = gfx.screen:get_height()/4.388
+  local boxHeightOffset = gfx.screen:get_height()/34
+
+  local fh = text.getFontHeight('lato', 'small')
+  local fw = text.getStringLength('lato', 'small', mascotText)
+  local actualFh = fh
+
+  local j = 1
+  for i = 1, fw, 1 do
+    j = j+1
+    if j > boxWidth then
+      actualFh = actualFh + fh
+      j=1
+    end
+  end
+
+  text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/5.85, (gfx.screen:get_height()-boxHeightOffset-boxHeight/2-actualFh/2), boxWidth, boxWidth)
+
+  gfx.update()
 end
 
 --- Genrates a random number between 1 and the size of the table answerTable and picks that word in the table

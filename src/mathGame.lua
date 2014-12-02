@@ -525,7 +525,7 @@ function printSpeechBubbleText()
 	local fh = text.getFontHeight('lato', 'small')
 	local fw = text.getStringLength('lato', 'small', mascotText)
     local actualFh = fh
-    
+
     local j = 1
     for i = 1, fw, 1 do
         j = j+1
