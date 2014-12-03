@@ -131,7 +131,7 @@ function printAnswers(answers)
 
   local textPosition = {
     x = screen.width / 2 + circleDiameter * 3 / 2,
-    y = screen.height / 8 - font.height / 2,
+    y = screen.height / 8 - font.height/4 ,
     w = screen.width / 2,
     h = screen.height / 4
   }
@@ -177,7 +177,7 @@ function placeAnswerCircles()
 
   local circlePosition = {
     x = screen.width / 2,
-    y = screen.height / 8 - circleDiameter / 2,
+    y = screen.height / 6 - circleDiameter / 2,
     w = circleDiameter,
     h = circleDiameter
   }
@@ -190,10 +190,10 @@ function placeAnswerCircles()
   }
 
   positions = {
-    ['red']     = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2},
-    ['green']   = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2 +  screen.height / 4},
-    ['yellow']  = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2 +2*screen.height / 4},
-    ['blue']    = {x =screen.width / 2, y= screen.height / 8 - circleDiameter / 2 +3*screen.height / 4}
+    ['red']     = {x =screen.width / 2, y= screen.height / 6 - circleDiameter / 2},
+    ['green']   = {x =screen.width / 2, y= screen.height / 6 - circleDiameter / 2 +  screen.height / 4},
+    ['yellow']  = {x =screen.width / 2, y= screen.height / 6 - circleDiameter / 2 +2*screen.height / 4},
+    ['blue']    = {x =screen.width / 2, y= screen.height / 6 - circleDiameter / 2 +3*screen.height / 4}
 }
 
   for i = 1,4 do
@@ -400,9 +400,9 @@ function printPlayerName()
     local fw_level = text.getStringLength('lato', 'medium', "Level " .. playerUserLevel)
 	local fh = text.getFontHeight('lato', 'medium')
 
-	text.print(gfx.screen, 'lato', 'black', 'medium', playerName, 20, 70, fw_name, fh)
-	
-	text.print(gfx.screen, 'lato', 'black', 'medium', "Level " .. playerUserLevel, 20, 90 + fh, fw_level, fh)
+    text.print(gfx.screen, 'lato', 'black', 'medium', playerName, gfx.screen:get_width()/2 - text.getStringLength('lato', 'medium', playerName)-20, 20, fw_name, fh)
+
+    text.print(gfx.screen, 'lato', 'black', 'medium', "Level " .. playerUserLevel,  gfx.screen:get_width()/2  + 20, 20, fw_level, fh)
 
     gfx.update()
 end

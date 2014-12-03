@@ -90,11 +90,11 @@ function printPlayerName()
 	
 	local playerName = profileHandler.getName(currentPlayer)
 
-	local fw = text.getStringLength('lato', 'medium', "Logged in as: " .. playerName)
+	local fw = text.getStringLength('lato', 'medium', "Welcome " .. playerName)
 	local fh = text.getFontHeight('lato', 'medium')
 	local position = 0.02
 
-	text.print(gfx.screen, 'lato', 'black', 'medium', "Logged in as: " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw, fh)
+	text.print(gfx.screen, 'lato', 'black', 'medium', "Welcome " .. playerName, gfx.screen:get_width()*position, gfx.screen:get_height()*position, fw, fh)
 
 end
 

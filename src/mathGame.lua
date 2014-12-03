@@ -550,9 +550,9 @@ function printPlayerName()
     local fw_level = text.getStringLength('lato', 'medium', "Level " .. playerUserLevel)
     local fh = text.getFontHeight('lato', 'medium')
 
-    text.print(gfx.screen, 'lato', 'black', 'medium', playerName, 20, 70, fw_name, fh)
+    text.print(gfx.screen, 'lato', 'black', 'medium', playerName, gfx.screen:get_width()/2 - text.getStringLength('lato', 'medium', playerName)-20, 20, fw_name, fh)
 
-    text.print(gfx.screen, 'lato', 'black', 'medium', "Level " .. playerUserLevel, 20, 90 + fh, fw_level, fh)
+    text.print(gfx.screen, 'lato', 'black', 'medium', "Level " .. playerUserLevel,  gfx.screen:get_width()/2  + 20, 20, fw_level, fh)
 
     gfx.update()
 end
