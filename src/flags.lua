@@ -46,6 +46,54 @@ return {
       positionY = 1307,
       height = 229
     }
+  },
+  {
+    country = 'Poland',
+    difficulty = 2,
+    dimensions = {
+      positionY = 1537,
+      height = 250
+    }
+  },
+  {
+    country = 'Spain',
+    difficulty = 0,
+    dimensions = {
+      positionY = 1786,
+      height = 267
+    }
+  },
+  {
+    country = 'Australia',
+    difficulty = 1,
+    dimensions = {
+      positionY = 2053,
+      height = 200
+    }
+  },
+  {
+    country = 'Iceland',
+    difficulty = 1,
+    dimensions = {
+      positionY = 2253,
+      height = 288
+    }
+  },
+  {
+    country = 'India',
+    difficulty = 2,
+    dimensions = {
+      positionY = 2541,
+      height = 267
+    }
+  },
+  {
+    country = 'China',
+    difficulty = 0,
+    dimensions = {
+      positionY = 2808,
+      height = 267
+    }
   }
 }
 

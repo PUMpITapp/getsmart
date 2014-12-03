@@ -1,56 +1,59 @@
 return {
 -- Table: {1}
 {
-   ["player3"]={2},
-   ["player1"]={3},
-   ["player4"]={4},
+   ["player1"]={2},
+   ["player4"]={3},
+   ["player3"]={4},
    ["player2"]={5},
 },
 -- Table: {2}
 {
-   ["spellingGame"]={6},
-   ["memoryGame"]={7},
+   ["flagGame"]={6},
+   ["mathGame"]={7},
+   ["memoryGame"]={8},
+   ["spellingGame"]={9},
+   ["name"]="Julbin",
    ["isActive"]=1,
-   ["name"]="Artrik",
-   ["flagGame"]={8},
-   ["mathGame"]={9},
 },
 -- Table: {3}
 {
-   ["spellingGame"]={10},
-   ["memoryGame"]={11},
+   ["flagGame"]={10},
+   ["mathGame"]={11},
+   ["memoryGame"]={12},
+   ["spellingGame"]={13},
+   ["name"]="Jachael",
    ["isActive"]=1,
-   ["name"]="Julbin",
-   ["flagGame"]={12},
-   ["mathGame"]={13},
 },
 -- Table: {4}
 {
-   ["spellingGame"]={14},
-   ["memoryGame"]={15},
+   ["flagGame"]={14},
+   ["mathGame"]={15},
+   ["memoryGame"]={16},
+   ["spellingGame"]={17},
+   ["name"]="Artrik",
    ["isActive"]=1,
-   ["name"]="Jachael",
-   ["flagGame"]={16},
-   ["mathGame"]={17},
 },
 -- Table: {5}
 {
-   ["spellingGame"]={18},
-   ["memoryGame"]={19},
-   ["isActive"]=0,
-   ["name"]="",
-   ["flagGame"]={20},
-   ["mathGame"]={21},
+   ["flagGame"]={18},
+   ["mathGame"]={19},
+   ["memoryGame"]={20},
+   ["spellingGame"]={21},
+   ["name"]="qwer",
+   ["isActive"]=1,
 },
 -- Table: {6}
 {
-   ["points"]=0,
-   ["userLevel"]=0,
+   ["points"]=29,
+   ["userLevel"]=2,
 },
 -- Table: {7}
 {
-   ["points"]=0,
-   ["userLevel"]=0,
+   ["divisionPoints"]=0,
+   ["subtractionPoints"]=3,
+   ["userLevel"]=4,
+   ["additionPoints"]=6,
+   ["multiplicationPoints"]=0,
 },
 -- Table: {8}
 {
@@ -59,34 +62,31 @@ return {
 },
 -- Table: {9}
 {
-   ["multiplicationPoints"]=0,
-   ["divisionPoints"]=0,
-   ["additionPoints"]=0,
-   ["subtractionPoints"]=0,
+   ["points"]=4,
    ["userLevel"]=0,
 },
 -- Table: {10}
 {
-   ["points"]=4,
+   ["points"]=0,
    ["userLevel"]=0,
 },
 -- Table: {11}
 {
-   ["points"]=0,
+   ["divisionPoints"]=0,
+   ["subtractionPoints"]=0,
    ["userLevel"]=0,
+   ["additionPoints"]=0,
+   ["multiplicationPoints"]=0,
 },
 -- Table: {12}
 {
-   ["points"]=11,
-   ["userLevel"]=2,
+   ["points"]=0,
+   ["userLevel"]=0,
 },
 -- Table: {13}
 {
-   ["multiplicationPoints"]=0,
-   ["divisionPoints"]=0,
-   ["additionPoints"]=6,
-   ["subtractionPoints"]=3,
-   ["userLevel"]=4,
+   ["points"]=0,
+   ["userLevel"]=0,
 },
 -- Table: {14}
 {
@@ -95,8 +95,11 @@ return {
 },
 -- Table: {15}
 {
-   ["points"]=0,
+   ["divisionPoints"]=0,
+   ["subtractionPoints"]=0,
    ["userLevel"]=0,
+   ["additionPoints"]=0,
+   ["multiplicationPoints"]=0,
 },
 -- Table: {16}
 {
@@ -105,21 +108,21 @@ return {
 },
 -- Table: {17}
 {
-   ["multiplicationPoints"]=0,
-   ["divisionPoints"]=0,
-   ["additionPoints"]=0,
-   ["subtractionPoints"]=0,
+   ["points"]=0,
    ["userLevel"]=0,
 },
 -- Table: {18}
 {
-   ["points"]=0,
-   ["userLevel"]=0,
+   ["points"]=14,
+   ["userLevel"]=2,
 },
 -- Table: {19}
 {
-   ["points"]=0,
+   ["divisionPoints"]=0,
+   ["subtractionPoints"]=0,
    ["userLevel"]=0,
+   ["additionPoints"]=0,
+   ["multiplicationPoints"]=0,
 },
 -- Table: {20}
 {
@@ -128,10 +131,7 @@ return {
 },
 -- Table: {21}
 {
-   ["multiplicationPoints"]=0,
-   ["divisionPoints"]=0,
-   ["additionPoints"]=0,
-   ["subtractionPoints"]=0,
+   ["points"]=0,
    ["userLevel"]=0,
 },
 }

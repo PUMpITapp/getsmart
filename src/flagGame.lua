@@ -99,15 +99,13 @@ end
 -- @param #number countryId The id of the country
 function printFlag(countryId)
   local flag = flags[countryId]
+
   local flagDimensions = {
     x = 0,
     y = flag.dimensions.positionY,
     w = 400,
     h = flag.dimensions.height
   }
-
-  local flagSurface = gfx.new_surface(flagDimensions.w, flagDimensions.h)
-  flagSurface:copyfrom(images.Flags, flagDimensions, true)
 
   local flagScreenPosition = {
     x = screen.width / 4 - flagDimensions.w / 2,
@@ -116,7 +114,7 @@ function printFlag(countryId)
     h = flagDimensions.h
   }
 
-  gfx.screen:copyfrom(flagSurface, nil, flagScreenPosition, true)
+  gfx.screen:copyfrom(images.Flags, flagDimensions, flagScreenPosition, true)
   gfx.update()
 end
 
@@ -280,6 +278,12 @@ function generateQuestion()
     repeat
       correctCountryId = getRandomCountryId()
       countryDifficulty = flags[correctCountryId].difficulty
+
+      if userLevel > 2 then
+        print('userLevel error! Abort, abort!')
+        countryDifficulty = userLevel
+      end
+
     until countryDifficulty == userLevel
 
     correctCountry = flags[correctCountryId].country
