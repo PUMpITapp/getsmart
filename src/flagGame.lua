@@ -3,23 +3,30 @@
 -- The flag game app for GetSmart
 --
 
+require "runState"
+
 --- Checks if the file was called from a test file.
--- @return #boolean True or false depending on testing file
+-- @return If called from test file return true (indicating file is being tested) else false  
 function checkTestMode()
-  runFile = debug.getinfo(2, "S").source:sub(2,3)
+ --[[ runFile = debug.getinfo(2, "S").source:sub(2,3)
   if (runFile ~= './' ) then
     underGoingTest = false
   elseif (runFile == './') then
     underGoingTest = true
   end
+  return underGoingTest --]]
+  underGoingTest = false
   return underGoingTest
 end
 
+
 --- Chooses either the actual or the stubs depending on if a test file started the program.
--- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+-- @param underGoingTest undergoing test is true if a test file started the program.
 function setRequire(underGoingTest)
   if not underGoingTest then
-    gfx = require "gfx"
+    if not runsOnSTB then
+      gfx = require "gfx"
+    end
     text = require "write_text"
     animation = require "animation"
     profileHandler = require "profileHandler"
@@ -29,15 +36,19 @@ function setRequire(underGoingTest)
     animation = require "animation_stub"
     profileHandler = require "profileHandler_stub"
   end
-
-  return underGoingTest
 end 
-
-local underGoingTest = setRequire(checkTestMode())
+setRequire(checkTestMode())
 
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
-dofile('table.save.lua')
-profiles, err = table.load('profiles.lua')
+if not runsOnSTB then
+  dofile('table.save.lua')
+  profiles, err = table.load('profiles.lua')
+  dir = "" 
+else
+  dir = sys.root_path()
+  dofile(dir .. 'table.save.lua')
+  profiles, err = table.load(dir .. 'profiles.lua') 
+end
 
 -- Require the table containing flags
 flags = require 'flags'
@@ -65,15 +76,25 @@ local screen = {
   height = gfx.screen:get_height()
 }
 
-local images = {
-  Colors = gfx.loadpng('images/color_choices.png'),
-  Flags = gfx.loadpng('images/flag-sprite.png')
+  circleColors = {
+   [1] = 'red',
+   [2] = 'green',
+   [3] = 'yellow',
+   [4] = 'blue'
+  }
+
+  positions = {
+    ['red']     = {x =screen.width / 2 +30, y= screen.height / 4 - circleDiameter / 3,                     w = circleDiameter, h = circleDiameter},
+    ['green']   = {x =screen.width / 2 +30, y= screen.height / 4 - circleDiameter / 3 +  screen.height / 8,w = circleDiameter, h = circleDiameter},
+    ['yellow']  = {x =screen.width / 2 +30, y= screen.height / 4 - circleDiameter / 3 +2*screen.height / 8,w = circleDiameter, h = circleDiameter},
+    ['blue']    = {x =screen.width / 2 +30, y= screen.height / 4 - circleDiameter / 3 +3*screen.height / 8,w = circleDiameter, h = circleDiameter}
+
 }
 
 --- Check if a table contains a given element
--- @param #table table The table to check in
+-- @param table The table to check in
 -- @param element The element to check for
--- @return #boolean True if table contains given element
+-- @return True if table contains given element
 function table.contains(table, element)
   for _, value in pairs(table) do
     if value == element then
@@ -84,8 +105,8 @@ function table.contains(table, element)
 end
 
 --- Shuffles an array
--- @param #table array Table to shuffle
--- @return #table array The shuffled array
+-- @param array Table to shuffle
+-- @return array The shuffled array
 function shuffle(array)
   local n, random, j = #array, math.random
   for i=1, n do
@@ -96,7 +117,7 @@ function shuffle(array)
 end
 
 --- Prints flag according to input id
--- @param #number countryId The id of the country
+-- @param countryId The id of the country
 function printFlag(countryId)
   local flag = flags[countryId]
 
@@ -107,26 +128,35 @@ function printFlag(countryId)
     h = flag.dimensions.height
   }
 
+  flagImg = gfx.loadpng("images/flag-sprite.png")
+  flagImg:premultiply()
+
+  local flagSurface = gfx.new_surface(flagDimensions.w, flagDimensions.h)
+  flagSurface:copyfrom(flagImg, flagDimensions, nil, true)
+  flagImg:destroy()
+
+
   local flagScreenPosition = {
-    x = screen.width / 4 - flagDimensions.w / 2,
+    x = screen.width / 2 - flagDimensions.w  ,
     y = screen.height / 2 - flagDimensions.h / 2,
-    w = flagDimensions.w,
-    h = flagDimensions.h
+    w = flagDimensions.w*0.75,
+    h = flagDimensions.h*0.75
   }
 
-  gfx.screen:copyfrom(images.Flags, flagDimensions, flagScreenPosition, true)
-  gfx.update()
+  gfx.screen:copyfrom(flagSurface, nil, flagScreenPosition, true)
+  flagSurface:destroy()
+
 end
 
 --- Prints the answers on the screen
--- @param #table answers A table containing the answers
+-- @param answers A table containing the answers
 function printAnswers(answers)
 
   local font = {
     face = 'lato',
     color = 'black',
-    size = 'large',
-    height = text.getFontHeight('lato', 'large')
+    size = 'medium',
+    height = text.getFontHeight('lato', 'medium')
   }
 
   local textPosition = {
@@ -137,8 +167,9 @@ function printAnswers(answers)
   }
 
   for i = 1, 4 do
-    text.print(gfx.screen, font.face, font.color, font.size, answers[i], textPosition.x, textPosition.y, textPosition.w, textPosition.h)
-    textPosition.y = textPosition.y + screen.height / 4
+    text.print(gfx.screen, font.face, font.color, font.size, answers[i], positions[circleColors[i]].x + circleDiameter*1.5, positions[circleColors[i]].y + font.height /2, textPosition.w, textPosition.h)
+  --  text.print(gfx.screen, font.face, font.color, font.size, answers[i], textPosition.x, textPosition.y, textPosition.w, textPosition.h)
+   -- textPosition.y = textPosition.y + screen.height / 4
   end
 
 end
@@ -157,6 +188,10 @@ function createColoredCircles()
     blue   = {x = xs + d * 2, y = y, w = d, h = d},
     green  = {x = xs + d * 3, y = y, w = d, h = d}
   }
+  
+  if not(circle == nil) then
+    destroyCircles()
+  end
 
   circle = {
     red    = gfx.new_surface(circleDiameter, circleDiameter),
@@ -165,10 +200,14 @@ function createColoredCircles()
     blue   = gfx.new_surface(circleDiameter, circleDiameter)
   }
 
-  circle.red:copyfrom(images.Colors, cutOut.red, true)
-  circle.green:copyfrom(images.Colors, cutOut.green, true)
-  circle.yellow:copyfrom(images.Colors, cutOut.yellow, true)
-  circle.blue:copyfrom(images.Colors, cutOut.blue, true)
+  colorImg = gfx.loadpng("images/color_choices.png")
+  colorImg:premultiply()
+
+  circle.red:copyfrom(colorImg, cutOut.red, {x=0,y=0,w=circleDiameter,h=circleDiameter}, true)
+  circle.green:copyfrom(colorImg, cutOut.green, {x=0,y=0,w=circleDiameter,h=circleDiameter}, true)
+  circle.yellow:copyfrom(colorImg, cutOut.yellow, {x=0,y=0,w=circleDiameter,h=circleDiameter}, true)
+  circle.blue:copyfrom(colorImg, cutOut.blue, {x=0,y=0,w=circleDiameter,h=circleDiameter}, true)
+  colorImg:destroy()
 
 end
 
@@ -182,31 +221,18 @@ function placeAnswerCircles()
     h = circleDiameter
   }
 
-  local circleColors = {
-    'red',
-    'green',
-    'yellow',
-    'blue'
-  }
-
-  positions = {
-    ['red']     = {x =screen.width / 2, y= screen.height / 6 - circleDiameter / 2},
-    ['green']   = {x =screen.width / 2, y= screen.height / 6 - circleDiameter / 2 +  screen.height / 4},
-    ['yellow']  = {x =screen.width / 2, y= screen.height / 6 - circleDiameter / 2 +2*screen.height / 4},
-    ['blue']    = {x =screen.width / 2, y= screen.height / 6 - circleDiameter / 2 +3*screen.height / 4}
-}
-
   for i = 1,4 do
-    gfx.screen:copyfrom(circle[circleColors[i]], nil, circlePosition, true)
-    circlePosition.y = circlePosition.y + screen.height / 4
-  end
+    gfx.screen:copyfrom(circle[circleColors[i]], nil, positions[circleColors[i]], true)
 
-  gfx.update()
+  --  circlePosition.y = circlePosition.y + screen.height / 4
+  end
+  --circle:destroy()
+  --gfx.update()
 end
 
 --- Generates random answers
--- @param #number correctCountryId The ID of the country which is the correct alternative
--- @return #table answers The table of answers shuffled
+-- @param correctCountryId The ID of the country which is the correct alternative
+-- @return answers The table of answers shuffled
 function generateAnswers(correctCountryId)
 
   -- Initialize the answers array and populate it with the correct answer
@@ -227,10 +253,19 @@ function generateAnswers(correctCountryId)
   return shuffle(answers)
 end
 
+function destroyCircles()
+  if circle ~= nil then
+    circle.red:destroy()
+    circle.blue:destroy()
+    circle.yellow:destroy()
+    circle.green:destroy()
+  end
+end
+
 --- Checks if the user's guess is correct
--- @param #string userAnswer The country guessed
--- @param #table answersLocal The table containing all answers 
--- @param #number correctCountryLocal The id of the correct answer
+-- @param userAnswer The country guessed
+-- @param answersLocal The table containing all answers 
+-- @param correctCountryLocal The id of the correct answer
 function checkAnswer(userAnswer, answersLocal, correctCountryLocal)
   answerState = nil
   if (answersLocal[userAnswer] == correctCountryLocal) then
@@ -251,7 +286,7 @@ function addScoreToUser()
 end
 
 --- Generates a random country id
--- @return #number randomCountryId A random country id
+-- @return randomCountryId A random country id
 function getRandomCountryId()
   math.randomseed(randomSeed)
   randomSeed = randomSeed + math.random(os.time())
@@ -262,10 +297,12 @@ end
 
 --- Prints the questions and answers
 function printQuestionAndAnswers()
+
 	generateQuestion()
 	createColoredCircles()
 	placeAnswerCircles()
     printSpeechBubbleText()
+
 end
 
 --- Generates question with random country and random answers
@@ -278,13 +315,7 @@ function generateQuestion()
     repeat
       correctCountryId = getRandomCountryId()
       countryDifficulty = flags[correctCountryId].difficulty
-
-      if userLevel > 2 then
-        print('userLevel error! Abort, abort!')
-        countryDifficulty = userLevel
-      end
-
-    until countryDifficulty == userLevel
+    until countryDifficulty <= userLevel
 
     correctCountry = flags[correctCountryId].country
     answers = generateAnswers(correctCountryId)
@@ -295,9 +326,16 @@ function generateQuestion()
 end
 
 --- Remove an answer in a stylish way (if user's guess is incorrect)
--- @param #integer answerToRemove The answer to remove (1,2,3,4)
+-- @param answerToRemove The answer to remove (1,2,3,4)
 function removeAnswer(answerToRemove)
-  local zoom = 0.000001 
+--[[<<<<<<< HEAD
+  local zoom = 0.0001 
+  tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
+  key = tempColor[answerToRemove]
+  answerIsCorrect= animation.zoom(nil, circle[key], positions[key].x, positions[key].y, zoom, 0.05)
+  --sleep(1)
+=======]]
+  local zoom = 0.0001 
   local isRemoved = false
   tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
   key = tempColor[answerToRemove]
@@ -311,16 +349,21 @@ function removeAnswer(answerToRemove)
 	  sleep(1)
   end
   table.insert(removedAlternatives, key)
+-->>>>>>> developer
 end
 
 --- Zoom in on an answer if correct guess
--- @param #integer answer The answer to remove (1,2,3,4)
+-- @param answer The answer to remove (1,2,3,4)
 function zoomAnswer(answer)
  local zoom = 2.5
   tempColor = { [1] = 'red', [2] = 'green', [3] = 'yellow', [4] = 'blue'}
   key = tempColor[answer]
-  answerIsCorrect= animation.zoom(background, circle[key], positions[key].x, positions[key].y, zoom, 0.3)
-  sleep(1)
+  answerIsCorrect= animation.zoom(nil, circle[key], positions[key].x, positions[key].y, zoom, 0.03)
+  --sleep(1)
+  --[[circle.red:destroy()
+  circle.blue:destroy()
+  circle.yellow:destroy()
+  circle.green:destroy()--]]
 
 end
 
@@ -334,7 +377,7 @@ function onKey(key, state)
   
     --if side menu is up
     if(sideMenu) then 
-	  if(key == 'red') then
+    if(key == 'red') then
         sideMenu = false
         gamePath = 'mathGame.lua'
         runGame(gamePath, underGoingTest)
@@ -353,46 +396,52 @@ function onKey(key, state)
         sideMenu = false
         changeSrfc()
       elseif(key == 'up') then
-      	dofile("login.lua")
+        dofile("login.lua")
       end
       
       -- In-game control when side menu is down, controls that a button can only be pressed once
     elseif(not sideMenu) then
-	  if state == 'up' then
-	      if (key == 'red') then
-	        userAnswer = 1
-	        checkAnswer(userAnswer, answers, correctCountry)
-	      elseif (key == 'green') then
-	        userAnswer = 2
-			checkAnswer(userAnswer, answers, correctCountry)
-	      elseif (key == 'yellow') then
-	        userAnswer = 3
-			checkAnswer(userAnswer, answers, correctCountry)
-	      elseif (key == 'blue') then
-	        userAnswer = 4
-	        checkAnswer(userAnswer, answers, correctCountry)
-	      elseif(key == "right") then
-	        sideMenu = true
-	        setMainSrfc()
-	        printSideMenu()
-	      end
-	  end
+    if state == 'up' then
+        if (key == 'red') then
+          userAnswer = 1
+          checkAnswer(userAnswer, answers, correctCountry)
+        elseif (key == 'green') then
+          userAnswer = 2
+      checkAnswer(userAnswer, answers, correctCountry)
+        elseif (key == 'yellow') then
+          userAnswer = 3
+      checkAnswer(userAnswer, answers, correctCountry)
+        elseif (key == 'blue') then
+          userAnswer = 4
+          checkAnswer(userAnswer, answers, correctCountry)
+        elseif(key == "right") then
+           destroyCircles()
+	         --background:destroy()
+          assert(loadfile(dir ..'menu.lua'))(currentPlayer)
+         --sideMenu = true
+        --setMainSrfc()
+        --printSideMenu()
+        elseif(key == "left") then
+           destroyCircles() 
+	         --background:destroy()                      
+         dofile(dir ..'login.lua')
+        end
+    end
     end
   end
 end
 
 --- Runs chosen game (file) if testing mode is off
--- @param #string path The path to the game to be loaded
--- @param #boolean testingModeOn If testing mode is on
+-- @param path The path to the game to be loaded
+-- @param testingModeOn If testing mode is on
 function runGame(path, testingModeOn)
-	if(not testingModeOn) then
-		assert(loadfile(path))(player)
-	end
+  if(not testingModeOn) then
+    assert(loadfile(path))(player)
+  end
 end
 
 --- Prints the players name in the top of the screen
 function printPlayerName()
-	
 	local playerName = profileHandler.getName(player)
 	local playerUserLevel = profileHandler.getLevel(player, "flagGame")
 
@@ -404,7 +453,7 @@ function printPlayerName()
 
     text.print(gfx.screen, 'lato', 'black', 'medium', "Level " .. playerUserLevel,  gfx.screen:get_width()/2  + 20, 20, fw_level, fh)
 
-    gfx.update()
+  --  gfx.update()
 end
 
 -- Prints the text in the mascot's speech bubble
@@ -440,12 +489,12 @@ function printSpeechBubbleText()
   gfx.update()
 end
 
+
 --- Sets the background of the screen
 function setBackground()
-	background = gfx.loadpng('./images/background-game.png')
-    --background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
-    --background:clear({122,219,228})
+    background = gfx.loadpng('./images/background-game.png')
     gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
+    background:destroy()
   return 
 end
 
@@ -453,6 +502,7 @@ function main()
   setBackground()
   printPlayerName()
   printQuestionAndAnswers()
+  gfx.update()
 end
 
 main()

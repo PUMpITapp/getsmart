@@ -1,29 +1,37 @@
 --- This file is only to set up the structure of the table for players.
 -- It should only be used once to set the structure for the profiles.lua file
+-- Then never again!!
+require "runState"
 
-dofile('table.save.lua')
+if not runsOnSTB then
+  dir = "" 
+else
+  dir = sys.root_path()
+end
+
+dofile(dir .. 'table.save.lua')
 
 profiles = {
 			['player1'] = {
 						name = 'Julbin',
 						isActive = 1,
 						mathGame = {
-									userLevel = 0,
+									userLevel = 1,
 									additionPoints = 0,
 									subtractionPoints = 0,
 									multiplicationPoints = 0,
 									divisionPoints = 0
 									},
 						flagGame = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									},
 						spellingGame = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									},
 						memoryGame  = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									}
 						},
@@ -31,22 +39,22 @@ profiles = {
 						name = '',
 						isActive = 0,
 						mathGame = {
-									userLevel = 0,
+									userLevel = 1,
 									additionPoints = 0,
 									subtractionPoints = 0,
 									multiplicationPoints = 0,
 									divisionPoints = 0
 									},
 						flagGame = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									},
 						spellingGame = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									},
 						memoryGame  = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									}
 						},					
@@ -54,22 +62,22 @@ profiles = {
 						name = 'Artrik',
 						isActive = 1,
 						mathGame = {
-									userLevel = 0,
+									userLevel = 1,
 									additionPoints = 0,
 									subtractionPoints = 0,
 									multiplicationPoints = 0,
 									divisionPoints = 0
 									},
 						flagGame = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									},
 						spellingGame = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									},
 						memoryGame  = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									}
 						},
@@ -77,25 +85,25 @@ profiles = {
 						name = 'Jachael',
 						isActive = 1,
 						mathGame = {
-									userLevel = 0,
+									userLevel = 1,
 									additionPoints = 0,
 									subtractionPoints = 0,
 									multiplicationPoints = 0,
 									divisionPoints = 0
 									},
 						flagGame = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									},
 						spellingGame = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									},
 						memoryGame  = {
-									userLevel = 0,
+									userLevel = 1,
 									points = 0
 									}
 						},
 			}
 
-	assert( table.save( profiles, "profiles.lua" ) == nil )	
+	assert( table.save( profiles, dir .. "profiles.lua" ) == nil )	

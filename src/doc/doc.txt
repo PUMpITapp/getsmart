@@ -1,0 +1,586 @@
+ Animation
+
+ Zooms a part of the surface
+-- Creates a zoom effect
+@param background The background surface
+@param surface The surface that is to bee zoomed
+@param x The horizontal placement on the background where the surface is placed
+@param y The vertical placement on the background where the surface is placed
+@param zoom The scale to where the zoom should end, 1 = 100%, 2 = 200%
+@param speed The amount of seconds from start of animation to end.
+function animation.zoom(background, surface, x, y, zoom, speed)
+
+ Change the size and position of the circles
+@param #surface background The background surface
+@paran #surface surface The surface with the circle
+@param #integer x current x-position of circle
+@param #integer y current y-position of circle
+@param #integer orginX x-position of circle with order 1
+@param #integer orginY y-position of circle with order 1
+@param #float scale how much the circle should be scaled
+@param #integer order the order of separation from order 1
+@param #string direction up or down, direction from circle with order 1
+function animation.changeSize(background, surface, x, y, originX, originY, scale, order, direction)
+
+ dalay function
+--@param #float time how long the delay will be
+function sleep(time)
+
+ Flag Game
+-- 
+-- The flag game app for GetSmart
+--
+
+ Checks if the file was called from a test file.
+@return #boolean True or false depending on testing file
+function checkTestMode()
+
+ Chooses either the actual or the stubs depending on if a test file started the program.
+@param #Boolean underGoingTest undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
+
+ Check if a table contains a given element
+@param #table table The table to check in
+@param element The element to check for
+@return #boolean True if table contains given element
+function table.contains(table, element)
+
+ Shuffles an array
+@param #table array Table to shuffle
+@return #table array The shuffled array
+function shuffle(array)
+
+ Prints flag according to input id
+@param #number countryId The id of the country
+function printFlag(countryId)
+
+ Prints the answers on the screen
+@param #table answers A table containing the answers
+function printAnswers(answers)
+
+ Creates the colored circles
+function createColoredCircles()
+
+ Places the answer circles in their correct positions
+function placeAnswerCircles()
+
+ Generates random answers
+@param #number correctCountryId The ID of the country which is the correct alternative
+@return #table answers The table of answers shuffled
+function generateAnswers(correctCountryId)
+
+ Checks if the user's guess is correct
+@param #string userAnswer The country guessed
+@param #table answersLocal The table containing all answers 
+@param #number correctCountryLocal The id of the correct answer
+function checkAnswer(userAnswer, answersLocal, correctCountryLocal)
+
+ Add one score to the user
+function addScoreToUser()
+
+ Generates a random country id
+@return #number randomCountryId A random country id
+function getRandomCountryId()
+
+ Prints the questions and answers
+function printQuestionAndAnswers()
+
+ Generates question with random country and random answers
+function generateQuestion()
+
+ Remove an answer in a stylish way (if user's guess is incorrect)
+@param #integer answerToRemove The answer to remove (1,2,3,4)
+function removeAnswer(answerToRemove)
+
+ Zoom in on an answer if correct guess
+@param #integer answer The answer to remove (1,2,3,4)
+function zoomAnswer(answer)
+
+ Gets input from user and checks answer or controls side-menu
+@param key The key that has been pressed
+@param state The state of thed key-press
+function onKey(key, state)
+
+ Runs chosen game (file) if testing mode is off
+@param #string path The path to the game to be loaded
+@param #boolean testingModeOn If testing mode is on
+function runGame(path, testingModeOn)
+
+ Keyboard 
+
+ Prints the players name in the top of the screen
+function printPlayerName()
+
+ Sets the background of the screen
+function setBackground()
+function main()
+function getInputText()
+function sendNameAndGoBack()
+function mapElement:new(key,row,column,posX,posY,upMove,downMove)
+function setKeyboardToLowerCase()
+function setKeyboardToUpperCase()
+function setKeyboardToSymbols()
+function main()
+function updateScreen()
+function displayKeyboardSurface()
+function displayHighlightSurface()
+function displayKeyboardLetters()
+function displayInputField()
+
+gets the coordinate of arguments
+function getCoordinates(posX, posY)
+
+gets the correct movement of cursor when moving in y-axis
+function getYmove(xVal,yVal,move)
+
+gets the char that is highlighted
+function getKeyboardChar(row, column)
+
+saves character to string
+function setToString(character)
+
+saves the text to the form to be sent back to last state
+function saveToForm(myText)
+
+send form back to state
+function sendFormBackToState(state, form)
+
+removes the last char in argument
+function removeLastChar(input)
+
+moves the highligther around
+function movehighlightKey(key)
+
+calls functions on keys
+function onKey(key, state)
+
+ Login
+
+ The login function for the app GetSmart
+
+ Checks if the file was called from a test file.
+@return #boolean True or false depending on testing file
+function checkTestMode()
+
+ Chooses either the actual or the stubs depending on if a test file started the program.
+@param #boolean underGoingTest Undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
+
+ Prints circle according to input
+@param surface img The surface to be printed on
+@param #number x The x-coordiante
+@param #number y The y-coordinate
+function printCircle(img, xIn, yIn)
+
+ Prints main menu circles and updates screen
+function printMenuCircles()
+
+ Prints logotype in the middle of the screen
+function printLogotype()
+
+ Gets input from user and re-directs according to input
+@param key The key that has been pressed
+@param state The state of the key-press
+function onKey(key,state)
+
+ Runs chosen game (file) if testing mode is off 
+@param #boolean testingModeOn If testing mode is on
+@param #number chosenPlayer The number of the chosen player (1-4)
+function runGame(testingModeOn, chosenPlayer)
+function printCompanyLogo()
+
+ GetMathSmart
+
+ Checks if the file was called from a test file.
+@return #boolean If called from test file return true (indicating file is being tested) else false  
+function checkTestMode()
+
+ Chooses either the actual or the stubs depending on if a test file started the program.
+@param #Boolean underGoingTest undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
+
+ produces a math problem based on the level of the user.
+@param #int level The difficulty level of the problem
+function produceMathProblem(level)
+
+ Solves a math problem
+ Gets a table with the first and second term and the operator.
+ Solves the problem based on the operator.
+@returns #number the correct answer
+@param #table The math problem to be solved, conatining two numbers and operator
+function solveProblem(mathProblem)
+
+ Get the operator for a math problem given its difficulty level.
+ The mathematical operation of a given problem depends on its difficulty level.
+@param #number playerUserLevel the level of the user
+@return #string Returns the operator for a math problem.
+function getOperator(playerUserLevel)
+
+comverts the opperator into stringOperator
+@param #string operator The operator in form: +/-/*//
+@return #string stringOperator
+function getOperatorString(operator)
+function getGameLevel(gameType)
+ 
+function getBoundries(gameType, level)
+
+ The lowest number that a term within a math problem should have.
+@param #number level The difficulty level of the math problem.
+@return #number Returns the lower numerical bound for terms within a problem.
+function getLowerBound(level)
+
+ The highest number that a term within a math problem should have.
+@param #number level The difficulty level of the math problem.
+@return #number Returns the upper numerical bound for terms within a problem.
+function getUpperBound(level)
+
+ Given the correct answer and difficulty level of a problem, create three other incorrect answers
+@param #number correctAnswer The correct answer to the problem.
+@param #number level The difficulty level of the problem.
+@return #number Incorrect answer choices to a problem.
+function produceAnswers(correctAnswer, level)
+
+ create the background and the "circles" for the answers
+function createAnswerBackground()
+
+ place the answers to the right position in their circle
+@param #number answers The answer options that is given to the user 
+function placeAnswersOnCircles(answers)
+
+Printing the answers
+ Places the colored answer circles on their positions
+function placeAnswerCircles()
+
+ Displays the problem and the answers on the screen by invoking write_text.lua.
+@param #table mathProblem The problem to be displayed on the screen.
+function printProblem(mathProblem)
+
+ Checks if the given answer is correct and provides feedback to the user.
+@param #number correctAnswer The correct answer to the problem.
+@param #number userAnswer The answer given by the user.
+@param #string key The button pressed
+function handleAnswer(correctAnswer, userAnswer, key)
+
+@param #number correctAnswer the correct answer to a question
+@param #number userAnswer The answe given by the user
+@param #string key The button pressed (red, blue, yellow or green)
+@return #boolean True if the user answered correctly False in user answered incorrectly
+function checkAnswer( correctAnswer, userAnswer, key )
+
+Decides if the user should get point for its answer or not
+Point is given if the user answers the question correctly on the first try
+@param #table answered The state (true/false) of the key entered
+@return #boolean True if the user answered the question correctly on the first try 
+@return #boolean False if the user did not answer the question on the first try
+function checkGivePoints (answered)
+
+ Zooms out the incorrect answers
+function zoomOutIncorrectAnswers()
+
+ Zooms in the correct answer
+@param #boolean isCorrectAnswer checks if the given answer is correct
+@param #string key The answered option
+function zoomAnswered(isCorrectAnswer, key)
+
+ Sets the answered to false
+@param #table answered The state of the keys
+function resetAnswered(answered)
+
+ Gets input from user and checks answer or controls side-menu
+@param key The key that has been pressed
+@param state The state of thed key-press
+function onKey(key, state)
+
+ Runs chosen game (file) if testing mode is off
+@param #string path The path to the game to be loaded
+@param #boolean testingModeOn If testing mode is on
+function runGame(path, testingModeOn)
+
+ Sets the background of the screen
+function setBackground()
+
+ Prints the players name in the top of the screen
+function printPlayerName()
+
+ Pauses the system for a period of time
+@param #number time The amount of seconds (decimal) the system should sleep
+function 
+
+ Menu
+-- 
+-- The start- and side menu for the application GetSmart
+--
+
+ Checks if the file was called from a test file.
+@return #boolean True or false depending on testing file  
+function checkTestMode()
+
+ Chooses either the actual or the stubs depending on if a test file started the program.
+@param #Boolean underGoingTest undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
+
+ Prints the current player name in the top left corner
+function printPlayerName()
+
+ Prints the side menu surface
+function printsideMenuSurface()
+
+ Prints the transparent surface on top of gfx.screen
+function printTransparentSurface()
+
+ Prints the side menu
+function printSideMenu()
+
+ Prints circle according to input
+@param surface img The surface to be printed on
+@param #number x The x-coordiante
+@param #number y The y-coordinate
+function printCircle(img, xIn, yIn)
+
+ Prints the circles for the main menu
+function printMenuCircles()
+
+ Prints the logotype in the middle of the screen
+function printLogotype()
+function printSchoolLogo()
+
+ Copys graphics from main surface (in this case main menu) to the surface mainSrfc
+function setMainSrfc()
+
+ Changes from active surface to mainSrfc (which can be seen as the previous "state")
+function changeSrfc()
+
+ Gets input from user and re-directs according to input
+@param key The key that has been pressed
+@param state The state of the key-press
+function onKey(key,state)
+
+ Runs chosen game (file) if testing mode is off
+@param #string path The path to the game to be loaded
+@param #boolean testingModeOn If testing mode is on
+function runGame(path, testingModeOn)
+
+ NewProfile
+-- 
+-- The new profile function for the app GetSmart
+--
+
+ Checks if the file was called from a test file.
+@return #boolean True or false depending on testing file
+function checkTestMode()
+
+ Chooses either the actual or the stubs depending on if a test file started the program.
+@param #boolean underGoingTest Undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
+ Requires profiles which is a file containing all profiles and it's related variables and tables
+ Test stub to make testing possible
+function testGoingToMenu(goingToMenu)
+
+ Decides if player is sent to keyboard or menu
+@return #boolean If it's a new player (coming from keyboard) return true
+function isNewPlayer()
+
+ Prints the number of the player at center of screen
+function printPlayerNumber()
+
+ Gets input from user, must be included for input to work
+@param key The key that has been pressed
+@param state The state of the key-press
+function onKey(key, state)
+
+ Profile Handler
+--
+-- The API to the database (profiles.lua)
+-- Contains all functionality to interact with the database
+--
+
+ Checks if the file was called from a test file.
+@return #boolean True or false depending on testing file
+function checkTestMode()
+
+ Updates points for wanted player in wanted game and gametype
+@param #string player Player to update
+@param #string game Game to update
+@param #string gameType GameType (eg division, addition etc)
+@param #number points Number of points
+function profileHandler.update(player, game, gameType, points)
+
+ Gets the players level for a game
+@param #string player Player
+@param #string game Game
+@param #string gameType GameType (eg division, addition etc)
+@return #number The profile's level in the given game
+function profileHandler.getGameLevel(player, game, gameType)
+
+ Updates the player's userLevel for a game
+@param #string player Player to update
+@param #number game Game to update
+function profileHandler.updateUserLevel(player, game)
+
+ Gets the name of the player
+@param #string player The player to retrieve the name for
+@return #string The player's name
+function profileHandler.getName(player)
+
+ Sets name for new player
+@param #string player The number of the new player (1-4)
+@param #string name The name of the new player
+function profileHandler.setName(player, name)
+
+ Gets level for wanted player
+@param #string player The players number
+@param #string game The game 
+@return #number The player's userLevel for a game
+function profileHandler.getLevel(player, game)
+
+ Checks if the file was called from a test file.
+@return #boolean If called from test file return true (indicating file is being tested) else false  
+function checkTestMode()
+
+ Chooses either the actual or the stubs depending on if a test file started the program.
+@param #Boolean underGoingTest undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
+
+Initiating all global variables
+function init()
+
+ Main function that runs the program
+function main()
+
+ Prints the players name in the top of the screen
+function printPlayerName()
+
+ Genrates a random number between 1 and the size of the table answerTable and picks that word in the table
+@return #table question a table with a word, its intervalls and the different spelling options
+function selectRandomWord()
+
+ Shuffles the set {1,2,3,4}
+@return #table order A random order
+function shuffleOrder()
+
+ Reorders all sets of alternatives according to a new order
+@param #table alternatives a table containing all sets of alternatives to the current question
+@param #table order a table with a given order
+@return #table shuffleAlternatives a table with all the input alternatives, reordered twith the given order
+function reorderAlternatives(alternatives, order)
+
+ Slitting the word into parts so the system know which parts to give altenatives to
+@param #string word the word that will be split
+@param #table Intervalls the intervalls the word will be split into
+@renurn #table wordParts a teble of the parts of the word
+function splitIntoWordParts(word,Intervalls)
+
+ Generates a word with some parts taken out and instead given alternatives to that part
+@param #table wordArray a table with a word split up in parts
+@return #table question a Table with the word in parts plus the altenatives to the parts with alternatives
+function generateQuestion(wordArray)
+
+ Calculates which position on screen a set of four alternatives will be palced
+@param #table alternatives the diffrent answer alternatives to be printed in circles on the screen
+@param #table position a table with a position x and a position y
+@param #string selected a string with the answer selected by the user, options: red, green, yellow, blue
+@param #number diameter a number with the diameter of the circles
+function printAlternatives(alternatives, position, selected, diameter)
+
+ Moves already printed alterantives vertcally based on which key was pressed
+@param #table alterantives a table with all sets of alternatives for the question
+@Param #table alternativePositions
+@param #string key a string with the answer selected by the user, options: red, green, yellow, blue
+function moveAlternatives(alternatives, key)
+
+ Places the alternatives and their respective color circles on the screen
+@Param #table alterantives a table with all sets of alternatives for the question
+@param #string selected a string with the answer selected by the user, options: red, green, yellow, blue
+function placeAlternativesOnScreen(alternatives, selected)
+
+ create the background and the circles for the answers
+function createAnswerBackground()
+
+ Places the colored answer circles on their positions
+@param #table circlePosition a table with the positions of the positions of the four circles
+@param #table circle A table with four surfaces with circles
+function placeAnswerCircles(circlePosition, circle)
+
+ place the answers to the right position in their circle
+@param #table answers a table with the answer alternatives
+@param #table circle a table of all the circles that the answers will be placed on
+@param #circlePosition a table with the positions of the positions of the four circles
+function placeAnswersOnCircles(answers, circle, circlePosition)
+
+ Downsizes the cirlces that are not selected
+@param #string selected a string representing the selected circle. possible alternatives: 'start', 'red', 'green', 'yellow', 'blue'
+@param #table circle a table of all the circles that all can be downsized
+@param #table circlePositions a table of the positions of the circles 
+function adjustCircleSize(selected, circle, circlePositions)
+
+ Calculates where the word parts and alternative sets should be printed.
+@param #table question a table of ward parts and alternative sets
+@return #table questionPosition a table of coordinates indicating where the questions word parts and alternative sets should be printed form.
+function getQuestionPosition(question)
+
+ Prints the word parts of the current question to the screen
+@param #table wordParts a table containgin the current questions word parts 
+@param #table wordPartsPosition a table containing the coordinated at which the word parts will be placed 
+function printWord(wordParts, wordPartPosition)
+
+ Prints the sets of alternatives in their designated posittons based on which alternative is selected
+@param #table alterantives a table containing the sets of alterantives
+@param #table alternativePositions a table containing the desiganted positions of the alternatives
+@param #string key a string reprenting the selected alternative
+function printQuestionAlternatives(alternatives, alternativePositions, key)
+
+ Determines the length of the question
+@Param #table question The question consisting of the word parts and alternatives
+@Param #number diameter The diameter of the colored circles
+@return #number questionLength The pixel length of the question to be printed on the screen.
+function questionLength(question, diameter)
+
+ Remover the selcted option
+@param #number userChoice the number labled to the selcted buttom
+@param #string key the button the user choose, options: red, green, yellow, blue
+function removeAlternative(userChoice, key)
+
+Check if the answer is correct
+@param #string key the button the user choose, options: red, green, yellow, blue
+@param #table alternatives All answer options in a specific order
+@param #string rightanswer The correct answer
+@return #boolean correct returns true if the answer is correct
+function checkAnswer(key,alternatives,rightanswer)
+
+ Sets the background of the screen
+function setBackground()
+
+ Runs chosen game (file) if testing mode is off
+@param #string path The path to the game to be loaded
+@param #boolean testingModeOn If testing mode is on
+function runGame(path, testingModeOn)
+
+ Gets input from user and checks answer
+@param key The key that has been pressed
+@param state
+function onKey(key, state)
+
+ Prints text to the screen
+@param surface The surface to print to
+@param fontFace The font to use, possible values: 'lora', 'lato'
+@param fontSize The font size to use, measured in pixel height
+@param text The text to print
+@param x X coordinate of upper left corner to start printing from
+@param y Y coordinate of upper left corner to start printing from
+@param w Width of textbox
+@param h Height of textbox
+function text.print(surface, fontFace, fontColor, fontSize, text, x, y, w, h)
+
+ Returns the width of the string in pixels
+@param fontFace The font-face to check the width of
+@param fontSize The font size to cehck the width of
+@param text The text that is being mesured
+@return integer The width of the tested string in px
+function text.getStringLength(fontFace, fontSize, text)
+
+ Returns the height of the font
+@param fontFace The fontFace to get the height of
+@param fontSize The font size to get the height of
+@return integer The height of the requested font
+function text.getFontHeight(fontFace, fontSize)
+

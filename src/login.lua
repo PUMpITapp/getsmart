@@ -3,27 +3,34 @@
 -- The login function for the app GetSmart
 --
 
+-- Set as true if running on the STB
+require "runState"
+
 --- Checks if the file was called from a test file.
--- @return #boolean True or false depending on testing file
+-- Returs true if it was, 
+--   - which would mean that the file is being tested.
+-- Returns false if it was not,
+--   - which wold mean that the file was being used.  
 function checkTestMode()
-  runFile = debug.getinfo(2, "S").source:sub(2,3)
+ --[[ runFile = debug.getinfo(2, "S").source:sub(2,3)
   if (runFile ~= './' ) then
     underGoingTest = false
   elseif (runFile == './') then
     underGoingTest = true
   end
-  return underGoingTest
+  return underGoingTest --]]
+  underGoingTest = false
 end
 
-local png_company_logo = 'images/pumpitapp.png'
-
 --- Chooses either the actual or the stubs depending on if a test file started the program.
--- @param #boolean underGoingTest Undergoing test is true if a test file started the program.
+-- @param underGoingTest undergoing test is true if a test file started the program.
 function setRequire(underGoingTest)
   if not underGoingTest then
-    gfx = require "gfx"
+  	if not runsOnSTB then
+    	gfx = require "gfx"
+    end
     text = require "write_text"
-    animation = require "animation"
+ -- animation = require "animation"
     profileHandler = require "profileHandler"
   elseif underGoingTest then 
     gfx = require "gfx_stub"
@@ -34,100 +41,125 @@ function setRequire(underGoingTest)
 
   return underGoingTest
 end 
-
+--local underGoingTest = setRequire(checkTestMode())
 local underGoingTest = setRequire(checkTestMode())
 
--- Imports and sets background
-local background = gfx.loadpng('./images/background.png')
-gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
-gfx.update()
-
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
-dofile('table.save.lua')
-profiles, err = table.load('profiles.lua')
+if not runsOnSTB then
+	dofile('table.save.lua')
+	profiles, err = table.load('profiles.lua')
+	dir = "" 
+else
+	--package.path = package.path .. ';' .. sys.root_path() .. 'images/?.png'
+	--package.path = package.path .. ';' .. sys.root_path() .. 'images/profile/?.png'
+	--package.path = package.path .. ';' .. sys.root_path() .. '?.png'
+	dir = sys.root_path()
+	dofile(dir .. 'table.save.lua')
+	profiles, err = table.load(dir .. 'profiles.lua') 
+end
+
+-- Imports and sets background
+local background = gfx.loadpng('images/background.png')
+gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
+background:destroy()
+
+
+-- Init profileStatus, will be set to 0 or 1 later
+profileStatus = nil
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_profile_circle_width = 149
 local png_profile_circle_height = 147
-local png_profile_circles = { 	profile1_inactive = 'images/profile/red-inactive.png',
-								profile1_active = 'images/profile/red-active.png',
-								profile2_inactive = 'images/profile/green-inactive.png',
-								profile2_active = 'images/profile/green-active.png',
-								profile3_inactive = 'images/profile/yellow-inactive.png',
-								profile3_active = 'images/profile/yellow-active.png',
-								profile4_inactive = 'images/profile/blue-inactive.png',
-								profile4_active = 'images/profile/blue-active.png'
+local png_profile_circles = { 	profile1_inactive = 'red-inactive.png',
+								profile1_active = 'red-active.png',
+								profile2_inactive = 'green-inactive.png',
+								profile2_active = 'green-active.png',
+								profile3_inactive = 'yellow-inactive.png',
+								profile3_active = 'yellow-active.png',
+								profile4_inactive = 'blue-inactive.png',
+								profile4_active = 'blue-active.png'
 }
 
 -- Logotype as .png pictuere with transparent background with width variable
 local png_logo_width = 447
-local png_logo = 'images/logo.png'
+local png_logo = 'logo.png'
 
--- Directory of images
-local dir = './'
 
 --- Prints circle according to input
 -- @param surface img The surface to be printed on
--- @param #number x The x-coordiante
--- @param #number y The y-coordinate
+-- @param x The x-coordiante
+-- @param y The y-coordinate
 function printCircle(img, xIn, yIn)
 	local scale = 0.5
-	gfx.screen:copyfrom(img, nil, {x = xIn, y = yIn, w = img:get_width() * scale, h = img:get_height() * scale})
+		gfx.screen:copyfrom(img, nil, {x = xIn, y = yIn, w = img:get_width() * scale, h = img:get_height() * scale}, true)
 end
 
---- Prints main menu circles and updates screen
+
+-- Prints main menu
 function printMenuCircles()
 
+--[[	-- Prints circle according to img, x and y values
+	function printCircle(img, xIn, yIn)
+		local scale = 0.5
+		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale}, true)
+		img:destroy()
+	end]]
+
 	local toScreen = nil
-	local profileCounter = 1
+	local gameCounter = 1
 	local status = ''
 	local textSize = 'medium'
 	local fh = text.getFontHeight('lato', textSize)
 	local verticalGrid = gfx.screen:get_width()/5
-
+	
 	-- Prints menu items
 	for i = 1, 4, 1 do
 
 		-- Checks if the user is active
-		if(profiles['player'..profileCounter]['isActive'] == 1) then
+		if(profiles['player'..gameCounter]['isActive'] == 1) then
 			status = 'active'
 		else
 			status = 'inactive'
 		end
 		
-		toScreen = gfx.loadpng(dir..png_profile_circles['profile'..profileCounter.."_"..status])
+		toScreen = gfx.loadpng('images/profile/' .. png_profile_circles['profile'..gameCounter.."_"..status])
+		toScreen:premultiply()
 		printCircle(toScreen, verticalGrid*i-(png_profile_circle_width/2), gfx.screen:get_height()*0.6)
 		
 		if(status == 'active') then
-			local fw = text.getStringLength('lato', textSize, profiles['player'..profileCounter]['name'])
-			text.print(gfx.screen, 'lato', 'black', textSize, profiles['player'..profileCounter]['name'], verticalGrid*i-(fw/2), gfx.screen:get_height()*0.8, fw, fh)
+			local fw = text.getStringLength('lato', textSize, profiles['player'..gameCounter]['name'])
+			text.print(gfx.screen, 'lato', 'black', textSize, profiles['player'..gameCounter]['name'], verticalGrid*i-(fw/2), gfx.screen:get_height()*0.8, fw, fh)
 		end
 		
-		profileCounter = profileCounter+1
+		gameCounter = gameCounter+1
 	end
+
 		
 	gfx.update()
-
+	
 end
 
---- Prints logotype in the middle of the screen
+-- Prints logotype in the middle of the screen
 function printLogotype()
 	
 	local toScreen = nil
 	
-	toScreen = gfx.loadpng(dir..png_logo)
-	local scale = 0.5
-	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2 *scale), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
+	toScreen = gfx.loadpng('images/' .. png_logo)
+	toScreen:premultiply()
+	scale = 0.5
+	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2 *scale), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale}, true)
+	toScreen:destroy()
 	gfx.update()
 
 end
 
---- Gets input from user and re-directs according to input
--- @param key The key that has been pressed
--- @param state The state of the key-press
+-- Gets input from user and executes chosen script
 function onKey(key,state)
+  if state == 'down' then
+  	return
 
-  if state == 'up' then
+  elseif state == 'up' then
+  	
       if (key == 'red') then
         chosenPlayer = 1
         runGame(underGoingTest, chosenPlayer)
@@ -141,42 +173,40 @@ function onKey(key,state)
         chosenPlayer = 4
         runGame(underGoingTest, chosenPlayer)
       end
+   
   end
 end
 
---- Runs chosen game (file) if testing mode is off 
--- @param #boolean testingModeOn If testing mode is on
--- @param #number chosenPlayer The number of the chosen player (1-4)
+-- Runs chosen game (file) if testing mode is off 
 function runGame(testingModeOn, chosenPlayer)
 
 	profileStatus = profiles['player'..chosenPlayer]['isActive'] -- Get the player status (active or not active/1 or 0)
 	
-	if(profileStatus == 1) then -- If player exists (is active) then go to game menu
+	if(not testingModeOn and profileStatus == 1) then -- If player exists (is active) then go to game menu
 		path = "menu.lua"
-	elseif(profileStatus == 0) then -- If player does not exist (is not active) go and create new profile
+	--	gfx.screen:destroy()
+		assert(loadfile(dir .. path))(chosenPlayer)
+	elseif(not testingModeOn and profileStatus == 0) then -- If player does not exist (is not active) go and create new profile
+		print(chosenPlayer)
+		path =  "newProfile.lua"
+		assert(loadfile(dir .. path))(chosenPlayer)
+	elseif (testingModeOn and profileStatus == 1) then -- If player does not exist and testning mode on go and create new profile
+		path = "menu.lua"
+	elseif(testingModeOn and profileStatus == 0) then -- If player does not exist and testing mode on go and create new profile
 		path = "newProfile.lua"
 	end
 
-    if(not testingModeOn) then
-      assert(loadfile(path))(chosenPlayer)
-    end
+	
 end
 
-function printCompanyLogo()
-
-	local toScreen = nil
-	toScreen = gfx.loadpng(dir..png_company_logo)
-	scale = 0.2
-	gfx.screen:copyfrom(toScreen, nil, {x = gfx.screen:get_width() - toScreen:get_width() * scale - 20  , y=gfx.screen:get_height() - toScreen:get_height() * scale - 20  ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
-	gfx.update()
-end
 
 -- Main function that runs the program
 local function main()
 
   printMenuCircles()  
   printLogotype()
-  printCompanyLogo()
 
 end
+
+
 main()

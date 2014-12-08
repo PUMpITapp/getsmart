@@ -1,21 +1,25 @@
+require "runState"
 --- Checks if the file was called from a test file.
--- @return #boolean If called from test file return true (indicating file is being tested) else false  
+-- @return If called from test file return true (indicating file is being tested) else false  
 function checkTestMode()
-  runFile = debug.getinfo(2, "S").source:sub(2,3)
+--[[  runFile = debug.getinfo(2, "S").source:sub(2,3)
   if (runFile ~= './' ) then
     underGoingTest = false
   elseif (runFile == './') then
     underGoingTest = true
   end
-  return underGoingTest
+  return underGoingTest --]]
+  return false
 end
 
 
 --- Chooses either the actual or the stubs depending on if a test file started the program.
--- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+-- @param underGoingTest undergoing test is true if a test file started the program.
 function setRequire(underGoingTest)
   if not underGoingTest then
-    gfx = require "gfx"
+    if not runsOnSTB then
+      gfx = require "gfx"
+    end
     text = require "write_text"
     profileHandler = require "profileHandler"
     animation = require "animation"
@@ -29,18 +33,20 @@ end
 setRequire(checkTestMode())
 
 -- Set player number
-player = ...
+currentPlayer = ...
 
 -- Imports the table with all data
 answerTable = require 'answerTable'
 
+--circle = nil
+
 -- Require the table containing all the mascot texts
 mascot_text = require 'mascot_text'
+
 
 ---Initiating all global variables
 function init()
   rightAlternatives = {} 
-  images = {['colors'] = "images/color_choices.png"} 
   inFocus = nil
   alternatives = {}
   allCircles = {}
@@ -65,25 +71,26 @@ function main()
   printWord(question[1], questionPosition[1])
   printQuestionAlternatives(question[2],questionPosition[2])
   printPlayerName()
+
+  gfx.update()
   printSpeechBubbleText()
 end
 
 --- Prints the players name in the top of the screen
 function printPlayerName()
-	
-	local playerName = profileHandler.getName(player)
-	local playerUserLevel = profileHandler.getLevel(player, "spellingGame")
+  
+  local playerName = profileHandler.getName(currentPlayer)
+  local playerUserLevel = profileHandler.getLevel(currentPlayer, "spellingGame")
+
 
     local fw_name = text.getStringLength('lato', 'medium', playerName)
     local fw_level = text.getStringLength('lato', 'medium', "Level " .. playerUserLevel)
     local fh = text.getFontHeight('lato', 'medium')
 
+
     text.print(gfx.screen, 'lato', 'black', 'medium', playerName, gfx.screen:get_width()/2 - text.getStringLength('lato', 'medium', playerName)-20, 20, fw_name, fh)
-
     text.print(gfx.screen, 'lato', 'black', 'medium', "Level " .. playerUserLevel,  gfx.screen:get_width()/2  + 20, 20, fw_level, fh)
-
     gfx.update()
-
 end
 
 -- Prints the text in the mascot's speech bubble
@@ -117,17 +124,18 @@ function printSpeechBubbleText()
   text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/5.85, (gfx.screen:get_height()-boxHeightOffset-boxHeight/2-actualFh/2), boxWidth, boxWidth)
 
   gfx.update()
+
 end
 
 --- Genrates a random number between 1 and the size of the table answerTable and picks that word in the table
--- @return #table question a table with a word, its intervalls and the different spelling options
+-- @return question a table with a word, its intervalls and the different spelling options
 function selectRandomWord()
   math.randomseed(os.time())
   math.random()
   math.random()
-  local playerUserLevel = profileHandler.getLevel(player, "spellingGame")
+  local playerUserLevel = profileHandler.getLevel(currentPlayer, "spellingGame")
   if(playerUserLevel == 0) then
-  	playerUserLevel = 1
+    playerUserLevel = 1
   end
   local questionPosition = tonumber(math.random(#answerTable[playerUserLevel]))
   local question = answerTable[playerUserLevel][questionPosition]  
@@ -135,7 +143,7 @@ function selectRandomWord()
 end
 
 --- Shuffles the set {1,2,3,4}
--- @return #table order A random order
+-- @return order A random order
 function shuffleOrder()
   local order = {1,2,3,4}
   local n = #order
@@ -152,9 +160,9 @@ function shuffleOrder()
 end
 
 --- Reorders all sets of alternatives according to a new order
--- @param #table alternatives a table containing all sets of alternatives to the current question
--- @param #table order a table with a given order
--- @return #table shuffleAlternatives a table with all the input alternatives, reordered twith the given order
+-- @param alternatives a table containing all sets of alternatives to the current question
+-- @param order a table with a given order
+-- @return shuffleAlternatives a table with all the input alternatives, reordered twith the given order
 function reorderAlternatives(alternatives, order)
   local shuffleAlternatives = {}
   for i = 1, #order do
@@ -164,9 +172,9 @@ function reorderAlternatives(alternatives, order)
 end
 
 --- Slitting the word into parts so the system know which parts to give altenatives to
--- @param #string word the word that will be split
--- @param #table Intervalls the intervalls the word will be split into
--- @renurn #table wordParts a teble of the parts of the word
+-- @param word the word that will be split
+-- @param Intervalls the intervalls the word will be split into
+-- @renurn wordParts a teble of the parts of the word
 function splitIntoWordParts(word,Intervalls)
   local wordParts = {}
 
@@ -191,8 +199,8 @@ function splitIntoWordParts(word,Intervalls)
 end
 
 --- Generates a word with some parts taken out and instead given alternatives to that part
--- @param #table wordArray a table with a word split up in parts
--- @return #table question a Table with the word in parts plus the altenatives to the parts with alternatives
+-- @param wordArray a table with a word split up in parts
+-- @return question a Table with the word in parts plus the altenatives to the parts with alternatives
 function generateQuestion(wordArray)
   for i = 1, #wordArray[3] do
     rightAlternatives[i] = wordArray[3][i][1]
@@ -213,10 +221,10 @@ function generateQuestion(wordArray)
 end
 
 --- Calculates which position on screen a set of four alternatives will be palced
--- @param #table alternatives the diffrent answer alternatives to be printed in circles on the screen
--- @param #table position a table with a position x and a position y
--- @param #string selected a string with the answer selected by the user, options: red, green, yellow, blue
--- @param #number diameter a number with the diameter of the circles
+-- @param alternatives the diffrent answer alternatives to be printed in circles on the screen
+-- @param position a table with a position x and a position y
+-- @param selected a string with the answer selected by the user, options: red, green, yellow, blue
+-- @param diameter a number with the diameter of the circles
 function printAlternatives(alternatives, position, selected, diameter)
   local d = {
     red = diameter,
@@ -251,20 +259,20 @@ function printAlternatives(alternatives, position, selected, diameter)
 
   allCirclePositions[#allCirclePositions + 1] = circlePositions
 
-  createAnswerBackground()
+  createAnswernil()
 end
 
 --- Moves already printed alterantives vertcally based on which key was pressed
--- @param #table alterantives a table with all sets of alternatives for the question
--- @Param #table alternativePositions
--- @param #string key a string with the answer selected by the user, options: red, green, yellow, blue
+-- @param alterantives a table with all sets of alternatives for the question
+-- @Param alternativePositions
+-- @param key a string with the answer selected by the user, options: red, green, yellow, blue
 function moveAlternatives(alternatives, key)
     
   for i=1, #allCircles do
-      animation.zoom(background, allCircles[i].red, allCirclePositions[i].red.x, allCirclePositions[i].red.y, 0.00001, 0)
-      animation.zoom(background, allCircles[i].green, allCirclePositions[i].green.x, allCirclePositions[i].green.y, 0.00001, 0)
-      animation.zoom(background, allCircles[i].yellow, allCirclePositions[i].yellow.x, allCirclePositions[i].yellow.y, 0.00001, 0)
-      animation.zoom(background, allCircles[i].blue, allCirclePositions[i].blue.x, allCirclePositions[i].blue.y, 0.00001, 0)
+      animation.zoom(nil, allCircles[i].red, allCirclePositions[i].red.x, allCirclePositions[i].red.y, 0, 0)
+      animation.zoom(nil, allCircles[i].green, allCirclePositions[i].green.x, allCirclePositions[i].green.y, 0, 0)
+      animation.zoom(nil, allCircles[i].yellow, allCirclePositions[i].yellow.x, allCirclePositions[i].yellow.y, 0, 0)
+      animation.zoom(nil, allCircles[i].blue, allCirclePositions[i].blue.x, allCirclePositions[i].blue.y, 0, 0)
   end
   local selected = 1.5
   if key == 'red' then
@@ -293,8 +301,8 @@ function moveAlternatives(alternatives, key)
 end
 
 --- Places the alternatives and their respective color circles on the screen
--- @Param #table alterantives a table with all sets of alternatives for the question
--- @param #string selected a string with the answer selected by the user, options: red, green, yellow, blue
+-- @Param alterantives a table with all sets of alternatives for the question
+-- @param selected a string with the answer selected by the user, options: red, green, yellow, blue
 function placeAlternativesOnScreen(alternatives, selected)
   for i=1, #allCircles do
     placeAnswersOnCircles(alternatives[i], allCircles[i],allCirclePositions[i])
@@ -305,10 +313,17 @@ function placeAlternativesOnScreen(alternatives, selected)
   return
 end
 
---- create the background and the circles for the answers
-function createAnswerBackground()
+--- create the nil and the circles for the answers
+function createAnswernil()
 
+  if not(colorsImg == nil) then
+     colorsImg:destroy()
+  end
+
+  images = {['colors'] = "images/color_choices.png"} 
   colorsImg = gfx.loadpng(images.colors)
+  colorsImg:premultiply()
+
   diameter = 140
 
   -- Positions in the circle sprite.
@@ -319,7 +334,11 @@ function createAnswerBackground()
                    yellow = {x= xs + d  , y = y, w = d, h = d},
                    blue   = {x= xs + d*2, y = y, w = d, h = d},
                    green  = {x= xs + d*3, y = y, w = d, h = d}}
-
+            
+  --if not(#allCircles == 0) then
+  -- foos = true
+    destroyCircles()
+  --end
 
   local circle = {
     red = gfx.new_surface(diameter, diameter),
@@ -328,17 +347,19 @@ function createAnswerBackground()
     blue = gfx.new_surface(diameter, diameter)
   }
 
-  circle.red:copyfrom(colorsImg, cutOut.red, true)
-  circle.green:copyfrom(colorsImg, cutOut.green, true)
-  circle.yellow:copyfrom(colorsImg, cutOut.yellow, true)
-  circle.blue:copyfrom(colorsImg, cutOut.blue, true)
+  circle.red:copyfrom(colorsImg, cutOut.red, {x=0,y=0,w=diameter,h=diameter})
+  circle.green:copyfrom(colorsImg, cutOut.green, {x=0,y=0,w=diameter,h=diameter})
+  circle.yellow:copyfrom(colorsImg, cutOut.yellow, {x=0,y=0,w=diameter,h=diameter})
+  circle.blue:copyfrom(colorsImg, cutOut.blue, {x=0,y=0,w=diameter,h=diameter})
+
+   colorsImg:destroy()
 
   allCircles[#allCircles + 1] = circle
 end
 
 --- Places the colored answer circles on their positions
--- @param #table circlePosition a table with the positions of the positions of the four circles
--- @param #table circle A table with four surfaces with circles
+-- @param circlePosition a table with the positions of the positions of the four circles
+-- @param circle A table with four surfaces with circles
 function placeAnswerCircles(circlePosition, circle)
   local fh = text.getFontHeight('lato', 'large') -- font height
 
@@ -348,12 +369,22 @@ function placeAnswerCircles(circlePosition, circle)
   gfx.screen:copyfrom(circle.green, nil, position.green, true)
   gfx.screen:copyfrom(circle.blue, nil, position.blue, true)
   gfx.screen:copyfrom(circle.yellow, nil, position.yellow, true)
+  
+end
+
+function destroyCircles()
+  if #allCircles ~= 0 then
+    allCircles[1].red:destroy()
+    allCircles[1].blue:destroy()
+    allCircles[1].yellow:destroy()
+    allCircles[1].green:destroy()
+  end
 end
 
 --- place the answers to the right position in their circle
--- @param #table answers a table with the answer alternatives
--- @param #table circle a table of all the circles that the answers will be placed on
--- @param #circlePosition a table with the positions of the positions of the four circles
+-- @param answers a table with the answer alternatives
+-- @param circle a table of all the circles that the answers will be placed on
+-- @param circlePosition a table with the positions of the positions of the four circles
 function placeAnswersOnCircles(answers, circle, circlePosition)
 
   local fh = text.getFontHeight('lato', 'large') -- font height
@@ -364,11 +395,16 @@ function placeAnswersOnCircles(answers, circle, circlePosition)
   for i=1, #answers do
     xOffset = text.getStringLength('lato', 'large', tostring(answers[i])) / 2
     if xOffset == 0 then
-      circle[colorCircles[i]]:copyfrom(colorsImg, cutOut[colorCircles[i]], true)
+      images = {['colors'] = "images/color_choices.png"} 
+      colorsImg = gfx.loadpng(images.colors)
+      colorsImg:premultiply()
+      circle[colorCircles[i]]:copyfrom(colorsImg, cutOut[colorCircles[i]], {x=0,y=0,w=circle[colorCircles[i]]:get_width(), h=circle[colorCircles[i]]:get_height()}, true)
+      colorsImg:destroy()
     else
       text.print(circle[colorCircles[i]], 'lato', 'black', 'large', tostring(answers[i]), circle[colorCircles[i]]:get_width() /2 - xOffset, circle[colorCircles[i]]:get_height() /2 - yOffset, xOffset*2, fh)
     end
   end
+   --colorsImg:destroy()
 end
 
 function setScale(diameter)
@@ -378,36 +414,38 @@ function setScale(diameter)
 end
 
 --- Downsizes the cirlces that are not selected
--- @param #string selected a string representing the selected circle. possible alternatives: 'start', 'red', 'green', 'yellow', 'blue'
--- @param #table circle a table of all the circles that all can be downsized
--- @param #table circlePositions a table of the positions of the circles 
+-- @param selected a string representing the selected circle. possible alternatives: 'start', 'red', 'green', 'yellow', 'blue'
+-- @param circle a table of all the circles that all can be downsized
+-- @param circlePositions a table of the positions of the circles 
 function adjustCircleSize(selected, circle, circlePositions)
-  scale = setScale(140)
+  scale = 0.5
+
+ -- scale = setScale(140)
   if selected == 'start' then
-    animation.zoom(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, scale, 0)
-    animation.zoom(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, scale, 0)
+    animation.zoom(nil, circle['red'], circlePositions['red'].x, circlePositions['red'].y, scale, 0)
+    animation.zoom(nil, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, scale, 0)
   elseif selected == 'red' then
-    animation.changeSize(background, circle['green'], circlePositions['green'].x, circlePositions['green'].y, circlePositions['red'].x, circlePositions['red'].y, scale, 2, 'down')
-    animation.changeSize(background, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y, circlePositions['red'].x, circlePositions['red'].y, scale, 3, 'down')
-    animation.changeSize(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, circlePositions['red'].x, circlePositions['red'].y, scale, 4, 'down')
+    animation.changeSize(nil, circle['green'], circlePositions['green'].x, circlePositions['green'].y, circlePositions['red'].x, circlePositions['red'].y, scale, 2, 'down')
+    animation.changeSize(nil, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y, circlePositions['red'].x, circlePositions['red'].y, scale, 3, 'down')
+    animation.changeSize(nil, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, circlePositions['red'].x, circlePositions['red'].y, scale, 4, 'down')
   elseif selected == 'green' then
-    animation.changeSize(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, circlePositions['green'].x, circlePositions['green'].y, scale, 2, 'up')
-    animation.changeSize(background, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y, circlePositions['green'].x, circlePositions['green'].y, scale, 2, 'down')
-    animation.changeSize(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, circlePositions['green'].x, circlePositions['green'].y, scale, 3, 'down')
+    animation.changeSize(nil, circle['red'], circlePositions['red'].x, circlePositions['red'].y, circlePositions['green'].x, circlePositions['green'].y, scale, 2, 'up')
+    animation.changeSize(nil, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y, circlePositions['green'].x, circlePositions['green'].y, scale, 2, 'down')
+    animation.changeSize(nil, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, circlePositions['green'].x, circlePositions['green'].y, scale, 3, 'down')
   elseif selected == 'yellow' then
-    animation.changeSize(background, circle['green'], circlePositions['green'].x, circlePositions['green'].y, circlePositions['yellow'].x, circlePositions['yellow'].y, scale, 2, 'up')
-    animation.changeSize(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y, circlePositions['yellow'].x, circlePositions['yellow'].y, scale, 3, 'up')
-    animation.changeSize(background, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, circlePositions['yellow'].x, circlePositions['yellow'].y, scale, 2, 'down')
+    animation.changeSize(nil, circle['green'], circlePositions['green'].x, circlePositions['green'].y, circlePositions['yellow'].x, circlePositions['yellow'].y, scale, 2, 'up')
+    animation.changeSize(nil, circle['red'], circlePositions['red'].x, circlePositions['red'].y, circlePositions['yellow'].x, circlePositions['yellow'].y, scale, 3, 'up')
+    animation.changeSize(nil, circle['blue'], circlePositions['blue'].x, circlePositions['blue'].y, circlePositions['yellow'].x, circlePositions['yellow'].y, scale, 2, 'down')
   elseif selected == 'blue' then
-    animation.changeSize(background, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y,circlePositions['blue'].x, circlePositions['blue'].y, scale, 2, 'up')  
-    animation.changeSize(background, circle['green'], circlePositions['green'].x, circlePositions['green'].y,circlePositions['blue'].x, circlePositions['blue'].y, scale, 3, 'up')
-    animation.changeSize(background, circle['red'], circlePositions['red'].x, circlePositions['red'].y,circlePositions['blue'].x, circlePositions['blue'].y, scale, 4, 'up')
+    animation.changeSize(nil, circle['yellow'], circlePositions['yellow'].x, circlePositions['yellow'].y,circlePositions['blue'].x, circlePositions['blue'].y, scale, 2, 'up')  
+    animation.changeSize(nil, circle['green'], circlePositions['green'].x, circlePositions['green'].y,circlePositions['blue'].x, circlePositions['blue'].y, scale, 3, 'up')
+    animation.changeSize(nil, circle['red'], circlePositions['red'].x, circlePositions['red'].y,circlePositions['blue'].x, circlePositions['blue'].y, scale, 4, 'up')
   end
 end
 
 --- Calculates where the word parts and alternative sets should be printed.
--- @param #table question a table of ward parts and alternative sets
--- @return #table questionPosition a table of coordinates indicating where the questions word parts and alternative sets should be printed form.
+-- @param question a table of ward parts and alternative sets
+-- @return questionPosition a table of coordinates indicating where the questions word parts and alternative sets should be printed form.
 function getQuestionPosition(question)
   local fh = text.getFontHeight('lato', 'large')
   local wordPartPositions = {}
@@ -439,8 +477,8 @@ function getQuestionPosition(question)
 end
 
 --- Prints the word parts of the current question to the screen
--- @param #table wordParts a table containgin the current questions word parts 
--- @param #table wordPartsPosition a table containing the coordinated at which the word parts will be placed 
+-- @param wordParts a table containgin the current questions word parts 
+-- @param wordPartsPosition a table containing the coordinated at which the word parts will be placed 
 function printWord(wordParts, wordPartPosition)
   --gfx.screen:clear({122,219,228})
   
@@ -452,9 +490,9 @@ function printWord(wordParts, wordPartPosition)
 end
 
 --- Prints the sets of alternatives in their designated posittons based on which alternative is selected
--- @param #table alterantives a table containing the sets of alterantives
--- @param #table alternativePositions a table containing the desiganted positions of the alternatives
--- @param #string key a string reprenting the selected alternative
+-- @param alterantives a table containing the sets of alterantives
+-- @param alternativePositions a table containing the desiganted positions of the alternatives
+-- @param key a string reprenting the selected alternative
 function printQuestionAlternatives(alternatives, alternativePositions, key)
   key = key or 'start'
   diameter = 140
@@ -469,9 +507,9 @@ function printQuestionAlternatives(alternatives, alternativePositions, key)
 end
 
 --- Determines the length of the question
--- @Param #table question The question consisting of the word parts and alternatives
--- @Param #number diameter The diameter of the colored circles
--- @return #number questionLength The pixel length of the question to be printed on the screen.
+-- @Param question The question consisting of the word parts and alternatives
+-- @Param diameter The diameter of the colored circles
+-- @return questionLength The pixel length of the question to be printed on the screen.
 function questionLength(question, diameter)
   local questionLength = diameter * #question[2]
   for i=1, #question[1] do
@@ -480,8 +518,8 @@ function questionLength(question, diameter)
   return questionLength
 end
 -- Remover the selcted option
--- @param #number userChoice the number labled to the selcted buttom
--- @param #string key the button the user choose, options: red, green, yellow, blue
+-- @param userChoice the number labled to the selcted buttom
+-- @param key the button the user choose, options: red, green, yellow, blue
 function removeAlternative(userChoice, key)
   for i=1, #question[2] do
     question[2][i][userChoice] = ''
@@ -490,10 +528,10 @@ function removeAlternative(userChoice, key)
 end
 
 ---Check if the answer is correct
--- @param #string key the button the user choose, options: red, green, yellow, blue
--- @param #table alternatives All answer options in a specific order
--- @param #string rightanswer The correct answer
--- @return #boolean correct returns true if the answer is correct
+-- @param key the button the user choose, options: red, green, yellow, blue
+-- @param alternatives All answer options in a specific order
+-- @param rightanswer The correct answer
+-- @return correct returns true if the answer is correct
 function checkAnswer(key,alternatives,rightanswer)
   local userChoice = 0
   --local alternatives = alternatives
@@ -512,8 +550,8 @@ function checkAnswer(key,alternatives,rightanswer)
   local correctAnswer = rightanswer[1]
 
   if (choosenAlternative==correctAnswer) then
-  	if(isFirstTry) then
-	    profileHandler.update(player,'spellingGame', nil, 1)
+    if(isFirstTry) then
+      profileHandler.update(currentPlayer,'spellingGame', nil, 1)
     end
     inFocus = nil
     main()
@@ -527,19 +565,18 @@ end
 --- Sets the background of the screen
 function setBackground()
     background = gfx.loadpng('./images/background-game.png')
-    --background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
-    --background:clear({122,219,228})
     gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
+    background:destroy()
   return 
 end
 
 --- Runs chosen game (file) if testing mode is off
--- @param #string path The path to the game to be loaded
--- @param #boolean testingModeOn If testing mode is on
+-- @param path The path to the game to be loaded
+-- @param testingModeOn If testing mode is on
 function runGame(path, testingModeOn)
-	if(not testingModeOn) then
-		assert(loadfile(path))(player)
-	end
+  if(not testingModeOn) then
+    assert(loadfile(path))(currentPlayer)
+  end
 end
 
 --- Gets input from user and checks answer
@@ -547,36 +584,8 @@ end
 -- @param state
 function onKey(key, state)
   if state == 'down' then
-
+    return
   elseif state == 'up' then
-    --if side menu is up
-    if(sideMenu) then
-      sideMenu = false
-	  if(key == 'red') then
-        sideMenu = false
-        gamePath = 'mathGame.lua'
-        runGame(gamePath, underGoingTest)
-      elseif(key == 'green') then
-        sideMenu = false
-        gamePath = 'memoryGame.lua'
-        runGame(gamePath, underGoingTest)
-      elseif(key == 'yellow') then
-        sideMenu = false
-        changeSrfc()
-      elseif(key == 'blue') then
-        sideMenu = false
-        gamePath = 'flagGame.lua'
-        runGame(gamePath, underGoingTest)
-      elseif(key == "right") then
-        sideMenu = false
-        changeSrfc()
-      elseif(key == 'up') then
-      	dofile("login.lua")
-      end
-
-      -- In-game control when side menu is down
-    elseif(not sideMenu) then
-      --give answer     
       if(key == 'red') then
         if(key==inFocus) then --if you have highlighted an answer and choose it as answer
           checkAnswer(key,question[2],rightAlternatives)
@@ -606,13 +615,18 @@ function onKey(key, state)
           printQuestionAlternatives(question[2],questionPosition[2],key)
         end
       elseif(key == "right") then
-        sideMenu = true
-        setMainSrfc()
-        printSideMenu()
+         destroyCircles()
+         assert(loadfile(dir ..'menu.lua'))(currentPlayer)
+         --sideMenu = true
+        --setMainSrfc()
+        --printSideMenu()
+      elseif(key == "left") then
+        destroyCircles()
+        dofile(dir ..'login.lua')
       end
-    end
-         
+
   elseif (state == "repeat") then
+      return
   end 
 end
 

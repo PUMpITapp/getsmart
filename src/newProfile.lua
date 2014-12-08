@@ -2,24 +2,28 @@
 -- 
 -- The new profile function for the app GetSmart
 --
-
+require "runState"
 --- Checks if the file was called from a test file.
--- @return #boolean True or false depending on testing file
+-- @return True or false depending on testing file
 function checkTestMode()
-  runFile = debug.getinfo(2, "S").source:sub(2,3)
+  --[[runFile = debug.getinfo(2, "S").source:sub(2,3)
   if (runFile ~= './' ) then
     underGoingTest = false
   elseif (runFile == './') then
     underGoingTest = true
   end
+	--]]
+	underGoingTest = false
   return underGoingTest
 end
 
 --- Chooses either the actual or the stubs depending on if a test file started the program.
--- @param #boolean underGoingTest Undergoing test is true if a test file started the program.
+-- @param underGoingTest Undergoing test is true if a test file started the program.
 function setRequire(underGoingTest)
   if not underGoingTest then
-    gfx = require "gfx"
+    if not runsOnSTB then
+    	gfx = require "gfx"
+    end
     text = require "write_text"
     animation = require "animation"
     profileHandler = require "profileHandler"
@@ -35,10 +39,21 @@ end
 
 local underGoingTest = setRequire(checkTestMode())
 
+--[[if not runsOnSTB then                                                                                                         
+  dir = ""                                                                                                                     
+else                                                                                                                                                     
+  dir = sys.root_path()                                                                              
+end --]]
+
 -- Imports and sets background
-local background = gfx.loadpng('./images/background.png')
+--local background = gfx.loadpng('./images/background.png')
+--gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
+--gfx.screen:clear({122,219,228})
+
+local background = gfx.loadpng('images/background.png')
 gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
-gfx.update()
+background:destroy()
+--gfx.update()
 
 -- Requires profiles which is a file containing all profiles and it's related variables and tables
 require "profiles"
@@ -75,17 +90,20 @@ local png_profile_circles = { 	profile1_inactive = 'images/profile/red-inactive.
 local png_logo_width = 447
 local png_logo = 'images/logo.png'
 
--- Directory of images
-local dir = './'
+if not runsOnSTB then
+  dir = "" 
+else
+  dir = sys.root_path()
+end
 
 --- Decides if player is sent to keyboard or menu
--- @return #boolean If it's a new player (coming from keyboard) return true
+-- @return If it's a new player (coming from keyboard) return true
 function isNewPlayer()
 	if(tonumber(profilePlayer) == nil) then							-- If name (coming from Keyboard)	
 		name, number = profilePlayer:match("([^,]+),([^,]+)")		-- Split string into two variables
 		if(not underGoingTest) then
 			profileHandler.setName(tonumber(number), tostring(name))
-			assert(loadfile('menu.lua'))(number)
+			assert(loadfile(dir .. 'menu.lua'))(number)
 		end
 	else															-- If number (coming from Login)
 		return true
@@ -99,30 +117,6 @@ function printPlayerNumber()
 		local fw = text.getStringLength('lato', 'large', tostring('Player '..profilePlayer))
 		text.print(gfx.screen, 'lato', 'black', 'large', tostring("Player "..profilePlayer), (gfx.screen:get_width()/2 - (fw/2)), (gfx.screen:get_height()*0.05), fw, fh)
 	end
-end
-
---- Prints save- and back buttons in the corners of the screen
-local function printNavigationButtons()
-
-	local backButton = gfx.loadpng(dir .. 'images/profile/profile-go-back.png')
-	local saveButton = gfx.loadpng(dir .. 'images/profile/profile-go-forward.png')
-	local scale = 0.4
-    local buttonMargin =  20
-	
-    gfx.screen:copyfrom(backButton, nil, {
-      x = buttonMargin,
-      y = buttonMargin,
-      w = backButton:get_width() * scale,
-      h = backButton:get_height() * scale
-    })
-
-    gfx.screen:copyfrom(saveButton, nil, {
-      x = gfx.screen:get_width() - saveButton:get_width() * scale - buttonMargin,
-      y = buttonMargin,
-      w = saveButton:get_width() * scale,
-      h = saveButton:get_height() * scale
-    })
-
 end
 
 --- Gets input from user, must be included for input to work
@@ -149,10 +143,13 @@ local function main()
 
 	if(isNewPlayer()) then
 		printPlayerNumber()
-		printNavigationButtons()
+		--printNavigationButtons()
+		gfx.update()
 		if(not underGoingTest) then
-			assert(loadfile('keyboard.lua'))(profilePlayer)
+			foo = 0
+			assert(loadfile(dir .. 'keyboard.lua'))(profilePlayer)
 		end
+		
 	end
 end
 

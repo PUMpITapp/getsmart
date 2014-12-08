@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>Luadocs for profileHandler.lua</title>
+    <link rel="stylesheet" href="../luadoc.css" type="text/css" />
+    <!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
+</head>
+
+<body>
+<div id="container">
+
+<div id="product">
+    <div id="product_logo"></div>
+    <div id="product_name"><big><b></b></big></div>
+    <div id="product_description"></div>
+</div> <!-- id="product" -->
+
+<div id="main">
+
+<div id="navigation">
+
+
+<h1>LuaDoc</h1>
+<ul>
+	
+	<li><a href="../index.html">Index</a></li>
+	
+</ul>
+
+
+<!-- Module list -->
+
+
+
+<!-- File list -->
+
+<h1>Files</h1>
+<ul>
+
+	<li>
+		<a href="../files/animation.html">animation.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/flagGame.html">flagGame.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/login.html">login.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/mathGame.html">mathGame.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/menu.html">menu.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/newProfile.html">newProfile.lua</a>
+	</li>
+
+	<li><strong>profileHandler.lua</strong></li>
+	
+	<li>
+		<a href="../files/spellingGame.html">spellingGame.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/write_text.html">write_text.lua</a>
+	</li>
+
+</ul>
+
+
+
+
+
+
+</div> <!-- id="navigation" -->
+
+<div id="content">
+
+<h1>File <code>profileHandler.lua</code></h1>
+
+
+
+
+
+
+
+<h2>Functions</h2>
+<table class="function_list">
+
+    <tr>
+    <td class="name" nowrap><a href="#checkTestMode">checkTestMode</a>&nbsp;()</td>
+    <td class="summary">Checks if the file was called from a test file.</td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#profileHandler.getGameLevel">profileHandler.getGameLevel</a>&nbsp;(player, game, gameType)</td>
+    <td class="summary">Gets the players level for a game </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#profileHandler.getLevel">profileHandler.getLevel</a>&nbsp;(player, game)</td>
+    <td class="summary">Gets level for wanted player </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#profileHandler.getName">profileHandler.getName</a>&nbsp;(player)</td>
+    <td class="summary">Gets the name of the player </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#profileHandler.setName">profileHandler.setName</a>&nbsp;(player, name)</td>
+    <td class="summary">Sets name for new player </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#profileHandler.update">profileHandler.update</a>&nbsp;(player, game, gameType, points)</td>
+    <td class="summary">Updates points for wanted player in wanted game and gametype </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#profileHandler.updateUserLevel">profileHandler.updateUserLevel</a>&nbsp;(player, game)</td>
+    <td class="summary">Updates the player's userLevel for a game </td>
+    </tr>
+
+</table>
+
+
+
+
+
+
+<br/>
+<br/>
+
+
+
+
+<h2><a name="functions"></a>Functions</h2>
+<dl class="function">
+
+
+
+<dt><a name="checkTestMode"></a><strong>checkTestMode</strong>&nbsp;()</dt>
+<dd>
+Checks if the file was called from a test file.
+
+
+
+
+
+
+
+<h3>Return value:</h3>
+True or false depending on testing file
+
+
+
+</dd>
+
+
+
+
+<dt><a name="profileHandler.getGameLevel"></a><strong>profileHandler.getGameLevel</strong>&nbsp;(player, game, gameType)</dt>
+<dd>
+Gets the players level for a game
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  player: Player
+	</li>
+	
+	<li>
+	  game: Game
+	</li>
+	
+	<li>
+	  gameType: GameType (eg division, addition etc)
+	</li>
+	
+</ul>
+
+
+
+
+
+
+<h3>Return value:</h3>
+The profile's level in the given game
+
+
+
+</dd>
+
+
+
+
+<dt><a name="profileHandler.getLevel"></a><strong>profileHandler.getLevel</strong>&nbsp;(player, game)</dt>
+<dd>
+Gets level for wanted player
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  player: The players number
+	</li>
+	
+	<li>
+	  game: The game
+	</li>
+	
+</ul>
+
+
+
+
+
+
+<h3>Return value:</h3>
+The player's userLevel for a game
+
+
+
+</dd>
+
+
+
+
+<dt><a name="profileHandler.getName"></a><strong>profileHandler.getName</strong>&nbsp;(player)</dt>
+<dd>
+Gets the name of the player
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  player: The player to retrieve the name for
+	</li>
+	
+</ul>
+
+
+
+
+
+
+<h3>Return value:</h3>
+The player's name
+
+
+
+</dd>
+
+
+
+
+<dt><a name="profileHandler.setName"></a><strong>profileHandler.setName</strong>&nbsp;(player, name)</dt>
+<dd>
+Sets name for new player
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  player: The number of the new player (1-4)
+	</li>
+	
+	<li>
+	  name: The name of the new player
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="profileHandler.update"></a><strong>profileHandler.update</strong>&nbsp;(player, game, gameType, points)</dt>
+<dd>
+Updates points for wanted player in wanted game and gametype
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  player: Player to update
+	</li>
+	
+	<li>
+	  game: Game to update
+	</li>
+	
+	<li>
+	  gameType: GameType (eg division, addition etc)
+	</li>
+	
+	<li>
+	  points: Number of points
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="profileHandler.updateUserLevel"></a><strong>profileHandler.updateUserLevel</strong>&nbsp;(player, game)</dt>
+<dd>
+Updates the player's userLevel for a game
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  player: Player to update
+	</li>
+	
+	<li>
+	  game: Game to update
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+</dl>
+
+
+
+
+
+
+
+</div> <!-- id="content" -->
+
+</div> <!-- id="main" -->
+
+<div id="about">
+    <p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" /></a></p>
+</div> <!-- id="about" -->
+
+</div> <!-- id="container" -->
+</body>
+</html>

@@ -1,17 +1,35 @@
-local gfx = require "gfx"
+require "runState"
+
+--[[if not runsOnSTB then
+   gfx = require "gfx"
+end
+
+if not runsOnSTB then
+  dir = "" 
+else
+  dir = sys.root_path()
+end --]]
+
 local text = require "write_text"
-local keyboardPNG = gfx.loadpng("images/KeyboardPics/keyboardblank.png")
-local textAreaPNG = gfx.loadpng("Images/KeyboardPics/textArea.png") -- change this to correct
-local lowerCasePNG = gfx.loadpng("Images/KeyboardPics/lowerCase.png")
-local upperCasePNG = gfx.loadpng("Images/KeyboardPics/upperCase.png")
-local symbolsPNG = gfx.loadpng("Images/KeyboardPics/symbols.png")
-local keyPressedPNG = gfx.loadpng("Images/KeyboardPics/standKeyPressed.png")
-local deletePressedPNG = gfx.loadpng("Images/KeyboardPics/deletePressed.png")
-local enterPressedPNG = gfx.loadpng("Images/KeyboardPics/enterPressed.png")
-local shiftPressedPNG = gfx.loadpng("Images/KeyboardPics/shiftPressed.png")
-local symbolPressedPNG = gfx.loadpng("Images/KeyboardPics/symbolPressed.png")
-local spacePressedPNG = gfx.loadpng("Images/KeyboardPics/spacePressed.png")
-local keyboardState = lowerCasePNG
+
+
+local keyboardState = "SHIFT" -- which layer that should be shown in keyboard
+local keyboardSurface = nil
+local textAreaSurface = nil
+
+
+local xUnit = gfx.screen:get_width()/16	-- units of the screen. based on 16:9 ratio
+local yUnit = gfx.screen:get_height()/9	-- units of the screen. based on 16:9 ratio
+local keyboardWidth = 10 * xUnit 	-- width of keyboard. can be changed to fit
+local keyboardHeight = 4 * yUnit 	-- height of keyabord. can be changed to fit
+local keyboardXUnit = keyboardWidth/10 -- margin in x for keyboard keys. 10 keys each row
+local keyboardYUnit = keyboardHeight/4 -- margin in y for keyboard keys. 4 keys each column
+local keyboardPosX = 3 * xUnit 		-- keyboard start posx. can be changed
+local keyboardPosY = 4 * yUnit 		-- keyboard start posy. can be changed
+local highlightPosX = 1 			-- pos on keyboard posx
+local highlightPosY = 1 			-- pos on keyboard posy
+local inputText = ""	-- text to display
+--local lastForm = ...	-- gets last state form
 
 -- Scrum team 1 changes
 profileHandler = require "profileHandler"
@@ -27,33 +45,16 @@ end
 
 function sendNameAndGoBack()
 	keyboard_player = getInputText()..','..keyboard_player
-	assert(loadfile('newProfile.lua'))(keyboard_player)
+	destroyTempSurfaces()
+	assert(loadfile(dir .. 'newProfile.lua'))(keyboard_player)
 end
 
 
 -- End Scrum team 1 changes
 
-local xUnit = gfx.screen:get_width()/16	-- units of the screen. based on 16:9 ratio
-local yUnit = gfx.screen:get_height()/12	-- units of the screen. based on 16:9 ratio
-local keyboardWidth = 10 * xUnit 	-- width of keyboard. can be changed to fit
-local keyboardHeight = 4 * yUnit 	-- height of keyabord. can be changed to fit
-local keyboardXUnit = keyboardWidth/10 -- margin in x for keyboard keys. 10 keys each row
-local keyboardYUnit = keyboardHeight/4 -- margin in y for keyboard keys. 4 keys each column
-local keyboardPosX = keyboardPositionX * xUnit 		-- keyboard start posx. can be changed
-local keyboardPosY = keyboardPositionY * yUnit 		-- keyboard start posy. can be changed
-local highlightPosX = 1 			-- pos on keyboard posx
-local highlightPosY = 1 			-- pos on keyboard posy
-inputText = ""	-- text to display
---local lastStateForm = ...	-- gets last state form
-
-local keyboardSurface = gfx.new_surface(keyboardWidth,keyboardHeight)
-local letterSurface = gfx.new_surface(keyboardWidth,keyboardHeight)
-local highlightSurface = gfx.new_surface(keyboardXUnit,keyboardYUnit)
-local inputSurface = gfx.new_surface(12 * xUnit, yUnit)
-
 local mapElement = {}
 
-function mapElement:new(key,row,column,posX,posY,upMove,downMove)
+function mapElement:new(key,row,column,posX,posY,upMove,downMove,leftMove,rightMove)
 	pos = {
 	letter = key,
 	row = row,
@@ -99,7 +100,7 @@ local map = {
 	p83 = mapElement:new("m",8,3,keyboardPosX +8.5 * keyboardXUnit, keyboardPosY +3*keyboardYUnit,8,4),
 	p93 = mapElement:new("DELETE",9,3,keyboardPosX +9.5 * keyboardXUnit, keyboardPosY +3*keyboardYUnit,9,5),
 
-	p14 = mapElement:new("SYMBOLS",1,4,keyboardPosX + 1 * keyboardXUnit, keyboardPosY +4 * keyboardYUnit,1,1),
+	p14 = mapElement:new("symbols",1,4,keyboardPosX + 1 * keyboardXUnit, keyboardPosY +4 * keyboardYUnit,1,1),
 	p24 = mapElement:new(",",2,4,keyboardPosX +3 * keyboardXUnit, keyboardPosY +4 * keyboardYUnit,2,3),
 	p34 = mapElement:new(" ",3,4,keyboardPosX +4 * keyboardXUnit, keyboardPosY +4 * keyboardYUnit,5,5),
 	p44 = mapElement:new(".",4,4,keyboardPosX +8 * keyboardXUnit, keyboardPosY +4 * keyboardYUnit,8,8),
@@ -224,53 +225,91 @@ function setKeyboardToSymbols()
 end
 
 
-function main()
+function onStart()
+	--setInputText(lastForm[lastForm.currentInputField])
+	createWhiteBackground()
+	createKeyboardSurface(keyboardState)
 	updateScreen()
 end
 
 function updateScreen()
 	displayKeyboardSurface()
+	displayInput()
 	displayHighlightSurface()
-	displayInputField()
-	displayKeyboardLetters()
 	gfx.update()
+end
+
+function setInputText(text)
+	inputText = text
 end
 
 --display keyboard
 function displayKeyboardSurface()
-	keyboardSurface:clear()
-	keyboardSurface:copyfrom(keyboardPNG)
-	gfx.screen:copyfrom(keyboardSurface,nil, {x=keyboardPositionX * xUnit, y=keyboardPositionY * yUnit, w=keyboardWidth, h=keyboardHeight})
-	-- gfx.screen:copyfrom(keyboardPNG,nil, {x=3 * xUnit, y= 3 * yUnit, w=keyboardWidth, h=keyboardHeight})
+	gfx.screen:copyfrom(keyboardSurface,nil,{x=keyboardPosX,y = keyboardPosY, w= keyboardWidth,h = keyboardHeight},true)
+end
+
+function createWhiteBackground()
+	local whiteBackgroundPNG = gfx.loadpng("images/KeyboardPics/keyboardbackgroundwhite.png")
+	whiteBackgroundPNG:premultiply()
+	gfx.screen:copyfrom(whiteBackgroundPNG,nil,{x=0 , y= 0 , w=16*xUnit, h=9*yUnit},true)
+	whiteBackgroundPNG:destroy()
+end
+
+function createKeyboardSurface(state)
+	local coord = {x=keyboardPosX,y = keyboardPosY, w= keyboardWidth,h = keyboardHeight}
+	local letters = nil
+	local keyboardPNG = gfx.loadpng("images/KeyboardPics/keyboardblank.png")
+	
+	keyboardPNG:premultiply()
+	gfx.screen:copyfrom(keyboardPNG,nil, coord,true)
+	keyboardPNG:destroy()
+	
+	if state == "shift" then
+		letters = gfx.loadpng("images/KeyboardPics/upperCase.png")
+	elseif state == "SHIFT" then
+		letters = gfx.loadpng("images/KeyboardPics/lowerCase.png")
+	elseif state == "symbols" then
+		letters = gfx.loadpng("images/KeyboardPics/symbols.png")
+	elseif state == "SYMBOLS" then
+		letters = gfx.loadpng("images/KeyboardPics/lowerCase.png")
+	elseif state == "SIGNS" then
+		letters = gfx.loadpng("images/KeyboardPics/lowerCase.png") --incorrect!
+	end
+	letters:premultiply()
+	gfx.screen:copyfrom(letters,nil,{x=3 * xUnit, y= keyboardPosY, w=keyboardWidth, h=keyboardHeight},true)
+	letters:destroy()
+	if keyboardSurface == nil then
+		keyboardSurface = gfx.new_surface(coord.w, coord.h)
+	end
+		keyboardSurface:copyfrom(gfx.screen,coord,nil)
 end
 
 -- displays the highlight
 -- TODO
 -- needs to change position of copyfrom. (0,0) now writes over keyboard 
 function displayHighlightSurface()
+
 	local coordinates = getCoordinates(highlightPosX,highlightPosY)
 	local width = xUnit
 	local height = yUnit
 	local highlighter = nil
 	local currentKey = getKeyboardChar(highlightPosX, highlightPosY)
-	--print(currentKey)
 
 	if string.upper(currentKey) == "SHIFT" then
-		highlighter = shiftPressedPNG
+		highlighter = gfx.loadpng("images/KeyboardPics/shiftPressed.png")
 	elseif currentKey == "DELETE" then
-		highlighter = deletePressedPNG
+		highlighter = gfx.loadpng("images/KeyboardPics/deletePressed.png")
 	elseif string.upper(currentKey) == "SYMBOLS" then
-		highlighter = symbolPressedPNG
+		highlighter = gfx.loadpng("images/KeyboardPics/symbolPressed.png")
 	elseif currentKey == " " then
-		highlighter = spacePressedPNG
+		highlighter = gfx.loadpng("images/KeyboardPics/spacePressed.png")
 	elseif currentKey == "ENTER" then
-		highlighter = enterPressedPNG
+		highlighter = gfx.loadpng("images/KeyboardPics/enterPressed.png")
+	elseif currentKey == "SIGNS" then
+		highlighter = gfx.loadpng("images/KeyboardPics/shiftPressed.png")
 	else
-		highlighter = keyPressedPNG
+		highlighter = gfx.loadpng("images/KeyboardPics/standKeyPressed.png")
 	end
-
-	-- highlightSurface:clear()
-	-- highlightSurface:copyfrom(keyPressedPNG)
 	
 	if (highlightPosX == 1 or highlightPosX == 9) and highlightPosY ==3 then
 		width = 1.5 * xUnit
@@ -280,41 +319,61 @@ function displayHighlightSurface()
 		width = 4 * xUnit
 	end
 
-	-- gfx.screen:copyfrom(highlightSurface, nil ,{x= coordinates.x - keyboardXUnit, y=coordinates.y - keyboardYUnit, w=width, h=height})
-	gfx.screen:copyfrom(highlighter, nil ,{x= coordinates.x - keyboardXUnit, y=coordinates.y - keyboardYUnit, w=width, h=height})
+	highlighter:premultiply()
+	local coord = {x= coordinates.x - keyboardXUnit, y=coordinates.y - keyboardYUnit, w=width, h=height}
+	gfx.screen:copyfrom(highlighter, nil, coord,true)
+	highlighter:destroy()
+
+
+    local state = keyboardState
+    if state == "shift" then
+      letters = gfx.loadpng("images/KeyboardPics/upperCase.png")
+    elseif state == "SHIFT" then
+      letters = gfx.loadpng("images/KeyboardPics/lowerCase.png")
+    elseif state == "symbols" then
+      letters = gfx.loadpng("images/KeyboardPics/symbols.png")
+    elseif state == "SYMBOLS" then
+      letters = gfx.loadpng("images/KeyboardPics/lowerCase.png")
+    elseif state == "SIGNS" then
+      letters = gfx.loadpng("images/KeyboardPics/lowerCase.png") --incorrect!
+    end
+
+    letters:premultiply()
+    gfx.screen:copyfrom(letters,nil,{x=3 * xUnit, y= keyboardPosY, w=keyboardWidth, h=keyboardHeight},true)
+    letters:destroy()
 end
 
-function displayKeyboardLetters()
-	-- letterSurface:clear()
-	-- letterSurface:copyfrom(lowerCasePNG)
-	gfx.screen:copyfrom(keyboardState,nil,{x=keyboardPositionX * xUnit, y=keyboardPositionY * yUnit, w=keyboardWidth, h=keyboardHeight})
-end
 
 -- displays the saved text on screen
 -- TODO: change pictures to fit
-function displayInputField()
-	inputSurface:clear()
-	inputSurface:copyfrom(textAreaPNG)
-	-- inputSurface:fill({r=255, g=255, b=255, a=0})
-	gfx.screen:copyfrom(inputSurface, nil ,{ x = inputPositionX * xUnit, y = inputPositionY * yUnit, w = 12 * xUnit, h = 2 * yUnit}) --colours the saved text field
-	-- gfx.screen:copyfrom(textAreaPNG, nil ,{x=2 * xUnit, y=2 *yUnit,w = 12* xUnit, h = yUnit})
-	text.print(gfx.screen, 'lato', 'black', 'large', inputText, inputPositionX * xUnit, inputPositionY * yUnit, 12 * xUnit, yUnit)
+function displayInput()
+	if(textAreaSurface == nil) then
+		local textAreaPNG = gfx.loadpng("images/KeyboardPics/textArea.png")
+		textAreaPNG:premultiply()
+		gfx.screen:copyfrom(textAreaPNG, nil ,{x=2 * xUnit, y=2 * yUnit, w=12 * xUnit, h=yUnit},true) --colours the saved text field
+		textAreaSurface = gfx.new_surface(12 * xUnit,yUnit)
+		textAreaSurface:copyfrom(gfx.screen,{x=2 * xUnit, y=2 * yUnit, w=12 * xUnit, h=yUnit},nil)
+		textAreaPNG:destroy()
+	else
+		gfx.screen:copyfrom(textAreaSurface, nil ,{x=2 * xUnit, y=2 * yUnit, w=12 * xUnit, h=yUnit},true) --colours the saved text field
+    end
+
+    text.print(gfx.screen, "lato","black","large", inputText.."|", 2.5 * xUnit, 1.8 * yUnit, 12 * xUnit, yUnit * 2.5)
 end
 
 --gets the coordinate of arguments
 function getCoordinates(posX, posY)
 	local pos = "p"..posX..posY
 	if map[pos] then
-	return map[pos]
+		return map[pos]
 	else
-	return nil
+		return nil
 	end
 end
 
 --gets the correct movement of cursor when moving in y-axis
 function getYmove(xVal,yVal,move)
 	local coordinates = "p"..xVal..yVal
-	--print(coordinates)
 	return map[coordinates][move]
 end
 
@@ -326,21 +385,27 @@ end
 
 --saves character to string
 function setToString(character)
-	if character and (string.len(inputText) < 10) then -- Scrum team 1: added condition about string length
+	if character then
 	inputText = inputText .. character
 	end
 end
 
 -- saves the text to the form to be sent back to last state
-function saveToForm(myText)
-	local inputField = lastStateForm.currentInputField
-	lastStateForm[inputField] = myText
-end
+--[[function saveToForm(myText)
+	local inputField = lastForm.currentInputField
+	lastForm[inputField] = myText
+end--]]
 
 -- send form back to state
 function sendFormBackToState(state, form)
 	saveToForm(inputText)
+	destroyTempSurfaces()
 	assert(loadfile(state))(form)
+end
+
+function destroyTempSurfaces()
+	keyboardSurface:destroy()
+	textAreaSurface:destroy()
 end
 
 -- removes the last char in argument
@@ -352,68 +417,49 @@ end
 function movehighlightKey(key)
 	if(key == 'down')then
 		--down
-
 		highlightPosX = getYmove(highlightPosX,highlightPosY,"down")
 		highlightPosY = highlightPosY + 1
 		if highlightPosY > 4 then
 			highlightPosY = 1
-			updateScreen()
-		else
-			updateScreen()
 		end
-	end
-	if(key == 'up')then
+	elseif(key == 'up')then
 		--up
 		highlightPosX = getYmove(highlightPosX,highlightPosY,"up")
 		highlightPosY = highlightPosY - 1
 		if highlightPosY < 1 then
 			highlightPosY = 4
-			updateScreen()
-		else
-			updateScreen()
 		end
-
-	end
-	if(key == 'left')then
+	elseif(key == 'left')then
 		--left
 		highlightPosX = highlightPosX - 1
 		highlightPosY = highlightPosY + 0
 
 		if not(getCoordinates(highlightPosX,highlightPosY))then
-			highlightPosX = highlightPosX + 1
-			updateScreen()
-		else
-			updateScreen()
+			if highlightPosY == 1 then
+				highlightPosX = 10
+			elseif highlightPosY == 2 or highlightPosY == 3 then
+				highlightPosX = 9
+			else
+				highlightPosX = 5
+			end
 		end
-
-	end
-	if(key == 'right')then
+	elseif(key == 'right')then
 		--right
 		highlightPosX = highlightPosX + 1
 		highlightPosY = highlightPosY + 0
 		if not(getCoordinates(highlightPosX,highlightPosY))then
-			highlightPosX = highlightPosX - 1
-			updateScreen()
-		else
-			updateScreen()
+			highlightPosX = 1
 		end
-
 	end
+		displayKeyboardSurface()
+		displayHighlightSurface()
+		gfx.update()
 end
 
 -- calls functions on keys
 function onKey(key, state)
 	if(state == 'up')then
-	
-		-- Scrum team 1 changes: Added functionality for green and red buttons
-		if(key == 'green') then
-			sendNameAndGoBack()
-			--sendFormBackToState(lastStateForm.laststate, lastStateForm) -- Same functionality as for pressing enter on keyboard
-		elseif(key == 'red') then
-			dofile("login.lua")
-		-- Scrum team 1 changes: end
-	
-		elseif(key == 'up') then
+		if(key == 'up') then
 			movehighlightKey(key)
 		elseif(key == 'down') then
 			movehighlightKey(key)
@@ -421,44 +467,78 @@ function onKey(key, state)
 			movehighlightKey(key)
 		elseif(key == 'right') then
 			movehighlightKey(key)
+		elseif(key == 'blue') then
+			--sendFormBackToState(dir..lastForm.laststate, lastForm)
+		elseif(key == 'red') then
+			inputText = removeLastChar(inputText)
+			displayInput()
+			gfx.update()
+		elseif(key == 'green') then
+			keyboardState = map.p14.letter
+			if keyboardState == "symbols" then
+				setKeyboardToSymbols()
+				createKeyboardSurface(keyboardState)
+			else
+				setKeyboardToLowerCase()
+				createKeyboardSurface(keyboardState)
+			end
+				updateScreen()
+		elseif(key == 'yellow') then
+			keyboardState = map.p13.letter
+			if keyboardState == "shift" then
+				setKeyboardToUpperCase()
+				createKeyboardSurface(keyboardState)
+			else
+				setKeyboardToLowerCase()
+				createKeyboardSurface(keyboardState)
+			end
+			updateScreen()
 		elseif(key == 'ok') then
+
 			local letterToDisplay = getKeyboardChar(highlightPosX,highlightPosY)
 			if (letterToDisplay == "ENTER") then
-				-- Scrum team 1 changes
-				--sendFormBackToState(lastStateForm.laststate, lastStateForm)
+				--sendFormBackToState(dir..lastForm.laststate, lastForm)
 				sendNameAndGoBack()
-				-- Scrum team 1 changes: end
-			elseif(letterToDisplay == "DELETE") then
 
+			elseif(letterToDisplay == "DELETE") then
 				inputText = removeLastChar(inputText)
-				displayInputField()
+				displayInput()
+				gfx.update()
 			elseif letterToDisplay == "shift" then
-				keyboardState = upperCasePNG
+				keyboardState = letterToDisplay
 				setKeyboardToUpperCase()
+				createKeyboardSurface(keyboardState)
 				updateScreen()
 			elseif letterToDisplay == "SHIFT" then
-				keyboardState = lowerCasePNG
+				keyboardState = letterToDisplay
 				setKeyboardToLowerCase()
+				createKeyboardSurface(keyboardState)
 				updateScreen()
 
 			elseif letterToDisplay == "symbols" then
-				keyboardState = symbolsPNG
+				keyboardState = letterToDisplay
 				setKeyboardToSymbols()
+				createKeyboardSurface(keyboardState)
 				updateScreen()
 
 			elseif letterToDisplay == "SYMBOLS" then
-				keyboardState = lowerCasePNG
+				keyboardState = letterToDisplay
 				setKeyboardToLowerCase()
+				createKeyboardSurface(keyboardState)
 				updateScreen()
-			else 
+
+			elseif letterToDisplay == "SIGNS" then
+				keyboardState = letterToDisplay
+				setKeyboardToLowerCase()
+				createKeyboardSurface(keyboardState)
+				updateScreen()
+            elseif (text.getStringLength('lato', 'large', getInputText() .. letterToDisplay .. '|') < 12 * xUnit) then
 				setToString(letterToDisplay)
-				displayInputField()
+				displayInput()
+				gfx.update()
 			end
 		end
-
 	end
-	gfx.update()
-
 end
 
-main()
+onStart()

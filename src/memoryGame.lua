@@ -1,52 +1,94 @@
-text = require "write_text"
-gfx = require "gfx"
+require "runState"
 
-gfx.screen:clear({122,219,228})
+--- Checks if the file was called from a test file.
+-- Returs true if it was, 
+--   - which would mean that the file is being tested.
+-- Returns false if it was not,
+--   - which wold mean that the file was being used.  
+function checkTestMode()
+ --[[ runFile = debug.getinfo(2, "S").source:sub(2,3)
+  if (runFile ~= './' ) then
+    underGoingTest = false
+  elseif (runFile == './') then
+    underGoingTest = true
+  end
+  return underGoingTest --]]
+  underGoingTest = false
+end
+
+--- Chooses either the actual or the stubs depending on if a test file started the program.
+-- @param underGoingTest undergoing test is true if a test file started the program.
+function setRequire(underGoingTest)
+  if not underGoingTest then
+  	if not runsOnSTB then
+    	gfx = require "gfx"
+    end
+    text = require "write_text"
+--  animation = require "animation"
+    profileHandler = require "profileHandler"
+  elseif underGoingTest then 
+    gfx = require "gfx_stub"
+    text = require "write_text_stub"
+    animation = require "animation_stub"
+    profileHandler = require "profileHandler_stub"
+  end
+end 
+
+setRequire(checkTestMode())
+
+--gfx.screen:clear({122,219,228})
 
 player = ...
 
 sideMenu = false
 
 function main()
+	setBackground()
 	printInformationText()
 	gfx.update()
+end
+
+--- Sets the background of the screen
+function setBackground()
+    background = gfx.loadpng('./images/background-game.png')
+    gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
+    background:destroy()
+  return 
 end
 
 --- Prints the information text in the center of the screen
 function printInformationText()
 	if(not tonumber(profilePlayer == nil)) then
 		local fh = text.getFontHeight('lato', 'medium')
-		local fw = text.getStringLength('lato', 'medium', "Memory game will not be implemented!")
-		text.print(gfx.screen, 'lato', 'black', 'medium', "Memory game will not be implemented!", (gfx.screen:get_width()/2 - (fw/2)), (gfx.screen:get_height()/2 - (fh/2)), fw, fh)
+		local fw = text.getStringLength('lato', 'medium', "Memory game coming soon!")
+		text.print(gfx.screen, 'lato', 'black', 'medium', "Memory game coming soon!", (gfx.screen:get_width()/2 - (fw/2)), (gfx.screen:get_height()/2 - (fh/2)), fw, fh)
 	end
 end
 
 --- Runs chosen game (file) if testing mode is off
--- @param #string path The path to the game to be loaded
--- @param #boolean testingModeOn If testing mode is on
+-- @param path The path to the game to be loaded
+-- @param testingModeOn If testing mode is on
 function runGame(path, testingModeOn)
 	if(not testingModeOn) then
-		assert(loadfile(path))(player)
+		assert(loadfile(dir .. path))(player)
 	end
 end
 
---- Gets input from user and checks answer or controls side-menu
+--- Gets input from user and re-directs according to input
 -- @param key The key that has been pressed
--- @param state The state of thed key-press
-function onKey(key, state)
-  if state == 'down' then return
-  elseif state == 'repeat' then return
+-- @param state The state of the key-press
+function onKey(key,state)
+ if state == 'down' then
+ 		return
   elseif state == 'up' then
-  
-    --if side menu is up
-    if(sideMenu) then 
-	  if(key == 'red') then
+	  if(key == 'right') then
         sideMenu = false
-        gamePath = 'mathGame.lua'
+        gamePath = 'menu.lua'
         runGame(gamePath, underGoingTest)
-      elseif(key == 'green') then
+      --[[elseif(key == 'green') then
         sideMenu = false
-        changeSrfc()
+        gamePath = 'memoryGame.lua'
+        runGame(gamePath, underGoingTest)
       elseif(key == 'yellow') then
         sideMenu = false
         gamePath = 'spellingGame.lua'
@@ -54,36 +96,12 @@ function onKey(key, state)
       elseif(key == 'blue') then
         sideMenu = false
         gamePath = 'flagGame.lua'
-        runGame(gamePath, underGoingTest)
-      elseif(key == "right") then
+        runGame(gamePath, underGoingTest)--]]
+	  elseif(key == 'left') then
         sideMenu = false
-        changeSrfc()
-      elseif(key == 'up') then
-      	dofile("login.lua")
-      end
-      
-      -- In-game control when side menu is down, controls that a button can only be pressed once
-    elseif(not sideMenu) then
-	  if state == 'up' then
-	      if (key == 'red') then
-	        userAnswer = 1
-	        checkAnswer(userAnswer, answers, correctCountry)
-	      elseif (key == 'green') then
-	        userAnswer = 2
-			checkAnswer(userAnswer, answers, correctCountry)
-	      elseif (key == 'yellow') then
-	        userAnswer = 3
-			checkAnswer(userAnswer, answers, correctCountry)
-	      elseif (key == 'blue') then
-	        userAnswer = 4
-	        checkAnswer(userAnswer, answers, correctCountry)
-	      elseif(key == "right") then
-	        sideMenu = true
-	        setMainSrfc()
-	        printSideMenu()
-	      end
-	  end
-    end
+        gamePath = 'login.lua'
+        runGame(gamePath, underGoingTest)
+	  end	  
   end
 end
 

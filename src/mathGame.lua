@@ -4,38 +4,42 @@
 -- addition, subtraction, multiplication and division. The user gets a
 -- mathimatical problem with four answers to choose from. The difficulty 
 -- of the problem is based on what level the user has reached:
--- level 1: addition 0-9
--- level 2: addition 10-99
--- level 3: subtraction 0-9
--- level 4: subtraction 10-99
--- level 5: multiplication 0-3 * 1-5
--- level 6: multiplication 0-3 * 1-9
--- level 7: multiplication 0-5 * 1-9
--- level 8: multiplication 2-9 * 2-9
---
+
 -- The answers are displayed in different colors that represent the
 -- colored buttons on the remotecontrol. Pressing one of the buttons    
 -- will display if the answer is correct or not and take the user onwards
 -- to new questions. 
 
+-- Import the number of the player
+local currentPlayer = ...
+
+require "runState"
+
+sideMenu = false
+
 --- Checks if the file was called from a test file.
--- @return #boolean If called from test file return true (indicating file is being tested) else false  
+-- @return If called from test file return true (indicating file is being tested) else false  
 function checkTestMode()
-  runFile = debug.getinfo(2, "S").source:sub(2,3)
+ --[[ runFile = debug.getinfo(2, "S").source:sub(2,3)
   if (runFile ~= './' ) then
     underGoingTest = false
   elseif (runFile == './') then
     underGoingTest = true
   end
+  return underGoingTest --]]
+  local underGoingTest = false
+
   return underGoingTest
 end
 
 
 --- Chooses either the actual or the stubs depending on if a test file started the program.
--- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+-- @param underGoingTest undergoing test is true if a test file started the program.
 function setRequire(underGoingTest)
   if not underGoingTest then
-    gfx = require "gfx"
+    if not runsOnSTB then
+      gfx = require "gfx"
+    end
     text = require "write_text"
     animation = require "animation"
     profileHandler = require "profileHandler"
@@ -49,7 +53,7 @@ end
 setRequire(checkTestMode())
 
 -- Set player
-player = ...
+--player = ...
 
 answers = {}
 answered = {red = false,
@@ -59,6 +63,7 @@ answered = {red = false,
 
 -- Require the table containing all the mascot texts
 mascot_text = require 'mascot_text'
+
 
 -- Printing the numbers on the correct position on the screen
 local sw = gfx.screen:get_width()  -- screen width
@@ -79,10 +84,8 @@ position = {termOne   = {x = sw * 0.13, y = sh * 0.37 },
 
 
 -- Directory of artwork 
-dir = './'
+--dir = './'
 
--- All images in the game are placed in this table
-images ={['colors'] = "images/color_choices.png"}
 
 
 -- Main function that runs the program
@@ -111,7 +114,7 @@ local function main()
 end
 
 --- produces a math problem based on the level of the user.
--- @param #int level The difficulty level of the problem
+-- @param level The difficulty level of the problem
 function produceMathProblem(level)
  -- level not implemented yet
   local operator = getOperator(playerUserLevel)
@@ -154,8 +157,8 @@ end
 --- Solves a math problem
 -- Gets a table with the first and second term and the operator.
 -- Solves the problem based on the operator.
--- @returns #number the correct answer
--- @param #table The math problem to be solved, conatining two numbers and operator
+-- @returns the correct answer
+-- @param The math problem to be solved, conatining two numbers and operator
 function solveProblem(mathProblem)
   if(mathProblem['operator'] == "+") then
     answer = tonumber(mathProblem['termOne'] + mathProblem['termTwo'])
@@ -178,8 +181,8 @@ end
 
 --- Get the operator for a math problem given its difficulty level.
 -- The mathematical operation of a given problem depends on its difficulty level.
--- @param #number playerUserLevel the level of the user
--- @return #string Returns the operator for a math problem.
+-- @param playerUserLevel the level of the user
+-- @return Returns the operator for a math problem.
 function getOperator(playerUserLevel)
   local operator = {'+'} 
   if (playerUserLevel > 2) then
@@ -195,8 +198,8 @@ function getOperator(playerUserLevel)
   return operator
 end
 -- comverts the opperator into stringOperator
--- @param #string operator The operator in form: +/-/*//
--- @return #string stringOperator
+-- @param operator The operator in form: +/-/*//
+-- @return stringOperator
 function getOperatorString(operator)
   stringOperator = nil
   if(operator == '+') then
@@ -213,7 +216,7 @@ end
 
 function getGameLevel(gameType)
 
-  return profileHandler.getGameLevel('player'..player,'mathGame',gameType..'Points')
+  return profileHandler.getGameLevel('player'..currentPlayer,'mathGame',gameType..'Points')
 end
 
 
@@ -229,8 +232,8 @@ function getBoundries(gameType, level)
 end
 
 --- The lowest number that a term within a math problem should have.
--- @param #number level The difficulty level of the math problem.
--- @return #number Returns the lower numerical bound for terms within a problem.
+-- @param level The difficulty level of the math problem.
+-- @return Returns the lower numerical bound for terms within a problem.
 function getLowerBound(level)
   local lowerBound = nil
   if(level > 8) then       lowerBound = 9
@@ -247,8 +250,8 @@ function getLowerBound(level)
 end
 
 --- The highest number that a term within a math problem should have.
--- @param #number level The difficulty level of the math problem.
--- @return #number Returns the upper numerical bound for terms within a problem.
+-- @param level The difficulty level of the math problem.
+-- @return Returns the upper numerical bound for terms within a problem.
 function getUpperBound(level)
   local lowerBound = nil
   if(level > 8) then       upperBound = 9
@@ -265,9 +268,9 @@ function getUpperBound(level)
 end
 
 --- Given the correct answer and difficulty level of a problem, create three other incorrect answers
--- @param #number correctAnswer The correct answer to the problem.
--- @param #number level The difficulty level of the problem.
--- @return #number Incorrect answer choices to a problem.
+-- @param correctAnswer The correct answer to the problem.
+-- @param level The difficulty level of the problem.
+-- @return Incorrect answer choices to a problem.
 function produceAnswers(correctAnswer, level)
   --answers ={}
   offset = math.random(4)-1
@@ -280,7 +283,11 @@ function produceAnswers(correctAnswer, level)
 end
 --- create the background and the "circles" for the answers
 function createAnswerBackground()
-  colorsImg = gfx.loadpng(images.colors)
+  -- All images in the game are placed in this table
+  --images ={['colors'] = "color_choices.png"}
+  colorsImg = gfx.loadpng("images/color_choices.png")
+
+  colorsImg:premultiply()
 
   -- Positions in the circle sprite.
   local xs =40  -- x starting coordinate
@@ -291,6 +298,10 @@ function createAnswerBackground()
                    blue   = {x= xs + d*2, y = y, w = d, h = d},
                    green  = {x= xs + d*3, y = y, w = d, h = d}}
 
+  if not (circle == nil) then
+      destroyCircles()
+  end
+
 
   circle = {
   red = gfx.new_surface(cutOut.red.w, cutOut.red.h),
@@ -298,14 +309,15 @@ function createAnswerBackground()
   yellow = gfx.new_surface(cutOut.yellow.w, cutOut.yellow.h),
   blue = gfx.new_surface(cutOut.blue.w, cutOut.blue.h)}
 
-  circle.red:copyfrom(colorsImg, cutOut.red, true)
-  circle.green:copyfrom(colorsImg, cutOut.green, true)
-  circle.yellow:copyfrom(colorsImg, cutOut.yellow, true)
-  circle.blue:copyfrom(colorsImg, cutOut.blue, true)
+  circle.red:copyfrom(colorsImg, cutOut.red, nil)
+  circle.green:copyfrom(colorsImg, cutOut.green, nil)
+  circle.yellow:copyfrom(colorsImg, cutOut.yellow, nil)
+  circle.blue:copyfrom(colorsImg, cutOut.blue, nil)
+  colorsImg:destroy()
 
 end
 --- place the answers to the right position in their circle
---@param #number answers The answer options that is given to the user 
+--@param answers The answer options that is given to the user 
 function placeAnswersOnCircles(answers)
 -- Printing the answers
   local fh = text.getFontHeight('lato', 'large') -- font height
@@ -331,11 +343,22 @@ function placeAnswerCircles()
   gfx.screen:copyfrom(circle.green, nil, position.green, true)
   gfx.screen:copyfrom(circle.blue, nil, position.blue, true)
   gfx.screen:copyfrom(circle.yellow, nil, position.yellow, true)
+
+   --destroyCircles()
+end
+
+function destroyCircles()
+  if circle ~= nil then
+    circle.red:destroy()
+    circle.blue:destroy()
+    circle.yellow:destroy()
+    circle.green:destroy()
+  end
 end
 
 
 --- Displays the problem and the answers on the screen by invoking write_text.lua.
--- @param #table mathProblem The problem to be displayed on the screen.
+-- @param mathProblem The problem to be displayed on the screen.
 function printProblem(mathProblem)
 
   local xOffset = 0     -- the horizontal offset to center the text over the position, half the strings width
@@ -357,23 +380,30 @@ end
 
 
 --- Checks if the given answer is correct and provides feedback to the user.
--- @param #number correctAnswer The correct answer to the problem.
--- @param #number userAnswer The answer given by the user.
--- @param #string key The button pressed
+-- @param correctAnswer The correct answer to the problem.
+-- @param userAnswer The answer given by the user.
+-- @param key The button pressed
 function handleAnswer(correctAnswer, userAnswer, key)
-
+-- local gameType = getGameType()
  local isCorrectAnswer = checkAnswer( correctAnswer, userAnswer, key )
  local givePoints = checkGivePoints(answered)
  local points = 1
 
  answered[key] = true
  if isCorrectAnswer then
-    zoomOutIncorrectAnswers()
+    --zoomOutIncorrectAnswers()
     resetAnswered(answered)
+    foo = 0
+    g = gameType
+    p = points
     zoomAnswered(isCorrectAnswer, key)
+    foo = 1
     if (givePoints) then
-      profileHandler.update(player, 'mathGame', gameType, points)
+	foo = 2
+      profileHandler.update(currentPlayer, 'mathGame', gameType, points)
+    	foo = 2.5
     end
+   foo = 3
     main()
 
   else
@@ -381,10 +411,10 @@ function handleAnswer(correctAnswer, userAnswer, key)
  end  
 
 end
--- @param #number correctAnswer the correct answer to a question
--- @param #number userAnswer The answe given by the user
--- @param #string key The button pressed (red, blue, yellow or green)
--- @return #boolean True if the user answered correctly False in user answered incorrectly
+-- @param correctAnswer the correct answer to a question
+-- @param userAnswer The answe given by the user
+-- @param key The button pressed (red, blue, yellow or green)
+-- @return True if the user answered correctly False in user answered incorrectly
 function checkAnswer( correctAnswer, userAnswer, key )
   if (correctAnswer == userAnswer) then 
     return true
@@ -393,9 +423,9 @@ function checkAnswer( correctAnswer, userAnswer, key )
 end
 -- Decides if the user should get point for its answer or not
 -- Point is given if the user answers the question correctly on the first try
--- @param #table answered The state (true/false) of the key entered
--- @return #boolean True if the user answered the question correctly on the first try 
--- @return #boolean False if the user did not answer the question on the first try
+-- @param answered The state (true/false) of the key entered
+-- @return True if the user answered the question correctly on the first try 
+-- @return False if the user did not answer the question on the first try
 function checkGivePoints (answered)
   local giveAnswerPoints = false
    for key,val in pairs(answered) do
@@ -408,25 +438,26 @@ end
 function zoomOutIncorrectAnswers()
   for key,val in pairs(answered) do
     if (not val) then
-     answerIsCorrect = animation.zoom(background, circle[key], position[key].x, position[key].y, 0.000001, 0.005)
+     answerIsCorrect = animation.zoom(nil, circle[key], position[key].x, position[key].y, 0.0001, 0.005)
     end
   end
 end
 
 -- Zooms in the correct answer
--- @param #boolean isCorrectAnswer checks if the given answer is correct
--- @param #string key The answered option
+-- @param isCorrectAnswer checks if the given answer is correct
+-- @param key The answered option
 function zoomAnswered(isCorrectAnswer, key)
-  local zoom = 0.000001
+  local zoom = 0.0001
   if (isCorrectAnswer) then
     zoom = 1.5
   end
-  answerIsCorrect= animation.zoom(background, circle[key], position[key].x, position[key].y, zoom, 0.005)
-  sleep(1)
+  answerIsCorrect= animation.zoom(nil, circle[key], position[key].x, position[key].y, zoom, 0.005)
+  --circle[key]:destroy()
+  --sleep(1)
 end
 
 -- Sets the answered to false
--- @param #table answered The state of the keys
+-- @param answered The state of the keys
 function resetAnswered(answered)
    for key,val in pairs(answered) do
     answered[key] = false
@@ -439,35 +470,12 @@ end
 -- @param key The key that has been pressed
 -- @param state The state of thed key-press
 function onKey(key, state)
-  if state == 'down' then return
-  elseif state == 'repeat' then return
+  if state == 'down' then
+    return
+  elseif state == 'repeat' then
+    return
   elseif state == 'up' then
-    --if side menu is up
-    if(sideMenu) then 
-	  if(key == 'red') then
-        sideMenu = false
-		changeSrfc()
-      elseif(key == 'green') then
-        sideMenu = false
-        gamePath = 'memoryGame.lua'
-        runGame(gamePath, underGoingTest)
-      elseif(key == 'yellow') then
-        sideMenu = false
-        gamePath = 'spellingGame.lua'
-        runGame(gamePath, underGoingTest)
-      elseif(key == 'blue') then
-        sideMenu = false
-        gamePath = 'flagGame.lua'
-        runGame(gamePath, underGoingTest)
-      elseif(key == "right") then
-        sideMenu = false
-        changeSrfc()
-      elseif(key == 'up') then
-      	dofile("login.lua")
-      end
-      
-      -- In-game control when side menu is down, controls that a button can only be pressed once
-    elseif(not sideMenu) then
+
       if(key == 'red' and not answered[key]) then
         handleAnswer(correctAnswer, answers[1], key)
        
@@ -481,91 +489,98 @@ function onKey(key, state)
         handleAnswer(correctAnswer, answers[4], key)
        
       elseif(key == "right") then
-        sideMenu = true
-        setMainSrfc()
-        printSideMenu()
+         destroyCircles()
+         --background:destroy()
+         assert(loadfile(dir ..'menu.lua'))(currentPlayer)
+         --sideMenu = true
+        --setMainSrfc()
+        --printSideMenu()
+      elseif(key == "left") then
+        destroyCircles()                        
+        --background:destroy()
+        dofile(dir ..'login.lua')
       end
-    end
-  end
+  end 
 end
 
 --- Runs chosen game (file) if testing mode is off
--- @param #string path The path to the game to be loaded
--- @param #boolean testingModeOn If testing mode is on
+-- @param path The path to the game to be loaded
+-- @param testingModeOn If testing mode is on
 function runGame(path, testingModeOn)
-	if(not testingModeOn) then
-		assert(loadfile(path))(player)
-	end
+  if(not testingModeOn) then
+    assert(loadfile(dir .. path))(currentPlayer)
+  end
 end
 
 --- Sets the background of the screen
 function setBackground()
     background = gfx.loadpng('./images/background-game.png')
-    --background = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
-    --background:clear({122,219,228})
     gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
+    background:destroy()
   return 
 end
 
+
 -- Prints the text in the mascot's speech bubble
 function printSpeechBubbleText()
-	
-	local mascotText = nil
-	local randomInt = nil
-	math.randomseed(os.time())
-	math.random()
-	randomInt = tonumber(math.random(#mascot_text['mathGame']))
-	
-	mascotText = mascot_text['mathGame'][randomInt]
-	
-	local boxWidth = gfx.screen:get_width()/7.1
-	local boxHeight = gfx.screen:get_height()/4.388
-    local boxHeightOffset = gfx.screen:get_height()/34
 
-	local fh = text.getFontHeight('lato', 'small')
-	local fw = text.getStringLength('lato', 'small', mascotText)
-    local actualFh = fh
+  local mascotText = nil
+  local randomInt = nil
+  math.randomseed(os.time())
+  math.random()
+  randomInt = tonumber(math.random(#mascot_text['mathGame']))
 
-    local j = 1
-    for i = 1, fw, 1 do
-        j = j+1
-       if j > boxWidth then
-           actualFh = actualFh + fh
-           j=1
-       end
+  mascotText = mascot_text['mathGame'][randomInt]
+
+  local boxWidth = gfx.screen:get_width()/7.1
+  local boxHeight = gfx.screen:get_height()/4.388
+  local boxHeightOffset = gfx.screen:get_height()/34
+
+  local fh = text.getFontHeight('lato', 'small')
+  local fw = text.getStringLength('lato', 'small', mascotText)
+  local actualFh = fh
+
+  local j = 1
+  for i = 1, fw, 1 do
+    j = j+1
+    if j > boxWidth then
+      actualFh = actualFh + fh
+      j=1
     end
+  end
 
-	text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/5.85, (gfx.screen:get_height()-boxHeightOffset-boxHeight/2-actualFh/2), boxWidth, boxWidth)
-	
-	gfx.update()
+  text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/5.85, (gfx.screen:get_height()-boxHeightOffset-boxHeight/2-actualFh/2), boxWidth, boxWidth)
+
+  gfx.update()
 end
+
 
 --- Prints the players name in the top of the screen
 function printPlayerName()
-	
-	local playerName = profileHandler.getName(currentPlayer)
-	local playerUserLevel = profileHandler.getLevel(currentPlayer, "mathGame")
+  
+  local playerName = profileHandler.getName(currentPlayer)
+  local playerUserLevel = profileHandler.getLevel(currentPlayer, "mathGame")
+
 
     local fw_name = text.getStringLength('lato', 'medium', playerName)
     local fw_level = text.getStringLength('lato', 'medium', "Level " .. playerUserLevel)
     local fh = text.getFontHeight('lato', 'medium')
 
-    text.print(gfx.screen, 'lato', 'black', 'medium', playerName, gfx.screen:get_width()/2 - text.getStringLength('lato', 'medium', playerName)-20, 20, fw_name, fh)
 
+    text.print(gfx.screen, 'lato', 'black', 'medium', playerName, gfx.screen:get_width()/2 - text.getStringLength('lato', 'medium', playerName)-20, 20, fw_name, fh)
     text.print(gfx.screen, 'lato', 'black', 'medium', "Level " .. playerUserLevel,  gfx.screen:get_width()/2  + 20, 20, fw_level, fh)
 
-    gfx.update()
 end
 
 --- Pauses the system for a period of time
--- @param #number time The amount of seconds (decimal) the system should sleep
+-- @param time The amount of seconds (decimal) the system should sleep
 --[[
 function 
   sleep(time)
   local t0 = os.clock()
   while os.clock() < (t0 +time) do end
 end
-]]
+--]]
 
 
 main()

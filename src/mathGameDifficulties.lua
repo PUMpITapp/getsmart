@@ -1,3 +1,4 @@
+--- Table with the difficulties of the math game
 return {
 ['addition'] =  { 	  [0] =	{['termOne'] = {1,3}, ['termTwo'] = {1,3} },
 					  [1] =	{['termOne'] = {1,4}, ['termTwo'] = {1,4} },

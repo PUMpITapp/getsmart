@@ -1,7 +1,7 @@
 return {
   {
     country = 'Sweden',
-    difficulty = 0,
+    difficulty = 1,
     dimensions = {
       positionY = 0,
       height = 249
@@ -9,7 +9,7 @@ return {
   },
   {
     country = 'Denmark',
-    difficulty = 0,
+    difficulty = 1,
     dimensions = {
       positionY = 249,
       height = 303
@@ -17,7 +17,7 @@ return {
   },
   {
     country = 'Germany',
-    difficulty = 1,
+    difficulty = 2,
     dimensions = {
       positionY = 552,
       height = 240
@@ -25,7 +25,7 @@ return {
   },
   {
     country = 'Greece',
-    difficulty = 1,
+    difficulty = 2,
     dimensions = {
       positionY = 792,
       height = 265
@@ -33,7 +33,7 @@ return {
   },
   {
     country = 'Argentina',
-    difficulty = 2,
+    difficulty = 3,
     dimensions = {
       positionY = 1057,
       height = 250
@@ -41,7 +41,7 @@ return {
   },
   {
     country = 'Mexico',
-    difficulty = 2,
+    difficulty = 3,
     dimensions = {
       positionY = 1307,
       height = 229
@@ -49,7 +49,7 @@ return {
   },
   {
     country = 'Poland',
-    difficulty = 2,
+    difficulty = 3,
     dimensions = {
       positionY = 1537,
       height = 250
@@ -57,7 +57,7 @@ return {
   },
   {
     country = 'Spain',
-    difficulty = 0,
+    difficulty = 1,
     dimensions = {
       positionY = 1786,
       height = 267
@@ -65,7 +65,7 @@ return {
   },
   {
     country = 'Australia',
-    difficulty = 1,
+    difficulty = 2,
     dimensions = {
       positionY = 2053,
       height = 200
@@ -73,7 +73,7 @@ return {
   },
   {
     country = 'Iceland',
-    difficulty = 1,
+    difficulty = 2,
     dimensions = {
       positionY = 2253,
       height = 288
@@ -81,7 +81,7 @@ return {
   },
   {
     country = 'India',
-    difficulty = 2,
+    difficulty = 3,
     dimensions = {
       positionY = 2541,
       height = 267
@@ -89,7 +89,7 @@ return {
   },
   {
     country = 'China',
-    difficulty = 0,
+    difficulty = 1,
     dimensions = {
       positionY = 2808,
       height = 267

@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>Luadocs for flagGame.lua</title>
+    <link rel="stylesheet" href="../luadoc.css" type="text/css" />
+    <!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
+</head>
+
+<body>
+<div id="container">
+
+<div id="product">
+    <div id="product_logo"></div>
+    <div id="product_name"><big><b></b></big></div>
+    <div id="product_description"></div>
+</div> <!-- id="product" -->
+
+<div id="main">
+
+<div id="navigation">
+
+
+<h1>LuaDoc</h1>
+<ul>
+	
+	<li><a href="../index.html">Index</a></li>
+	
+</ul>
+
+
+<!-- Module list -->
+
+
+
+<!-- File list -->
+
+<h1>Files</h1>
+<ul>
+
+	<li>
+		<a href="../files/animation.html">animation.lua</a>
+	</li>
+
+	<li><strong>flagGame.lua</strong></li>
+	
+	<li>
+		<a href="../files/login.html">login.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/mathGame.html">mathGame.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/menu.html">menu.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/newProfile.html">newProfile.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/profileHandler.html">profileHandler.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/spellingGame.html">spellingGame.lua</a>
+	</li>
+
+	<li>
+		<a href="../files/write_text.html">write_text.lua</a>
+	</li>
+
+</ul>
+
+
+
+
+
+
+</div> <!-- id="navigation" -->
+
+<div id="content">
+
+<h1>File <code>flagGame.lua</code></h1>
+
+
+
+
+
+
+
+<h2>Functions</h2>
+<table class="function_list">
+
+    <tr>
+    <td class="name" nowrap><a href="#addScoreToUser">addScoreToUser</a>&nbsp;()</td>
+    <td class="summary">Add one score to the user </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#checkAnswer">checkAnswer</a>&nbsp;(userAnswer, answersLocal, correctCountryLocal)</td>
+    <td class="summary">Checks if the user's guess is correct </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#checkTestMode">checkTestMode</a>&nbsp;()</td>
+    <td class="summary">Checks if the file was called from a test file.</td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#createColoredCircles">createColoredCircles</a>&nbsp;()</td>
+    <td class="summary">Creates the colored circles </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#generateAnswers">generateAnswers</a>&nbsp;(correctCountryId)</td>
+    <td class="summary">Generates random answers </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#generateQuestion">generateQuestion</a>&nbsp;()</td>
+    <td class="summary">Generates question with random country and random answers </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#getRandomCountryId">getRandomCountryId</a>&nbsp;()</td>
+    <td class="summary">Generates a random country id </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#onKey">onKey</a>&nbsp;(key, state)</td>
+    <td class="summary">Gets input from user and checks answer or controls side-menu </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#placeAnswerCircles">placeAnswerCircles</a>&nbsp;()</td>
+    <td class="summary">Places the answer circles in their correct positions </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#printAnswers">printAnswers</a>&nbsp;(answers)</td>
+    <td class="summary">Prints the answers on the screen </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#printFlag">printFlag</a>&nbsp;(countryId)</td>
+    <td class="summary">Prints flag according to input id </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#printPlayerName">printPlayerName</a>&nbsp;()</td>
+    <td class="summary">Prints the players name in the top of the screen </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#printQuestionAndAnswers">printQuestionAndAnswers</a>&nbsp;()</td>
+    <td class="summary">Prints the questions and answers </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#removeAnswer">removeAnswer</a>&nbsp;(answerToRemove)</td>
+    <td class="summary">Remove an answer in a stylish way (if user's guess is incorrect) </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#runGame">runGame</a>&nbsp;(path, testingModeOn)</td>
+    <td class="summary">Runs chosen game (file) if testing mode is off </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#setBackground">setBackground</a>&nbsp;()</td>
+    <td class="summary">Sets the background of the screen </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#setRequire">setRequire</a>&nbsp;(underGoingTest)</td>
+    <td class="summary">Chooses either the actual or the stubs depending on if a test file started the program.</td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#shuffle">shuffle</a>&nbsp;(array)</td>
+    <td class="summary">Shuffles an array </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#table.contains">table.contains</a>&nbsp;(table, element)</td>
+    <td class="summary">Check if a table contains a given element </td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#zoomAnswer">zoomAnswer</a>&nbsp;(answer)</td>
+    <td class="summary">Zoom in on an answer if correct guess </td>
+    </tr>
+
+</table>
+
+
+
+
+
+
+<br/>
+<br/>
+
+
+
+
+<h2><a name="functions"></a>Functions</h2>
+<dl class="function">
+
+
+
+<dt><a name="addScoreToUser"></a><strong>addScoreToUser</strong>&nbsp;()</dt>
+<dd>
+Add one score to the user
+
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="checkAnswer"></a><strong>checkAnswer</strong>&nbsp;(userAnswer, answersLocal, correctCountryLocal)</dt>
+<dd>
+Checks if the user's guess is correct
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  userAnswer: The country guessed
+	</li>
+	
+	<li>
+	  answersLocal: The table containing all answers
+	</li>
+	
+	<li>
+	  correctCountryLocal: The id of the correct answer
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="checkTestMode"></a><strong>checkTestMode</strong>&nbsp;()</dt>
+<dd>
+Checks if the file was called from a test file.
+
+
+
+
+
+
+
+<h3>Return value:</h3>
+If called from test file return true (indicating file is being tested) else false
+
+
+
+</dd>
+
+
+
+
+<dt><a name="createColoredCircles"></a><strong>createColoredCircles</strong>&nbsp;()</dt>
+<dd>
+Creates the colored circles
+
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="generateAnswers"></a><strong>generateAnswers</strong>&nbsp;(correctCountryId)</dt>
+<dd>
+Generates random answers
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  correctCountryId: The ID of the country which is the correct alternative
+	</li>
+	
+</ul>
+
+
+
+
+
+
+<h3>Return value:</h3>
+answers The table of answers shuffled
+
+
+
+</dd>
+
+
+
+
+<dt><a name="generateQuestion"></a><strong>generateQuestion</strong>&nbsp;()</dt>
+<dd>
+Generates question with random country and random answers
+
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="getRandomCountryId"></a><strong>getRandomCountryId</strong>&nbsp;()</dt>
+<dd>
+Generates a random country id
+
+
+
+
+
+
+
+<h3>Return value:</h3>
+randomCountryId A random country id
+
+
+
+</dd>
+
+
+
+
+<dt><a name="onKey"></a><strong>onKey</strong>&nbsp;(key, state)</dt>
+<dd>
+Gets input from user and checks answer or controls side-menu
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  key: The key that has been pressed
+	</li>
+	
+	<li>
+	  state: The state of thed key-press
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="placeAnswerCircles"></a><strong>placeAnswerCircles</strong>&nbsp;()</dt>
+<dd>
+Places the answer circles in their correct positions
+
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="printAnswers"></a><strong>printAnswers</strong>&nbsp;(answers)</dt>
+<dd>
+Prints the answers on the screen
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  answers: A table containing the answers
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="printFlag"></a><strong>printFlag</strong>&nbsp;(countryId)</dt>
+<dd>
+Prints flag according to input id
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  countryId: The id of the country
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="printPlayerName"></a><strong>printPlayerName</strong>&nbsp;()</dt>
+<dd>
+Prints the players name in the top of the screen
+
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="printQuestionAndAnswers"></a><strong>printQuestionAndAnswers</strong>&nbsp;()</dt>
+<dd>
+Prints the questions and answers
+
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="removeAnswer"></a><strong>removeAnswer</strong>&nbsp;(answerToRemove)</dt>
+<dd>
+Remove an answer in a stylish way (if user's guess is incorrect)
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  answerToRemove: The answer to remove (1,2,3,4)
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="runGame"></a><strong>runGame</strong>&nbsp;(path, testingModeOn)</dt>
+<dd>
+Runs chosen game (file) if testing mode is off
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  path: The path to the game to be loaded
+	</li>
+	
+	<li>
+	  testingModeOn: If testing mode is on
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="setBackground"></a><strong>setBackground</strong>&nbsp;()</dt>
+<dd>
+Sets the background of the screen
+
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="setRequire"></a><strong>setRequire</strong>&nbsp;(underGoingTest)</dt>
+<dd>
+Chooses either the actual or the stubs depending on if a test file started the program.
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  underGoingTest: undergoing test is true if a test file started the program.
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+
+
+<dt><a name="shuffle"></a><strong>shuffle</strong>&nbsp;(array)</dt>
+<dd>
+Shuffles an array
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  array: Table to shuffle
+	</li>
+	
+</ul>
+
+
+
+
+
+
+<h3>Return value:</h3>
+array The shuffled array
+
+
+
+</dd>
+
+
+
+
+<dt><a name="table.contains"></a><strong>table.contains</strong>&nbsp;(table, element)</dt>
+<dd>
+Check if a table contains a given element
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  table: The table to check in
+	</li>
+	
+	<li>
+	  element: The element to check for
+	</li>
+	
+</ul>
+
+
+
+
+
+
+<h3>Return value:</h3>
+True if table contains given element
+
+
+
+</dd>
+
+
+
+
+<dt><a name="zoomAnswer"></a><strong>zoomAnswer</strong>&nbsp;(answer)</dt>
+<dd>
+Zoom in on an answer if correct guess
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  answer: The answer to remove (1,2,3,4)
+	</li>
+	
+</ul>
+
+
+
+
+
+
+
+
+</dd>
+
+
+</dl>
+
+
+
+
+
+
+
+</div> <!-- id="content" -->
+
+</div> <!-- id="main" -->
+
+<div id="about">
+    <p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" /></a></p>
+</div> <!-- id="about" -->
+
+</div> <!-- id="container" -->
+</body>
+</html>

@@ -3,25 +3,32 @@
 -- The start- and side menu for the application GetSmart
 --
 
+require "runState"
 --- Checks if the file was called from a test file.
--- @return #boolean True or false depending on testing file  
+-- Returs true if it was, 
+--   - which would mean that the file is being tested.
+-- Returns false if it was not,
+--   - which wold mean that the file was being used.  
 function checkTestMode()
-  runFile = debug.getinfo(2, "S").source:sub(2,3)
+ --[[ runFile = debug.getinfo(2, "S").source:sub(2,3)
   if (runFile ~= './' ) then
     underGoingTest = false
   elseif (runFile == './') then
     underGoingTest = true
   end
-  return underGoingTest
+  return underGoingTest --]]
+  underGoingTest = false
 end
 
 --- Chooses either the actual or the stubs depending on if a test file started the program.
--- @param #Boolean underGoingTest undergoing test is true if a test file started the program.
+-- @param underGoingTest undergoing test is true if a test file started the program.
 function setRequire(underGoingTest)
   if not underGoingTest then
-    gfx = require "gfx"
+  	if not runsOnSTB then
+    	gfx = require "gfx"
+    end
     text = require "write_text"
-    animation = require "animation"
+--  animation = require "animation"
     profileHandler = require "profileHandler"
   elseif underGoingTest then 
     gfx = require "gfx_stub"
@@ -31,14 +38,24 @@ function setRequire(underGoingTest)
   end
 end 
 
-underGoingTest = checkTestMode()
-setRequire(underGoingTest)
+setRequire(checkTestMode())
 
 -- Imports and sets background
-local background = gfx.loadpng('./images/background.png')
+local background = gfx.loadpng('images/background.png')
 gfx.screen:copyfrom(background, nil, {x=0 , y=0, w=gfx.screen:get_width(), h=gfx.screen:get_height()})
-gfx.update()
+background:destroy()
 
+
+--gfx.update()
+
+--gfx.screen:clear({122,219,228})
+--gfx.update()
+
+--[[if not runsOnSTB then
+  dir = "" 
+else
+  dir = sys.root_path()
+end--]]
 -- Boolean controlling if side menu is showing
 sideMenu = false
 
@@ -48,47 +65,44 @@ gamePath = ''
 -- The number of the playing user
 currentPlayer = ...
 
-
 -- Create a new surface with 33% width and 100% height of the screen
-local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width() / 3, gfx.screen:get_height())
-local transparentSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
-local mainSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+--local sideMenuSrfc = gfx.new_surface(gfx.screen:get_width() / 3, gfx.screen:get_height())
+--local transparentSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
+--local mainSrfc = gfx.new_surface(gfx.screen:get_width(), gfx.screen:get_height())
 
 -- All main menu items as .png pictures as transparent background with width and height variables
 local png_menu_circle_width = 149
 local png_menu_circle_height = 147
+local imgDir = 'images/menu/'
 local png_menu_circles = {
-  game1 = 'images/menu/main-menu_math.png',
-  game2 = 'images/menu/main-menu_memory.png',
-  game3 = 'images/menu/main-menu_spelling.png',
-  game4 = 'images/menu/main-menu_geography.png'
+  game1 = imgDir..'main-menu_math.png',
+  game2 = imgDir..'main-menu_memory.png',
+  game3 = imgDir..'main-menu_spelling.png',
+  game4 = imgDir..'main-menu_geography.png'
 }
 
 -- All side menu items as .png pictures as transparent background with width and height variables
 local png_side_menu_circle_width = 115
 local png_circle_height = 112
-local png_side_menu_circles = {
-  game1 = 'images/side-menu/side-menu-math.png',
-  game2 = 'images/side-menu/side-menu-memory.png',
-  game3 = 'images/side-menu/side-menu-spelling.png',
-  game4 = 'images/side-menu/side-menu-geography.png',
-  game5 = 'images/side-menu/side-menu-users.png'
-}
+--[[local png_side_menu_circles = {
+  game1 = 'side-menu-math.png',
+  game2 = 'side-menu-memory.png',
+  game3 = 'side-menu-spelling.png',
+  game4 = 'side-menu-geography.png',
+  game5 = 'side-menu-users.png'
+}]]
 
 -- Logotype as .png pictuere with transparent background with width variable
 local png_logo_width = 447
 local png_logo = 'images/logo.png'
 
--- The school logo as .png , transparent background
-local png_school_logo = 'images/liu.png'
-
 -- Directory of images
-local dir = './'
+--local dir = './'
 
---- Prints the current player name in the top left corner
 function printPlayerName()
 	
-	local playerName = profileHandler.getName(currentPlayer)
+	 playerName = profileHandler.getName(currentPlayer)
+
 
 	local fw = text.getStringLength('lato', 'medium', "Welcome " .. playerName)
 	local fh = text.getFontHeight('lato', 'medium')
@@ -98,8 +112,13 @@ function printPlayerName()
 
 end
 
---- Prints the side menu surface
-function printsideMenuSurface()
+
+--[[
+-- Prints the side menu
+function printSideMenu()
+
+-- Prints the side menu
+local function printsideMenuSurface()
 
 	local toScreen = nil
 	local gameCounter = 1
@@ -108,47 +127,46 @@ function printsideMenuSurface()
 
 	sideMenuSrfc:fill({100, 100, 100}) --RGB
 
-	gfx.screen:copyfrom(sideMenuSrfc, nil, {x=0, y=0}) -- Prints sideMenuSrfc
+	gfx.screen:copyfrom(sideMenuSrfc, nil, {x=0, y=0}, true) -- Prints sideMenuSrfc
+	sideMenuSrfc:destroy()
 
 	-- Prints menu items
 	for i = 35, 650, 145 do
-		toScreen = gfx.loadpng(dir..png_side_menu_circles['game'..gameCounter])
+		toScreen = gfx.loadpng(png_side_menu_circles['game'..gameCounter])
+		toScreen:premultiply()
 		printCircle(toScreen, (gfx.screen:get_width()/3)/2-(png_side_menu_circle_width/2), i)
 		gameCounter = gameCounter+1
 	end
 
 end
 
---- Prints the transparent surface on top of gfx.screen
-function printTransparentSurface()
+-- Prints the transparent surface above the gfx.screen
+local function printTransparentSurface()
 
 	transparentSrfc:clear() -- Initializes transparentSrfc
 	transparentSrfc:fill({0, 0, 0, 127}) --RGBA -- should be 50% transparent
-	gfx.screen:copyfrom(transparentSrfc, nil, {x=0, y=0}) -- Prints transparentSrfc
+	gfx.screen:copyfrom(transparentSrfc, nil, {x=0, y=0}, true) -- Prints transparentSrfc
+	transparentSrfc:destroy()
 
 end
 
---- Prints the side menu
-function printSideMenu()
-
-	printTransparentSurface()
-	printsideMenuSurface()
+	--printTransparentSurface()
+	--printsideMenuSurface()
 	
-	gfx.update()
+	--gfx.update()
 	
 end
+--]]
 
---- Prints circle according to input
--- @param surface img The surface to be printed on
--- @param #number x The x-coordiante
--- @param #number y The y-coordinate
-function printCircle(img, xIn, yIn)
-	local scale = 0.5
-	gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale})
-end
-
---- Prints the circles for the main menu
+-- Prints main menu
 function printMenuCircles()
+
+	-- Prints circle according to img, x and y values
+	function printCircle(img, xIn, yIn)
+		local scale = 0.5
+		gfx.screen:copyfrom(img, nil, {x=xIn, y=yIn, w=img:get_width()*scale, h=img:get_height()*scale}, true)
+		img:destroy()
+	end
 
 	local toScreen = nil
 	local gameCounter = 1
@@ -156,7 +174,8 @@ function printMenuCircles()
 
 	-- Prints menu items
 	for i = 1, 4, 1 do
-		toScreen = gfx.loadpng(dir..png_menu_circles['game'..gameCounter])
+		toScreen = gfx.loadpng(png_menu_circles['game'..gameCounter])
+		toScreen:premultiply()
 		printCircle(toScreen, verticalGrid*i-(png_menu_circle_width/2), 450)
 		gameCounter = gameCounter+1
 	end
@@ -165,48 +184,46 @@ function printMenuCircles()
 
 end
 
---- Prints the logotype in the middle of the screen
+-- Prints logotype in the middle of the screen
 function printLogotype()
 	
 	local toScreen = nil
-	toScreen = gfx.loadpng(dir..png_logo)
+	
+	toScreen = gfx.loadpng(png_logo)
+	toScreen:premultiply()
 	scale = 0.5
-	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2 *scale), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
+	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2 *scale), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale},true)
+	toScreen:destroy()
 	gfx.update()
+
 
 end
 
-function printSchoolLogo()
-
-	local toScreen = nil
-	toScreen = gfx.loadpng(dir..png_school_logo)
-	scale = 0.1
-	gfx.screen:copyfrom(toScreen, nil, {x = gfx.screen:get_width() - toScreen:get_width() * scale - 20 , y=20 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale})
-	gfx.update()
-
-end
-
---- Copys graphics from main surface (in this case main menu) to the surface mainSrfc
+-- Copys graphics from main surface (in this case main menu) to the surface mainSrfc
 function setMainSrfc()
 
-	mainSrfc:clear()
-	mainSrfc:copyfrom(gfx.screen, nil, {x=0, y=0})
+--	mainSrfc:clear()
+--	mainSrfc:copyfrom(gfx.screen, nil, {x=0, y=0})
+	
 
 end
 
---- Changes from active surface to mainSrfc (which can be seen as the previous "state")
+-- Changes from active surface to mainSrfc (which can be seen as the previous "state")
 function changeSrfc()
 
-	gfx.screen:copyfrom(mainSrfc, nil, {x=0, y=0})
-	gfx.update()
+--	gfx.screen:copyfrom(mainSrfc, nil, {x=0, y=0})
+--	mainSrfc:destroy()
+--	gfx.update()
 
 end
+
+
 --- Gets input from user and re-directs according to input
 -- @param key The key that has been pressed
 -- @param state The state of the key-press
 function onKey(key,state)
  if state == 'down' then
-
+ 		return
   elseif state == 'up' then
 	  if(key == 'red') then
         sideMenu = false
@@ -224,16 +241,20 @@ function onKey(key,state)
         sideMenu = false
         gamePath = 'flagGame.lua'
         runGame(gamePath, underGoingTest)
-		end	  
+	  elseif(key == 'left') then
+        sideMenu = false
+        gamePath = 'login.lua'
+        runGame(gamePath, underGoingTest)
+	  end	  
   end
 end
 
 --- Runs chosen game (file) if testing mode is off
--- @param #string path The path to the game to be loaded
--- @param #boolean testingModeOn If testing mode is on
+-- @param path The path to the game to be loaded
+-- @param testingModeOn If testing mode is on
 function runGame(path, testingModeOn)
 	if(not testingModeOn) then
-		assert(loadfile(path))(currentPlayer)
+		assert(loadfile(dir .. path))(currentPlayer)
 	end
 end
 
@@ -243,8 +264,8 @@ local function main()
 	printPlayerName()
  	printMenuCircles()  
  	printLogotype()
- 	printSchoolLogo()
+ 	--printSchoolLogo()
 end
 
 
-main()
+main()	  
