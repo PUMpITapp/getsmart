@@ -32,20 +32,59 @@ function setRequire(underGoingTest)
     animation = require "animation_stub"
     profileHandler = require "profileHandler_stub"
   end
-end 
+end
 
 setRequire(checkTestMode())
-
---gfx.screen:clear({122,219,228})
 
 player = ...
 
 sideMenu = false
 
+-- Require the table containing all the mascot texts
+mascot_text = require 'mascot_text'
+
 function main()
 	setBackground()
+
 	printInformationText()
 	gfx.update()
+    printSpeechBubbleText()
+end
+
+-- Prints the text in the mascot's speech bubble
+function printSpeechBubbleText()
+
+    local mascotText = nil
+    local randomInt = nil
+    math.randomseed(os.time())
+    math.random()
+
+    randomInt = 1
+
+    mascotText = mascot_text['memoryGame'][randomInt]
+
+    local boxWidth = gfx.screen:get_width()/7.1
+    local boxHeight = gfx.screen:get_height()/4.388
+    local boxHeightOffset = gfx.screen:get_height()/34
+
+
+
+    local fh = text.getFontHeight('lato', 'small')
+    local fw = text.getStringLength('lato', 'small', mascotText)
+    local actualFh = fh
+
+    local j = 1
+    for i = 1, fw, 1 do
+        j = j+1
+        if j > boxWidth then
+            actualFh = actualFh + fh
+            j=1
+        end
+    end
+
+    text.print(gfx.screen, 'lato', 'black', 'small', mascotText, gfx.screen:get_width()/5.85, (gfx.screen:get_height()-boxHeightOffset-boxHeight/2-actualFh/2), boxWidth, boxWidth)
+
+    gfx.update()
 end
 
 --- Sets the background of the screen

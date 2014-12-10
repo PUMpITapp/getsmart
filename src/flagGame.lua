@@ -203,10 +203,10 @@ function createColoredCircles()
   colorImg = gfx.loadpng("images/color_choices.png")
   colorImg:premultiply()
 
-  circle.red:copyfrom(colorImg, cutOut.red, {x=0,y=0,w=circleDiameter,h=circleDiameter}, true)
-  circle.green:copyfrom(colorImg, cutOut.green, {x=0,y=0,w=circleDiameter,h=circleDiameter}, true)
-  circle.yellow:copyfrom(colorImg, cutOut.yellow, {x=0,y=0,w=circleDiameter,h=circleDiameter}, true)
-  circle.blue:copyfrom(colorImg, cutOut.blue, {x=0,y=0,w=circleDiameter,h=circleDiameter}, true)
+  circle.red:copyfrom(colorImg, cutOut.red, {x=0,y=0,w=circleDiameter,h=circleDiameter})
+  circle.green:copyfrom(colorImg, cutOut.green, {x=0,y=0,w=circleDiameter,h=circleDiameter})
+  circle.yellow:copyfrom(colorImg, cutOut.yellow, {x=0,y=0,w=circleDiameter,h=circleDiameter})
+  circle.blue:copyfrom(colorImg, cutOut.blue, {x=0,y=0,w=circleDiameter,h=circleDiameter})
   colorImg:destroy()
 
 end

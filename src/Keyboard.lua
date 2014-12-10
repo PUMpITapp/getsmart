@@ -358,7 +358,7 @@ function displayInput()
 		gfx.screen:copyfrom(textAreaSurface, nil ,{x=2 * xUnit, y=2 * yUnit, w=12 * xUnit, h=yUnit},true) --colours the saved text field
     end
 
-    text.print(gfx.screen, "lato","black","large", inputText.."|", 2.5 * xUnit, 1.8 * yUnit, 12 * xUnit, yUnit * 2.5)
+    text.print(gfx.screen, "lato","black","large", inputText.."|", 2.5 * xUnit, 1.75 * yUnit, 12 * xUnit, yUnit * 2.5)
 end
 
 --gets the coordinate of arguments

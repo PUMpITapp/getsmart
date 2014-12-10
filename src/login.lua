@@ -1,3 +1,4 @@
+local timeTestingVariable = os.clock()
 --- Login
 -- 
 -- The login function for the app GetSmart
@@ -149,7 +150,6 @@ function printLogotype()
 	scale = 0.5
 	gfx.screen:copyfrom(toScreen, nil, {x=gfx.screen:get_width()/2-(toScreen:get_width()/2 *scale), y=100 ,w =toScreen:get_width() *scale , h= toScreen:get_height() *scale}, true)
 	toScreen:destroy()
-	gfx.update()
 
 end
 
@@ -199,14 +199,34 @@ function runGame(testingModeOn, chosenPlayer)
 	
 end
 
+function printPumpItAppLogo()
+  local pumpItApp = gfx.loadpng('./images/pumpitapp.png')
+  pumpItApp:premultiply()
+  gfx.screen:copyfrom(pumpItApp, nil, {
+    x = gfx.screen:get_width() - 220,
+    y = gfx.screen:get_height() - 80,
+    w = 200,
+    h = 60
+  }, true)
+  pumpItApp:destroy()
+end
+
+-- Test the executuion time for login.lua on the STB
+function getLoadTime(startTime)
+	local endTime = os.clock()
+	print(endTime - startTime)
+end
 
 -- Main function that runs the program
 local function main()
 
   printMenuCircles()  
   printLogotype()
+  printPumpItAppLogo()
+  gfx.update()
 
 end
 
 
 main()
+getLoadTime(timeTestingVariable)

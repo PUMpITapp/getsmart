@@ -143,7 +143,6 @@ local function main()
 
 	if(isNewPlayer()) then
 		printPlayerNumber()
-		--printNavigationButtons()
 		gfx.update()
 		if(not underGoingTest) then
 			foo = 0

@@ -95,6 +95,7 @@ local png_circle_height = 112
 -- Logotype as .png pictuere with transparent background with width variable
 local png_logo_width = 447
 local png_logo = 'images/logo.png'
+local png_school_logo = 'images/liu.png'
 
 -- Directory of images
 --local dir = './'
@@ -258,13 +259,23 @@ function runGame(path, testingModeOn)
 	end
 end
 
+function printSchoolLogo()
+  local toScreen = nil
+  toScreen = gfx.loadpng(png_school_logo)
+  scale = 0.1
+  toScreen:premultiply()
+  gfx.screen:copyfrom(toScreen, nil, {x = gfx.screen:get_width() - toScreen:get_width() * scale - 50 , y=20 ,w =toScreen:get_width() *scale + 50, h= toScreen:get_height() *scale + 40}, true)
+  toScreen:destroy()
+  gfx.update()
+end
+
 -- Main function that runs the program
 local function main()
 
 	printPlayerName()
  	printMenuCircles()  
  	printLogotype()
- 	--printSchoolLogo()
+ 	printSchoolLogo()
 end
 
 
